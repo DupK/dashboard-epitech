@@ -21,7 +21,9 @@ const header_style = StyleSheet.create({
   title: {
 
     margin: 10,
-    color: '#ffffff'
+    color: '#ffffff',
+    fontFamily: 'weblysleekuil'
+
 
   },
 

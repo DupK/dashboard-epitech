@@ -21,17 +21,20 @@ const header_style = StyleSheet.create({
   title: {
 
     margin: 10,
-    color: '#2c3e50'
+    color: '#2c3e50',
+    fontFamily: 'weblysleekuil'
 
   },
 
   sub_title: {
 
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+
 
   },
 
   sub_title_bis: {
+
 
   },
 
