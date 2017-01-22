@@ -3,7 +3,7 @@ Version 1.0.0
 ![react]
 (https://getsiphon.com/blog/images/future-of-apps/react-native.png "react")
 
-A simple mobile application to view the ranking of its **Epitech** promotion
+An **Epitech** intranet application
 
 Library
 -
