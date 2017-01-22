@@ -8,6 +8,9 @@ An **Epitech** intranet application
 Library
 -
 * [React native](https://facebook.github.io/react-native/)
+* [Native base](http://nativebase.io/)
+* [Lodash](https://lodash.com/)
+* [Bluebird](http://bluebirdjs.com/docs/getting-started.html)
 
 MIT License
 -
