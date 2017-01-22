@@ -15,6 +15,6 @@ import {
   View
 } from 'react-native';
 
-import Main from './src/features/Main';
+import Main from './src/features/main';
 
 AppRegistry.registerComponent('App', () => Main);
