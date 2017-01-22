@@ -6,13 +6,6 @@
 
 import React, { Component } from 'react';
 
-/* Component */
-
-import HeaderDark from './android/app/features/header/header_dark';
-import HeaderLight from './android/app/features/header/header_light';
-
-import Login from './android/app/features/login/login';
-
 /* Modules */
 
 import {
@@ -22,6 +15,6 @@ import {
   View
 } from 'react-native';
 
-import Main from './android/app/features/Main';
+import Main from './common/src/features/Main';
 
 AppRegistry.registerComponent('App', () => Main);
