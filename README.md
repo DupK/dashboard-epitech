@@ -8,6 +8,7 @@ A simple mobile application to view the ranking of its **Epitech** promotion
 Library
 -
 * [React native](https://facebook.github.io/react-native/)
+
 MIT License
 -
 
