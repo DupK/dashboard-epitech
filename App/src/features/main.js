@@ -3,35 +3,37 @@
  */
 
 import React, { Component } from 'react';
-import { Navigator } from 'react-native';
-import { Container, Content } from 'native-base';
+import { Router, Scene } from 'react-native-mobx';
+import Login from './login/Login';
+import Home from './home/Home'
+import store from '../stores/Authentication';
 
-import HeaderLight from './header/header_light';
-import routes from './routes';
+const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) => {
+    const style = {
+        flex: 1,
+        backgroundColor: '#fff',
+        shadowColor: null,
+        shadowOffset: null,
+        shadowOpacity: null,
+        shadowRadius: null,
+    };
+    if (computedProps.isActive) {
+        style.marginTop = computedProps.hideNavBar ? 0 : 54;
+    }
+    return style;
+};
 
 class Main extends Component {
-
-    renderScene(route, navigator) {
-        return (
-            <Container>
-                <Content style={{ flex: 1 }}>
-                    <HeaderLight />
-                    { routes[route.name](navigator) }
-                </Content>
-            </Container>
-        );
-    }
-
     render() {
         return (
-            <Navigator
-                style={{ flex: 1 }}
-                initialRoute={{ name: 'login' }}
-                renderScene={this.renderScene.bind(this)}
-            />
+            <Router store={store} getSceneStyle={getSceneStyle}>
+                <Scene key="root">
+                    <Scene initial key="login" hideNavBar component={Login} />
+                    <Scene key="home" title="Dashboard" component={Home} hideNavBar={false}/>
+                </Scene>
+            </Router>
         );
     }
-
 }
 
 export default Main;
