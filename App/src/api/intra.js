@@ -47,3 +47,17 @@ export function fetchStudent(student) {
             console.error(error);
         });
 }
+
+export function fetchCalendar() {
+    return fetch('https://intra.epitech.eu/planning/load?format=json', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json())
+        .catch((error) => {
+            console.error(error);
+        });
+}
