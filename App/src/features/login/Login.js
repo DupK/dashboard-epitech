@@ -19,13 +19,83 @@ import {
 import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
+import backgroundSource from '../../public/img/login/background-test.jpg';
+import logoSource from '../../public/img/login/logo.png';
+
+
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#2c3e50',
         flex: 1,
     },
+
+    backgroundImage: {
+        flex: 1,
+        resizeMode: 'cover',
+        width: null,
+        height: null,
+    },
+
+    logoImage: {
+        alignSelf: 'center',
+        width: 90,
+        height: 90,
+        resizeMode: 'contain',
+    },
+
+    boxTitle: {
+        alignSelf: 'center',
+        fontFamily: 'Nunito-ExtraLight',
+        color: "#FFFFFF",
+        fontSize: 20,
+    },
+
+    title: {
+        fontWeight: 'bold',
+    },
+
+    subTitle: {
+
+    },
+
+    iconButton: {
+        color: "#FFFFFF",
+        fontSize: 40,
+    },
+
+    iconInputMail: {
+        color: "#FFFFFF",
+        marginLeft: 13,
+    },
+
+    iconInputPwd: {
+        color: "#FFFFFF",
+        marginLeft: 16,
+    },
+
+    pwdInput: {
+        fontSize: 13,
+        color: "#FFFFFF",
+        fontFamily: "Nunito-Light",
+        marginLeft: 15,
+    },
+
+    mailInput: {
+        fontSize: 13,
+        color: "#FFFFFF",
+        fontFamily: "Nunito-Light",
+        marginLeft: 15,
+    },
+
+    emptyBox: {
+        justifyContent: 'flex-end',
+        flex: 0.4,
+    },
 });
+
+
+
 
 @observer
 export default class Login extends Component {
@@ -59,14 +129,14 @@ export default class Login extends Component {
             return null;
         }
 
-        return <Spinner/>
+        return null;
     }
 
     renderFetchingUserInformation() {
         const { store: { ui, authentication } } = this.props;
 
         if (ui.currentState === ui.state.fetching && authentication.isLogged) {
-            return <Text>Retrieving all information...</Text>;
+            return null;
         }
 
         return null;
@@ -78,24 +148,59 @@ export default class Login extends Component {
         return (
             <Container style={styles.container}>
                 <Content contentContainerStyle={{
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderColor: 'red',
-                    flexDirection: 'column',
-                    borderWidth: 1
+                    flex: 1
                 }}>
-                    <Text>Login page</Text>
-                    <Button
-                        title="Login"
-                        style={{ alignSelf: 'center', marginTop: 20 }}
-                        onPress={this.login}
-                        disabled={ui.currentState == ui.state.fetching}
-                    >
-                        Login
-                    </Button>
-                    { this.renderLoginSpinner() }
-                    { this.renderFetchingUserInformation() }
+                    <Image source={backgroundSource} style={styles.backgroundImage}>
+
+                        <View style={styles.emptyBox}>
+                            <Image source={logoSource} style={styles.logoImage} />
+                            <Text style={styles.boxTitle}>
+                                <Text style={styles.title}>Dashboard</Text>
+                                <Text style={styles.subTitle}> Epitech</Text>
+                            </Text>
+                        </View>
+
+                        <View style={{ flex: 0.6, justifyContent: 'center'}}>
+
+
+                            <InputGroup>
+
+                                <Icon name="ios-mail-outline" style={styles.iconInputMail} />
+                                <Input
+                                    placeholder="Mail Address"
+                                    placeholderTextColor="#FFFFFF"
+                                    style={styles.mailInput}
+                                />
+
+                            </InputGroup>
+
+                            <InputGroup>
+
+                                <Icon name="ios-lock-outline" style={styles.iconInputPwd} />
+                                <Input
+                                    placeholder="Unix Password"
+                                    placeholderTextColor="#FFFFFF"
+                                    secureTextEntry
+                                    style={styles.pwdInput}
+                                />
+
+                            </InputGroup>
+
+                            <Button
+                                title="Login"
+                                transparent
+                                large
+                                style={{ alignSelf: 'center', marginTop: 25 }}
+                                onPress={this.login}
+                                disabled={ui.currentState == ui.state.fetching}
+                            >
+                                <Icon name="md-finger-print" style={styles.iconButton} />
+                            </Button>
+                            { this.renderLoginSpinner() }
+                            { this.renderFetchingUserInformation() }
+
+                        </View>
+                    </Image>
                 </Content>
             </Container>
         );
