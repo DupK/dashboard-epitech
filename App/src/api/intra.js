@@ -20,6 +20,20 @@ export function login(login, password) {
         });
 }
 
+export function userBaseInformation() {
+    return fetch('https://intra.epitech.eu/', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    })
+        .then((response) => response.json())
+        .catch((error) => {
+            console.error(error);
+        });
+}
+
 export function fetchStudent(student) {
     return fetch('https://intra.epitech.eu/user/' + student + '/?format=json', {
         method: 'GET',

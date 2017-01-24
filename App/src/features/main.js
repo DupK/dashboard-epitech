@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { Router, Scene } from 'react-native-mobx';
 import Login from './login/Login';
 import Home from './home/Home'
-import store from '../stores/Authentication';
+import store from '../stores';
 
 const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) => {
     const style = {
