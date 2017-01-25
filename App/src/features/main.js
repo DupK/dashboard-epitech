@@ -31,7 +31,7 @@ class Main extends Component {
                 <Scene key="root">
                     <Scene key="login" hideNavBar component={Login} />
                     <Scene key="home" title="Dashboard" component={Home} hideNavBar={false}/>
-                    <Scene initial key="calendar" title="Calendar" component={Calendar} />
+                    <Scene key="calendar" title="Calendar" component={Calendar} />
                 </Scene>
             </Router>
         );

@@ -1,81 +1,56 @@
 /**
  * Created by desver_f on 24/01/17.
  */
-import React, { Component, PropTypes as t } from 'react';
+import React, { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
-import randomColor from 'randomcolor';
 import {
     AppRegistry,
     StyleSheet,
     Text,
     View,
     Image,
-    Alert,
     ScrollView,
     Dimensions
 } from 'react-native';
-import {
-    Container,
-    Content,
-} from 'native-base';
+import { Container, Content } from 'native-base';
 import { observable } from 'react-native-mobx';
+import { WEEK_DAYS, WORKING_HOURS, HOUR_SIZE } from './constants'
+import DaySelector from './DaySelector';
+import MonthSelector from './MonthSelector';
+import Hour from './Hour';
+import Event from './Event';
+
 import * as Intra from '../../api/intra';
 
-const WORKING_HOURS = _.range(9, 24);
-const QUARTER_SIZE = 10;
-const HOUR_SIZE = QUARTER_SIZE * 4;
 
-class Hour extends Component {
-    render() {
-        return (
-            <View style={{ height: QUARTER_SIZE * 4 }}>
-                <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row', borderBottomWidth: 0.5, borderColor: '#dbdbdb' }}>
-                    <Text style={{ fontSize: 8, color: '#666666' }}>{this.props.hour} AM</Text>
-                </View>
-            </View>
-        );
-    }
-}
+const CurrentTime = () => {
+    const { width } = Dimensions.get('window');
+    const currentTime = moment();
+    const numericTime = currentTime.hours() + (currentTime.minutes() / 60);
+    const barColor = 'rgba(255, 0, 0, 0.3)';
+    const sphereColor = 'rgb(255, 0, 0)';
 
-Hour.propTypes = {
-    hour: t.number
-};
-
-class Event extends Component {
-    render() {
-        const { width: screenWidth } = Dimensions.get('window');
-        const startDate = moment(this.props.event.start);
-        const start = startDate.hours() + (startDate.minutes() / 60) + (startDate.seconds() / 60);
-        const eventWidth = (screenWidth * .7) / this.props.nbEvents;
-
-        const eventColor = randomColor({
-            hue: 'blue',
-            luminosity: 'light',
-            alpha: 1,
-        });
-
-        return (
+    return (
+        <View style={{ position: 'absolute', height: 5, top: ((numericTime * HOUR_SIZE) - (8 * HOUR_SIZE))}}>
             <View style={{
-                backgroundColor: eventColor,
-                position: 'absolute',
-                height: (this.props.event.duration / 15) * QUARTER_SIZE,
-                top: ((start * HOUR_SIZE) - (8 * HOUR_SIZE)),
-                width: eventWidth,
-                left: 30 + ((eventWidth + 1) * (this.props.nthEvent - 1)),
-            }}>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <Text style={{ padding: 3, fontSize: 10, color: 'white' }}>{this.props.event.title} - {moment.duration(this.props.event.duration, 'minutes').humanize()}</Text>
-                </View>
-            </View>
-        );
-    }
-}
-
-Event.propTypes = {
-    event: t.object,
-    nthEvent: t.number,
-    nbEvents: t.number,
+                position: 'relative',
+                backgroundColor: barColor,
+                height: 1,
+                width: width,
+                left: 20
+            }}/>
+            <View style={{
+                position: 'relative',
+                backgroundColor: sphereColor,
+                height: 6,
+                width: 6,
+                left: 20,
+                top: -3,
+                borderRadius: 50
+            }}/>
+        </View>
+    );
 };
 
 export default class Calendar extends Component {
@@ -83,11 +58,23 @@ export default class Calendar extends Component {
     constructor(props) {
         super(props);
 
-        this.fetchCalendar();
+        this.getPreviousWeek = this.getPreviousWeek.bind(this);
+        this.getNextWeek = this.getNextWeek.bind(this);
+        this.getDatesForWeek = this.getDatesForWeek.bind(this);
+        this.onDateSelected = this.onDateSelected.bind(this);
+        this.isDateSelected = this.isDateSelected.bind(this);
+        this.getPreviousMonth = this.getPreviousMonth.bind(this);
+        this.getNextMonth = this.getNextMonth.bind(this);
+    }
+
+    async componentWillMount() {
+        await this.fetchCalendar();
     }
 
     state = {
         calendar: null,
+        selectedDate: moment(),
+        startingDate: moment(),
     };
 
     groupByOverlappingRanges(ranges) {
@@ -139,18 +126,18 @@ export default class Calendar extends Component {
             .fromPairs()
             .value();
 
-        this.fullCalendar = remappedCalendar;
         this.setState({ calendar: remappedCalendar });
     }
 
     renderEvents() {
-        const { calendar } = this.state;
+        const { calendar, selectedDate } = this.state;
+        const dayFormatted = moment(selectedDate).format('DD-MM-YYYY');
 
         if (!calendar) {
             return null;
         }
 
-        return _.flatMap(calendar['07-02-2017'], (events) => {
+        return _.flatMap(calendar[dayFormatted], (events) => {
             let nthEvent = 0;
             return _.map(events, (event) => {
                 nthEvent++;
@@ -168,17 +155,83 @@ export default class Calendar extends Component {
         return WORKING_HOURS.map((hour) => <Hour key={hour} hour={hour}/>)
     }
 
+    //Set startingDate to the previous week
+    getPreviousWeek() {
+        this.setState({startingDate: this.state.startingDate.subtract(1, 'w')});
+    }
+
+    //Set startingDate to the next week
+    getNextWeek() {
+        this.setState({startingDate: this.state.startingDate.add(1, 'w')});
+    }
+
+    getPreviousMonth() {
+        this.setState({startingDate: this.state.startingDate.subtract(1, 'M')});
+    }
+
+    getNextMonth() {
+        this.setState({startingDate: this.state.startingDate.add(1, 'M')});
+    }
+
+    //Using isoWeekday so that it will start from Monday
+    getDatesForWeek() {
+        const startDate = moment(this.state.startingDate);
+
+        return WEEK_DAYS.map((day, i) => moment(startDate.isoWeekday(i + 1)));
+    }
+
+    onDateSelected(date) {
+        this.setState({selectedDate: moment(date)});
+    }
+
+    isDateSelected(date) {
+        return date.isSame(this.state.selectedDate, 'day');
+    }
+
     render() {
+
+        if (!this.state.calendar) {
+            return <Text>Loading calendar...</Text>;
+        }
+
         return (
             <Container>
-                <Content contentContainerStyle={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{ flex: 0.2, backgroundColor: 'red' }}/>
-                    <ScrollView
-                        style={{ flex: 1, backgroundColor: 'white', marginLeft: 5 }}
-                    >
-                        { this.renderHours() }
-                        { this.renderEvents() }
-                    </ScrollView>
+                <Content contentContainerStyle={{ flex: 1, flexDirection: 'column' }}>
+                    <View style={{ flex: 7, backgroundColor: '#0062ce', elevation: 10 }}>
+                        <MonthSelector
+                            calendarHeaderFormat="MMMM YYYY"
+                            startingDate={this.state.startingDate}
+                            getDatesForWeek={this.getDatesForWeek}
+                            getNextMonth={this.getNextMonth}
+                            getPreviousMonth={this.getPreviousMonth}
+                        />
+                    </View>
+                    <View style={{ flex: 100, flexDirection: 'row' }}>
+                        <View style={{ flex: 0.2, backgroundColor: '#0062ce' }}>
+                            <DaySelector
+                                calendarAnimation={{duration: 30}}
+                                selectionAnimation={{duration: 100}}
+                                calendarColor={'#0062ce'}
+                                highlightColor={'#0075dc'}
+                                dateNumberStyle={{color: '#FFFFFF'}}
+                                dateNameStyle={{color: '#FFFFFF'}}
+                                startingDate={this.state.startingDate}
+                                selectedDate={this.state.selectedDate}
+                                getDatesForWeek={this.getDatesForWeek}
+                                getNextWeek={this.getNextWeek}
+                                getPreviousWeek={this.getPreviousWeek}
+                                isDateSelected={this.isDateSelected}
+                                onDateSelected={this.onDateSelected}
+                            />
+                        </View>
+                        <ScrollView
+                            style={{ flex: 1, backgroundColor: 'white', marginLeft: 5 }}
+                        >
+                            { this.renderHours() }
+                            { this.renderEvents() }
+                            <CurrentTime/>
+                        </ScrollView>
+                    </View>
                 </Content>
             </Container>
         );
