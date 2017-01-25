@@ -4,6 +4,7 @@
 import React, { Component, PropTypes as t } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
+import randomColor from 'randomcolor';
 import {
     AppRegistry,
     StyleSheet,
@@ -21,6 +22,7 @@ import {
 import { observable } from 'react-native-mobx';
 import * as Intra from '../../api/intra';
 
+const WORKING_HOURS = _.range(9, 24);
 const QUARTER_SIZE = 10;
 const HOUR_SIZE = QUARTER_SIZE * 4;
 
@@ -45,13 +47,17 @@ class Event extends Component {
         const { width: screenWidth } = Dimensions.get('window');
         const startDate = moment(this.props.event.start);
         const start = startDate.hours() + (startDate.minutes() / 60) + (startDate.seconds() / 60);
-
         const eventWidth = (screenWidth * .7) / this.props.nbEvents;
+
+        const eventColor = randomColor({
+            hue: 'blue',
+            luminosity: 'light',
+            alpha: 1,
+        });
 
         return (
             <View style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                borderRadius: 3,
+                backgroundColor: eventColor,
                 position: 'absolute',
                 height: (this.props.event.duration / 15) * QUARTER_SIZE,
                 top: ((start * HOUR_SIZE) - (8 * HOUR_SIZE)),
@@ -59,7 +65,7 @@ class Event extends Component {
                 left: 30 + ((eventWidth + 1) * (this.props.nthEvent - 1)),
             }}>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <Text style={{ padding: 3, fontSize: 9, color: 'white' }}>{this.props.event.title} - {moment.duration(this.props.event.duration, 'minutes').humanize()}</Text>
+                    <Text style={{ padding: 3, fontSize: 10, color: 'white' }}>{this.props.event.title} - {moment.duration(this.props.event.duration, 'minutes').humanize()}</Text>
                 </View>
             </View>
         );
@@ -144,11 +150,9 @@ export default class Calendar extends Component {
             return null;
         }
 
-        console.log(calendar['07-02-2017']);
-
         return _.flatMap(calendar['07-02-2017'], (events) => {
             let nthEvent = 0;
-            return _.map(events, (event, i) => {
+            return _.map(events, (event) => {
                 nthEvent++;
                 return <Event
                     key={event.uid}
@@ -160,6 +164,10 @@ export default class Calendar extends Component {
         });
     }
 
+    renderHours() {
+        return WORKING_HOURS.map((hour) => <Hour key={hour} hour={hour}/>)
+    }
+
     render() {
         return (
             <Container>
@@ -168,23 +176,7 @@ export default class Calendar extends Component {
                     <ScrollView
                         style={{ flex: 1, backgroundColor: 'white', marginLeft: 5 }}
                     >
-                        <Hour hour={9}/>
-                        <Hour hour={10}/>
-                        <Hour hour={11}/>
-                        <Hour hour={12}/>
-                        <Hour hour={13}/>
-                        <Hour hour={14}/>
-                        <Hour hour={15}/>
-                        <Hour hour={16}/>
-                        <Hour hour={17}/>
-                        <Hour hour={18}/>
-                        <Hour hour={19}/>
-                        <Hour hour={20}/>
-                        <Hour hour={21}/>
-                        <Hour hour={21}/>
-                        <Hour hour={22}/>
-                        <Hour hour={23}/>
-                        <Hour hour={24}/>
+                        { this.renderHours() }
                         { this.renderEvents() }
                     </ScrollView>
                 </Content>
