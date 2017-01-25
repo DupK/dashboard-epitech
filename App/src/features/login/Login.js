@@ -19,8 +19,8 @@ import {
 import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
-import backgroundSource from '../../public/img/login/background-test.jpg';
-import logoSource from '../../public/img/login/logo.png';
+import backgroundSource from '../../assets/background.png';
+import logoSource from '../../assets/logo.png';
 
 
 
@@ -42,9 +42,11 @@ const styles = StyleSheet.create({
         width: 90,
         height: 90,
         resizeMode: 'contain',
+        marginBottom: 20,
     },
 
     boxTitle: {
+        margin: 3,
         alignSelf: 'center',
         fontFamily: 'Nunito-ExtraLight',
         color: "#FFFFFF",
@@ -91,6 +93,10 @@ const styles = StyleSheet.create({
     emptyBox: {
         justifyContent: 'flex-end',
         flex: 0.4,
+    },
+
+    forgroundTitleBox: {
+        backgroundColor: 'rgba(44, 62, 80, 0.26)',
     },
 });
 
@@ -153,11 +159,18 @@ export default class Login extends Component {
                     <Image source={backgroundSource} style={styles.backgroundImage}>
 
                         <View style={styles.emptyBox}>
+
                             <Image source={logoSource} style={styles.logoImage} />
+
+                            <View style={styles.forgroundTitleBox}>
+
                             <Text style={styles.boxTitle}>
                                 <Text style={styles.title}>Dashboard</Text>
                                 <Text style={styles.subTitle}> Epitech</Text>
                             </Text>
+
+                            </View>
+
                         </View>
 
                         <View style={{ flex: 0.6, justifyContent: 'center'}}>
@@ -167,7 +180,7 @@ export default class Login extends Component {
 
                                 <Icon name="ios-mail-outline" style={styles.iconInputMail} />
                                 <Input
-                                    placeholder="Mail Address"
+                                    placeholder="Email Address"
                                     placeholderTextColor="#FFFFFF"
                                     style={styles.mailInput}
                                 />
