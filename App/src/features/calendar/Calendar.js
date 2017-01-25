@@ -1,10 +1,9 @@
 /**
  * Created by desver_f on 24/01/17.
  */
-import React, { Component } from 'react';
+import React, { Component, PropTypes as t } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
-
 import {
     AppRegistry,
     StyleSheet,
@@ -12,52 +11,182 @@ import {
     View,
     Image,
     Alert,
+    ScrollView,
+    Dimensions
 } from 'react-native';
 import {
     Container,
     Content,
 } from 'native-base';
 import { observable } from 'react-native-mobx';
-import { observer } from 'mobx-react/native';
-import { Actions } from 'react-native-router-flux';
 import * as Intra from '../../api/intra';
 
-// 96 x 15min in one day
+const QUARTER_SIZE = 10;
+const HOUR_SIZE = QUARTER_SIZE * 4;
+
+class Hour extends Component {
+    render() {
+        return (
+            <View style={{ height: QUARTER_SIZE * 4 }}>
+                <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row', borderBottomWidth: 0.5, borderColor: '#dbdbdb' }}>
+                    <Text style={{ fontSize: 8, color: '#666666' }}>{this.props.hour} AM</Text>
+                </View>
+            </View>
+        );
+    }
+}
+
+Hour.propTypes = {
+    hour: t.number
+};
+
+class Event extends Component {
+    render() {
+        const { width: screenWidth } = Dimensions.get('window');
+        const startDate = moment(this.props.event.start);
+        const start = startDate.hours() + (startDate.minutes() / 60) + (startDate.seconds() / 60);
+
+        const eventWidth = (screenWidth * .7) / this.props.nbEvents;
+
+        return (
+            <View style={{
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                borderRadius: 3,
+                position: 'absolute',
+                height: (this.props.event.duration / 15) * QUARTER_SIZE,
+                top: ((start * HOUR_SIZE) - (8 * HOUR_SIZE)),
+                width: eventWidth,
+                left: 30 + ((eventWidth + 1) * (this.props.nthEvent - 1)),
+            }}>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <Text style={{ padding: 3, fontSize: 9, color: 'white' }}>{this.props.event.title} - {moment.duration(this.props.event.duration, 'minutes').humanize()}</Text>
+                </View>
+            </View>
+        );
+    }
+}
+
+Event.propTypes = {
+    event: t.object,
+    nthEvent: t.number,
+    nbEvents: t.number,
+};
 
 export default class Calendar extends Component {
 
     constructor(props) {
         super(props);
+
+        this.fetchCalendar();
     }
 
     state = {
         calendar: null,
     };
 
-    async fetchCalendar() {
-        console.log('fetch calendar');
-        const rawCalendar = await Intra.fetchCalendar();
-        const myActivities = _(rawCalendar)
-            .filter((event) => event.module_registered === true)
-            .value();
-        //.orderBy((event) => moment(event.))
+    groupByOverlappingRanges(ranges) {
+        const endDatesValues = ranges.map((r) => moment(r.end).unix()).sort((a, b) => a - b);
+        const datesRanges = ranges.sort((a, b) => moment(a.start).unix() - moment(b.start).unix());
 
-        console.log(myActivities);
+        let i = 0, j = 0, n = datesRanges.length, active = 0;
+        let groups = [], cur = [];
+        while (true) {
+            if (i < n && moment(datesRanges[i].start).unix() < endDatesValues[j]) {
+                cur.push(datesRanges[i++]);
+                ++active
+            } else if (j < n) {
+                ++j;
+                if (--active == 0) {
+                    groups.push(cur);
+                    cur = []
+                }
+            } else break
+        }
+        return groups
+    }
+
+    async fetchCalendar() {
+        const rawCalendar = await Intra.fetchCalendar();
+
+        const remappedCalendar = _(rawCalendar)
+            .filter((event) => event.start && event.module_registered === true)
+            .map((event) => ({
+                title: event.acti_title,
+                type: event.type_title,
+                module: event.titlemodule,
+                start: event.start,
+                end: event.end,
+                room: event.room,
+                duration: moment(event.end).diff(moment(event.start), 'minutes'),
+                uid: event.codeevent,
+            }))
+            .groupBy((event) => moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY'))
+            .toPairs()
+            .map(([date, events]) => {
+                const eventsGroupedByOverlappingTimes = this.groupByOverlappingRanges(events);
+
+                return [
+                    date,
+                    eventsGroupedByOverlappingTimes
+                ];
+            })
+            .fromPairs()
+            .value();
+
+        this.fullCalendar = remappedCalendar;
+        this.setState({ calendar: remappedCalendar });
+    }
+
+    renderEvents() {
+        const { calendar } = this.state;
+
+        if (!calendar) {
+            return null;
+        }
+
+        console.log(calendar['07-02-2017']);
+
+        return _.flatMap(calendar['07-02-2017'], (events) => {
+            let nthEvent = 0;
+            return _.map(events, (event, i) => {
+                nthEvent++;
+                return <Event
+                    key={event.uid}
+                    event={event}
+                    nbEvents={events.length}
+                    nthEvent={nthEvent}
+                />;
+            });
+        });
     }
 
     render() {
-
-        this.fetchCalendar();
-
         return (
             <Container>
                 <Content contentContainerStyle={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{ flex: 0.2, backgroundColor: 'red' }}>
-
-                    </View>
-                    <View style={{ flex: 0.7, backgroundColor: 'green' }}>
-
-                    </View>
+                    <View style={{ flex: 0.2, backgroundColor: 'red' }}/>
+                    <ScrollView
+                        style={{ flex: 1, backgroundColor: 'white', marginLeft: 5 }}
+                    >
+                        <Hour hour={9}/>
+                        <Hour hour={10}/>
+                        <Hour hour={11}/>
+                        <Hour hour={12}/>
+                        <Hour hour={13}/>
+                        <Hour hour={14}/>
+                        <Hour hour={15}/>
+                        <Hour hour={16}/>
+                        <Hour hour={17}/>
+                        <Hour hour={18}/>
+                        <Hour hour={19}/>
+                        <Hour hour={20}/>
+                        <Hour hour={21}/>
+                        <Hour hour={21}/>
+                        <Hour hour={22}/>
+                        <Hour hour={23}/>
+                        <Hour hour={24}/>
+                        { this.renderEvents() }
+                    </ScrollView>
                 </Content>
             </Container>
         );
