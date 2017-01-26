@@ -1,28 +1,25 @@
-
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import _ from 'lodash';
 import {
-    Text,
     View,
-    Image,
     Animated,
     Easing,
-    TouchableOpacity,
     PanResponder,
     Dimensions,
     LayoutAnimation
 } from 'react-native';
 import moment from 'moment';
 import { WEEK_DAYS } from './constants';
-import CalendarDay from './Day';
+import Day from './Day';
+import { observer } from 'mobx-react/native';
 
+@observer
 export default class DaySelector extends Component {
 
     constructor(props) {
         super(props);
 
         this.resetAnimation();
-
         this.componentDidMount = this.componentDidMount.bind(this);
         this.animate = this.animate.bind(this);
         this.resetAnimation = this.resetAnimation.bind(this);
@@ -61,7 +58,7 @@ export default class DaySelector extends Component {
 
                 if (Math.abs(dy) > threshold) {
                     // Animate to the outside of the device the current scene.
-                    dy < 0 ? this.props.getNextWeek() : this.props.getPreviousWeek();
+                    dy < 0 ? this.props.calendarStore.getNextWeek() : this.props.calendarStore.getPreviousWeek();
                     this.slide(0);
                 } else {
                     // Otherwise cancel the animation.
@@ -86,7 +83,10 @@ export default class DaySelector extends Component {
     }
 
     componentWillUpdate(nextProps) {
-        if (nextProps.selectedDate === this.props.selectedDate) {
+        const { calendarStore: prevCalendar } = this.props;
+        const { calendarStore: nextCalendar } = nextProps;
+
+        if (nextCalendar.selectedDate === prevCalendar.selectedDate) {
             this.resetAnimation();
             this.animate();
         }
@@ -117,25 +117,26 @@ export default class DaySelector extends Component {
     }
 
     render() {
+        const { calendarStore: calendar, calendarAnimation } = this.props;
+
         let opacityAnim = 1;
-        const datesRender = this.props.getDatesForWeek().map((date, index) => {
-            if (this.props.calendarAnimation) {
+        const datesRender = calendar.getDatesForWeek().map((date, index) => {
+            if (calendarAnimation) {
                 opacityAnim = this.animatedValue[index];
             }
             return (
                 <Animated.View key={date} style={{opacity: opacityAnim}}>
-                    <CalendarDay
-                        date={date}
+                    <Day
                         key={date}
-                        selected={this.props.isDateSelected(moment(date))}
-                        onDateSelected={this.props.onDateSelected}
+                        calendarStore={calendar}
+                        date={date}
+                        selected={calendar.isDateSelected(moment(date))}
                         calendarColor={this.props.calendarColor}
                         highlightColor={this.props.highlightColor}
                         dateNameStyle={this.props.dateNameStyle}
                         dateNumberStyle={this.props.dateNumberStyle}
                         weekendDateNameStyle={this.props.weekendDateNameStyle}
                         weekendDateNumberStyle={this.props.weekendDateNumberStyle}
-                        selection={this.props.selection}
                         selectionAnimation={this.props.selectionAnimation}
                     />
                 </Animated.View>
@@ -156,6 +157,7 @@ export default class DaySelector extends Component {
 }
 
 DaySelector.propTypes = {
+    calendarStore: React.PropTypes.object,
     calendarAnimation: React.PropTypes.object,
     selectionAnimation: React.PropTypes.object,
 
@@ -165,12 +167,4 @@ DaySelector.propTypes = {
     dateNumberStyle: React.PropTypes.any,
     weekendDateNameStyle: React.PropTypes.any,
     weekendDateNumberStyle: React.PropTypes.any,
-
-    startingDate: React.PropTypes.any,
-    selectedDate: React.PropTypes.any,
-    getPreviousWeek: React.PropTypes.func,
-    getNextWeek: React.PropTypes.func,
-    getDatesForWeek: React.PropTypes.func,
-    onDateSelected: React.PropTypes.func,
-    isDateSelected: React.PropTypes.func,
 };

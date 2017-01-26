@@ -29,7 +29,7 @@ class Main extends Component {
         return (
             <Router store={store} getSceneStyle={getSceneStyle}>
                 <Scene key="root">
-                    <Scene key="login" hideNavBar component={Login} />
+                    <Scene initial key="login" hideNavBar component={Login} />
                     <Scene key="home" title="Dashboard" component={Home} hideNavBar={false}/>
                     <Scene key="calendar" title="Calendar" component={Calendar} />
                 </Scene>
