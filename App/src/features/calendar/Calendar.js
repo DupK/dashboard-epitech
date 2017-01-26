@@ -98,20 +98,20 @@ export default class Calendar extends Component {
         return (
             <Container>
                 <Content contentContainerStyle={{ flex: 1, flexDirection: 'column' }}>
-                    <View style={{ flex: 7, backgroundColor: '#0062ce', elevation: 10 }}>
+                    <View style={{ flex: 7, backgroundColor: '#2c3e50', elevation: 10 }}>
                         <MonthSelector
                             calendarHeaderFormat="MMMM YYYY"
                             calendarStore={calendar}
                         />
                     </View>
                     <View style={{ flex: 100, flexDirection: 'row' }}>
-                        <View style={{ flex: 0.2, backgroundColor: '#0062ce' }}>
+                        <View style={{ flex: 0.2, backgroundColor: '#2c3e50' }}>
                             <DaySelector
                                 calendarStore={calendar}
                                 calendarAnimation={{ duration: 30 }}
                                 selectionAnimation={{ duration: 100 }}
-                                calendarColor={'#0062ce'}
-                                highlightColor={'#0075dc'}
+                                calendarColor={'#2c3e50'}
+                                highlightColor={'#62c462'}
                                 dateNumberStyle={{color: '#FFFFFF'}}
                                 dateNameStyle={{color: '#FFFFFF'}}
                             />
