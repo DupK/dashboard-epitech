@@ -48,8 +48,12 @@ export function fetchStudent(student) {
         });
 }
 
-export function fetchCalendar() {
-    return fetch('https://intra.epitech.eu/planning/load?format=json', {
+export function fetchCalendar(start, end) {
+    const calendarUrl = start && end
+        ? `https://intra.epitech.eu/planning/load?format=json&start=${start}&end=${end}`
+        : 'https://intra.epitech.eu/planning/load?format=json';
+
+    return fetch(calendarUrl, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',

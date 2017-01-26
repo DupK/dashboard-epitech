@@ -5,5 +5,5 @@ export const WORKING_HOURS = _.range(9, 25).map((hour, i) => moment('1970-01-01T
 export const WEEK_DAYS = _.range(0, 7);
 
 //size in pixel
-export const QUARTER_SIZE = 10;
+export const QUARTER_SIZE = 14;
 export const HOUR_SIZE = QUARTER_SIZE * 4;

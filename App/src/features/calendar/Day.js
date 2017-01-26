@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     StyleSheet,
     Text,
@@ -6,9 +6,11 @@ import {
     Easing,
     TouchableOpacity
 } from 'react-native';
+import { observer } from 'mobx-react/native';
 import styles from './DaySelector.style';
 
-export default class CalendarDay extends Component {
+@observer
+export default class Day extends Component {
 
     constructor(props) {
         super(props);
@@ -16,7 +18,9 @@ export default class CalendarDay extends Component {
     }
 
     componentDidMount() {
-        if (this.props.selected) {
+        const { selected } = this.props;
+
+        if (selected) {
             this.animate(1);
         }
     }
@@ -39,6 +43,7 @@ export default class CalendarDay extends Component {
     }
 
     render() {
+        const { calendarStore: calendar, date } = this.props;
         const animValue = this.animValue.interpolate({
             inputRange: [0, 1],
             outputRange: [this.props.calendarColor, this.props.highlightColor]
@@ -55,18 +60,18 @@ export default class CalendarDay extends Component {
 
         return (
             <Animated.View style={[styles.dateContainer, animObject]}>
-                <TouchableOpacity onPress={this.props.onDateSelected.bind(this, this.props.date)}>
-                    <Text style={dateNameStyle}>{this.props.date.format('ddd').toUpperCase()}</Text>
-                    <Text style={dateNumberStyle}>{this.props.date.date()}</Text>
+                <TouchableOpacity onPress={() => calendar.onDateSelected(date)}>
+                    <Text style={dateNameStyle}>{date.format('ddd').toUpperCase()}</Text>
+                    <Text style={dateNumberStyle}>{date.date()}</Text>
                 </TouchableOpacity>
             </Animated.View>
         );
     }
 }
 
-CalendarDay.propTypes = {
+Day.propTypes = {
+    calendarStore: React.PropTypes.object.isRequired,
     date: React.PropTypes.object.isRequired,
-    onDateSelected: React.PropTypes.func.isRequired,
     selected: React.PropTypes.bool.isRequired,
 
     calendarColor: React.PropTypes.string,
@@ -77,6 +82,5 @@ CalendarDay.propTypes = {
     weekendDateNameStyle: React.PropTypes.any,
     weekendDateNumberStyle: React.PropTypes.any,
 
-    selection: React.PropTypes.string,
     selectionAnimation: React.PropTypes.object
 };
