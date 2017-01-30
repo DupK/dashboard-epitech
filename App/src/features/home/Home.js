@@ -4,6 +4,7 @@
 
 import React, { Component } from 'react';
 import _ from 'lodash';
+import moment from 'moment';
 import {
     AppRegistry,
     StyleSheet,
@@ -74,8 +75,11 @@ export default class Home extends Component {
             Actions.login();
         }
     };
-    
+
     render() {
+        const { store: { calendar } } = this.props;
+        const nextEvent = calendar.getNextEvent();
+
         return (
             <Container>
                 <Content>
@@ -104,7 +108,7 @@ export default class Home extends Component {
                         <ListItem button onPress={this.menu.Calendar}>
                             <Icon name="ios-calendar" style={ styles.iconStyle }/>
                             <Text style={ styles.itemTitle }>Calendar{"\n"}
-                                <Text style={ styles.itemDescr }>Insert calendar description..</Text>
+                                <Text style={ styles.itemDescr }>Next event: {nextEvent.title} {moment(nextEvent.start).fromNow()}</Text>
                             </Text>
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
                         </ListItem>

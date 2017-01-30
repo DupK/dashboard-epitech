@@ -1,9 +1,11 @@
 /**
  * Created by desver_f on 26/01/17.
  */
-import { observable } from "mobx";
-import moment from "moment";
+import _ from 'lodash';
 import autobind from "autobind-decorator";
+import moment from "moment";
+import { observable } from "mobx";
+
 import {WEEK_DAYS} from "../features/calendar/constants";
 import * as Intra from "../api/intra";
 
@@ -82,6 +84,19 @@ class Calendar {
             ...this.calendar,
             ...remappedCalendar
         }
+    }
+
+    getNextEvent() {
+        const flattenedEvents = _(this.calendar)
+            .flatMap((dayWithEvents) => (
+                _.flatMap(dayWithEvents, (events) => (
+                    _.flatMap(events, (event) => event))
+                )
+            ))
+            .orderBy((event) => event.start)
+            .value();
+
+        return _.find(flattenedEvents, (event) => moment(event.start, 'YYYY-MM-DD HH:mm:ss').isAfter()) || {};
     }
 
     //Set startingDate to the previous week
