@@ -14,10 +14,7 @@ export function login(login, password) {
             password,
         })
     })
-        .then((response) => response.json())
-        .catch((error) => {
-            console.error(error);
-        });
+        .then((response) => response.json());
 }
 
 export function userBaseInformation() {
@@ -28,10 +25,7 @@ export function userBaseInformation() {
             'Content-Type': 'application/json',
         },
     })
-        .then((response) => response.json())
-        .catch((error) => {
-            console.error(error);
-        });
+        .then((response) => response.json());
 }
 
 export function fetchStudent(student) {
@@ -42,10 +36,7 @@ export function fetchStudent(student) {
             'Content-Type': 'application/json',
         }
     })
-        .then((response) => response.json())
-        .catch((error) => {
-            console.error(error);
-        });
+        .then((response) => response.json());
 }
 
 export function fetchCalendar(start, end) {
@@ -60,8 +51,16 @@ export function fetchCalendar(start, end) {
             'Content-Type': 'application/json',
         }
     })
-        .then((response) => response.json())
-        .catch((error) => {
-            console.error(error);
-        });
+        .then((response) => response.json());
+}
+
+export function logout() {
+    return fetch('https://intra.epitech.eu/logout?format=json', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
 }

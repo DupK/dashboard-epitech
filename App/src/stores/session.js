@@ -8,19 +8,35 @@ import stores from './index';
 import * as Intra from '../api/intra';
 
 @autobind
-class User {
-    @observable baseInformation = null;
+class Session {
+    @observable isLogged = false;
+    @observable session = null;
 
-    async fetchBaseInformation() {
+    async login(username = '', password = '') {
         try {
-            this.baseInformation = await Intra.userBaseInformation();
-        } catch(e) {
-            console.error(e);
+            const session = await Intra.login(username, password);
+
+            if (session.message !== "Veuillez vous connecter") {
+                this.isLogged = true;
+                this.session = session;
+            }
+        } catch (e) {
             stores.ui.errorState();
+            this.isLogged = false;
+        }
+    }
+
+    async logout() {
+        try {
+            await Intra.logout();
+            this.isLogged = false;
+        } catch (e) {
+            stores.ui.errorState();
+            this.isLogged = true;
         }
     }
 
 }
 
-const userStore = new User();
-export default userStore;
+const sessionStore = new Session();
+export default sessionStore;
