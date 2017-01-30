@@ -7,6 +7,7 @@ import { Router, Scene } from 'react-native-mobx';
 import Login from './login/Login';
 import Home from './home/Home'
 import Calendar from './calendar/Calendar';
+import Loading from './loading/Loading'
 import store from '../stores';
 
 const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) => {
@@ -32,6 +33,7 @@ class Main extends Component {
                     <Scene initial key="login" hideNavBar component={Login} />
                     <Scene key="home" title="Dashboard" component={Home} hideNavBar={false}/>
                     <Scene key="calendar" title="Calendar" component={Calendar} />
+                    <Scene key="loading" title="Loading" component={Loading} />
                 </Scene>
             </Router>
         );
