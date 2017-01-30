@@ -13,7 +13,7 @@ class Calendar {
     @observable calendar = null;
     @observable startingDate = moment();
     @observable selectedDate = moment();
-    calendarStart = moment().subtract(1, 'M').format('YYYY-MM-DD');
+    calendarStart = moment().subtract(3, 'w').format('YYYY-MM-DD');
     calendarEnd = moment().add(3, 'w').format('YYYY-MM-DD');
     lastFetchedStart = null;
     lastFetchedEnd = null;

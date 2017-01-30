@@ -14,7 +14,6 @@ import {
     Input,
     Icon,
     Button,
-    Spinner
 } from 'native-base';
 import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
@@ -98,6 +97,13 @@ const styles = StyleSheet.create({
     forgroundTitleBox: {
         backgroundColor: 'rgba(44, 62, 80, 0.26)',
     },
+
+    notLoggedMessage: {
+        alignSelf: 'center',
+        fontFamily: 'Nunito-ExtraLight',
+        color: "#ff3d31",
+        fontSize: 16,
+    }
 });
 
 
@@ -116,36 +122,40 @@ export default class Login extends Component {
         password: '',
     };
 
-    async login() {
-        const { store: { ui, authentication, session } } = this.props;
+    async componentWillMount() {
+        const { store: { session } } = this.props;
 
-        ui.fetchingState();
-        await authentication.login(this.state.username, this.state.password);
-        if (authentication.isLogged) {
-            await session.fetchBaseInformation();
-            ui.defaultState();
-            Actions.home();
+        await session.login();
+
+        if (session.isLogged) {
+            Actions.loading();
         }
     }
 
-    renderLoginSpinner() {
+    async login() {
+        if (!this.state.username.length || !this.state.password.length) {
+            return Promise.resolve(false);
+        }
+
+        const { store: { ui, session } } = this.props;
+
+        await session.login(this.state.username, this.state.password);
+
+        if (session.isLogged) {
+            Actions.loading();
+        } else {
+            ui.errorState();
+        }
+    }
+
+    renderUserNotLogged() {
         const { store: { ui } } = this.props;
 
-        if (ui.currentState !== ui.state.fetching) {
+        if (ui.currentState !== ui.state.error) {
             return null;
         }
 
-        return null;
-    }
-
-    renderFetchingUserInformation() {
-        const { store: { ui, authentication } } = this.props;
-
-        if (ui.currentState === ui.state.fetching && authentication.isLogged) {
-            return null;
-        }
-
-        return null;
+        return <Text style={styles.notLoggedMessage}>Could not connect to intranet</Text>;
     }
 
     render() {
@@ -201,6 +211,8 @@ export default class Login extends Component {
 
                             </InputGroup>
 
+                            { this.renderUserNotLogged() }
+
                             <Button
                                 title="Login"
                                 transparent
@@ -211,9 +223,6 @@ export default class Login extends Component {
                             >
                                 <Icon name="md-finger-print" style={styles.iconButton} />
                             </Button>
-                            { this.renderLoginSpinner() }
-                            { this.renderFetchingUserInformation() }
-
                         </View>
                     </Image>
                 </Content>

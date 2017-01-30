@@ -17,6 +17,8 @@ import {
     Content,
     Icon,
 } from 'native-base';
+import { Actions } from 'react-native-router-flux';
+import { observer } from 'mobx-react/native';
 
 const styles = StyleSheet.create({
 
@@ -78,7 +80,20 @@ const styles = StyleSheet.create({
 
 });
 
+@observer
 export default class Loading extends Component {
+
+    async componentWillMount() {
+        const { store: { session, calendar } } = this.props;
+
+        if (session.isLogged) {
+            await calendar.fetchCalendar();
+            Actions.home();
+        } else {
+            console.error('This should never happen');
+        }
+    }
+
     render() {
         return (
             <Container style={ styles.mainContainer }>

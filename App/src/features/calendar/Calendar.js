@@ -56,12 +56,6 @@ const CurrentTime = () => {
 @observer
 export default class Calendar extends Component {
 
-    async componentWillMount() {
-        const { store: { calendar } } = this.props;
-
-        await calendar.fetchCalendar();
-    }
-
     renderHours() {
         return WORKING_HOURS.map((hour) => <Hour key={hour} hour={hour}/>)
     }
