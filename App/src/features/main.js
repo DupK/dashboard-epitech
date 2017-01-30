@@ -31,7 +31,7 @@ class Main extends Component {
             <Router store={store} getSceneStyle={getSceneStyle}>
                 <Scene key="root">
                     <Scene initial key="login" hideNavBar component={Login} />
-                    <Scene key="home" title="Dashboard" component={Home} />
+                    <Scene key="home" title="Dashboard" component={Home} panHandlers={null} />
                     <Scene key="calendar" title="Calendar" component={Calendar} />
                     <Scene key="loading" title="Loading" component={Loading} />
                 </Scene>
