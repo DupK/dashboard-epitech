@@ -58,6 +58,7 @@ export default class Calendar extends Component {
 
     async componentWillMount() {
         const { store: { calendar } } = this.props;
+
         await calendar.fetchCalendar();
     }
 

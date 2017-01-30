@@ -5,13 +5,10 @@ import {
     Dimensions,
 } from 'react-native';
 import moment from 'moment';
-import randomColor from 'randomcolor';
 import { QUARTER_SIZE, HOUR_SIZE } from './constants';
 
 
 class Event extends Component {
-    
-
     render() {
         const { event, nbEvents, nthEvent } = this.props;
         const { width: screenWidth } = Dimensions.get('window');
@@ -19,15 +16,9 @@ class Event extends Component {
         const start = startDate.hours() + (startDate.minutes() / 60);
         const eventWidth = (screenWidth * .7) / nbEvents;
 
-        const eventColor = randomColor({
-            hue: 'blue',
-            luminosity: 'bright',
-            alpha: 1,
-        });
-
         return (
             <View style={{
-                backgroundColor: eventColor,
+                backgroundColor: '#62c462',
                 position: 'absolute',
                 height: (event.duration / 15) * QUARTER_SIZE,
                 top: ((start * HOUR_SIZE) - (8 * HOUR_SIZE)),
