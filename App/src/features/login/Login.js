@@ -183,6 +183,7 @@ export default class Login extends Component {
                                     placeholder="Email Address"
                                     placeholderTextColor="#FFFFFF"
                                     style={styles.mailInput}
+                                    onChangeText={(text) => this.setState({ username: text })}
                                 />
 
                             </InputGroup>
@@ -195,6 +196,7 @@ export default class Login extends Component {
                                     placeholderTextColor="#FFFFFF"
                                     secureTextEntry
                                     style={styles.pwdInput}
+                                    onChangeText={(text) => this.setState({ password: text })}
                                 />
 
                             </InputGroup>
