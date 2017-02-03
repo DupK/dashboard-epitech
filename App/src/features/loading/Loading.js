@@ -65,11 +65,6 @@ const styles = StyleSheet.create({
         color: "#FFFFFF",
     },
 
-    progressBarFetch: {
-        width: 300,
-        height: 40,
-    },
-
     slogan: {
         fontFamily: 'Nunito-ExtraLight',
         fontWeight: "100",
@@ -111,13 +106,6 @@ export default class Loading extends Component {
                             <Text style={ styles.fetchingTitle }>&nbsp;
                                 Fetching data...
                             </Text>
-                        </View>
-                        <View>
-                            <ProgressBarAndroid
-                                style={ styles.progressBarFetch }
-                                styleAttr="Horizontal"
-                                color="#FFFFFF"
-                            />
                         </View>
                     </View>
                 </Content>
