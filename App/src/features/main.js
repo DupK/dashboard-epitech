@@ -1,6 +1,6 @@
 /**
  * Created by jules on 20/01/17.
- */
+ **/
 
 import React, { Component } from 'react';
 import { Router, Scene } from 'react-native-mobx';
@@ -9,6 +9,8 @@ import Home from './home/Home'
 import Calendar from './calendar/Calendar';
 import Loading from './loading/Loading'
 import store from '../stores';
+import _ from 'lodash';
+
 
 const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) => {
     const style = {
@@ -25,15 +27,64 @@ const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) 
     return style;
 };
 
+const getHeaderStyle = () => {
+    return { backgroundColor: '#2c3e50', }
+};
+
+const getTitleStyle = () => {
+    return { color: '#FFFFFF', fontFamily: 'Nunito-Light', marginTop: -3}
+};
+
+const getImageStyle = () => {
+    return { width: 20, height: 20, marginRight: 5}
+};
+
 class Main extends Component {
     render() {
         return (
-            <Router store={store} getSceneStyle={getSceneStyle}>
+            <Router
+                store={store}
+                getSceneStyle={getSceneStyle}
+                navigationBarStyle={getHeaderStyle()}
+                titleStyle={getTitleStyle()}
+                backButtonImage={ require(`../assets/left-arr.png`)}
+            >
+
                 <Scene key="root">
-                    <Scene initial key="login" hideNavBar component={Login} />
-                    <Scene key="home" title="Dashboard" component={Home} panHandlers={null} />
-                    <Scene key="calendar" title="Calendar" component={Calendar} />
-                    <Scene key="loading" title="Loading" component={Loading} />
+
+                    <Scene
+                        initial
+                        key="login"
+                        hideNavBar={true}
+                        component={Login}
+                    />
+
+                    <Scene
+                        key="home"
+                        title="Home"
+                        hideNavBar={false}
+                        component={Home}
+                        panHandlers={null}
+                        hideBackImage={true}
+                        onBack={_.noop}
+                        onRight={_.noop}
+                        rightButtonImage={ require('../assets/reload.png')}
+                        rightButtonIconStyle={getImageStyle()}
+                    />
+
+                    <Scene
+                        key="calendar"
+                        title="Calendar"
+                        component={Calendar}
+                    />
+
+                    <Scene
+                        key="loading"
+                        title="Loading"
+                        hideNavBar={true}
+                        component={Loading}
+                    />
+
                 </Scene>
             </Router>
         );
