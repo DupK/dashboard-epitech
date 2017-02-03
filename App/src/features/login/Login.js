@@ -76,14 +76,14 @@ const styles = StyleSheet.create({
     },
 
     pwdInput: {
-        fontSize: 13,
+        fontSize: 14,
         color: "#FFFFFF",
         fontFamily: "Nunito-Light",
         marginLeft: 15,
     },
 
     mailInput: {
-        fontSize: 13,
+        fontSize: 14,
         color: "#FFFFFF",
         fontFamily: "Nunito-Light",
         marginLeft: 15,
@@ -103,11 +103,8 @@ const styles = StyleSheet.create({
         fontFamily: 'Nunito-ExtraLight',
         color: "#ff3d31",
         fontSize: 16,
-    }
+    },
 });
-
-
-
 
 @observer
 export default class Login extends Component {
@@ -183,8 +180,9 @@ export default class Login extends Component {
 
                         </View>
 
-                        <View style={{ flex: 0.6, justifyContent: 'center'}}>
+                        <View style={{flex: 0.15}}/>
 
+                        <View style={{ flex: 0.45, justifyContent: 'center'}}>
 
                             <InputGroup>
 
