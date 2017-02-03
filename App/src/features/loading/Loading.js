@@ -28,14 +28,8 @@ const styles = StyleSheet.create({
     },
 
     titleContainer: {
-        flex: 0.5,
-        justifyContent: 'flex-end',
-    },
-
-    loadingContainer: {
-        flex: 0.5,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
     },
 
     loadingSubContainer: {
@@ -99,14 +93,6 @@ export default class Loading extends Component {
                             <Text>Epitech</Text>
                         </Text>
                         <Text style={ styles.slogan }>An Epitech Intranet</Text>
-                    </View>
-                    <View style={ styles.loadingContainer }>
-                        <View style={ styles.loadingSubContainer }>
-                            <Icon name="md-cloud-download" style={ styles.iconFetching } />
-                            <Text style={ styles.fetchingTitle }>&nbsp;
-                                Fetching data...
-                            </Text>
-                        </View>
                     </View>
                 </Content>
             </Container>
