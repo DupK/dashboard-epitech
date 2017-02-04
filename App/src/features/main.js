@@ -8,6 +8,7 @@ import Login from './login/Login';
 import Home from './home/Home'
 import Calendar from './calendar/Calendar';
 import Loading from './loading/Loading'
+import News from './news/News'
 import store from '../stores';
 import _ from 'lodash';
 
@@ -83,6 +84,13 @@ class Main extends Component {
                         title="Loading"
                         hideNavBar={true}
                         component={Loading}
+                    />
+
+                    <Scene
+                        key="news"
+                        title="News"
+                        hideNavBar={false}
+                        component={News}
                     />
 
                 </Scene>

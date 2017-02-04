@@ -64,7 +64,7 @@ export default class Home extends Component {
 
     menu = {
         Profile: () => _.noop,
-        News: () => _.noop,
+        News: () => Actions.news(),
         Projects: () => _.noop,
         Calendar: () => Actions.calendar(),
         Marks: () => _.noop,

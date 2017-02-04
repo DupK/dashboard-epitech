@@ -10,7 +10,6 @@ import {
     View,
     Image,
     Alert,
-    ProgressBarAndroid,
 } from 'react-native';
 import {
     Container,
