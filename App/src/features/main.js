@@ -7,8 +7,11 @@ import { Router, Scene } from 'react-native-mobx';
 import Login from './login/Login';
 import Home from './home/Home'
 import Calendar from './calendar/Calendar';
-import Loading from './loading/Loading'
-import News from './news/News'
+import Loading from './loading/Loading';
+import News from './news/News';
+import Projects from './projects/Projects';
+import Marks from './marks/Marks';
+import Ranking from './ranking/Ranking';
 import store from '../stores';
 import _ from 'lodash';
 
@@ -91,6 +94,27 @@ class Main extends Component {
                         title="News"
                         hideNavBar={false}
                         component={News}
+                    />
+
+                    <Scene
+                        key="projects"
+                        title="Projects"
+                        hideNavBar={false}
+                        component={Projects}
+                    />
+
+                    <Scene
+                        key="marks"
+                        title="Marks"
+                        hideNavBar={false}
+                        component={Marks}
+                    />
+
+                    <Scene
+                        key="ranking"
+                        title="Ranking"
+                        hideNavBar={false}
+                        component={Ranking}
                     />
 
                 </Scene>

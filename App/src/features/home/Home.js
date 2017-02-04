@@ -19,9 +19,12 @@ import {
     Icon,
     List,
     ListItem,
+    Thumbnail,
 } from 'native-base';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
+import avatar from '../../assets/jules.jpg';
+import greenLight from '../../assets/circle-green.png';
 
 const styles = StyleSheet.create ({
 
@@ -32,7 +35,18 @@ const styles = StyleSheet.create ({
         justifyContent: 'center',
     },
 
+    ThumbStyle: {
+        flex: 0.15,
+        justifyContent: 'center',
+    },
+
     itemTitle: {
+        flex: 0.75,
+        fontWeight: 'bold',
+        fontFamily: 'Nunito-ExtraLight',
+    },
+
+    profileTitle: {
         flex: 0.75,
         fontWeight: 'bold',
         fontFamily: 'Nunito-ExtraLight',
@@ -47,7 +61,12 @@ const styles = StyleSheet.create ({
         flex: 0.03,
         fontSize: 20,
         alignSelf: 'center',
-        color: '#2c3e50'
+        color: '#2c3e50',
+    },
+
+    trafficLightStyle: {
+        flex: 0.06,
+        alignSelf: 'center',
     },
 
     logoutStyle: {
@@ -64,10 +83,10 @@ export default class Home extends Component {
 
     menu = {
         News: () => Actions.news(),
-        Projects: () => _.noop,
+        Projects: () => Actions.projects(),
         Calendar: () => Actions.calendar(),
-        Marks: () => _.noop,
-        Ranking: () => _.noop,
+        Marks: () => Actions.marks(),
+        Ranking: () => Actions.ranking(),
         Logout: async () => {
             await this.props.store.session.logout();
             this.props.store.ui.defaultState();
@@ -83,6 +102,17 @@ export default class Home extends Component {
             <Container>
                 <Content>
                     <List>
+                        <ListItem>
+                            <View style={styles.ThumbStyle}>
+                                 <Thumbnail size={42} source={avatar} />
+                            </View>
+                                <Text style={ styles.profileTitle }>Jules DUPONT{"\n"}
+                                <Text style={ styles.itemDescr }>60 credits | 2.70 GPA {"\n"}Connect time : 23.2h / 50.0h</Text>
+                            </Text>
+                            <View style={styles.trafficLightStyle}>
+                                <Thumbnail size={20} source={greenLight}/>
+                            </View>
+                        </ListItem>
                         <ListItem button onPress={this.menu.News}>
                             <Icon name="ios-paper" style={ styles.iconStyle }/>
                             <Text style={ styles.itemTitle }>News{"\n"}

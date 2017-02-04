@@ -15,27 +15,16 @@ import {
 import {
     Container,
     Content,
-    List,
-    ListItem,
 } from 'native-base';
 
-export default class News extends Component {
+export default class Ranking extends Component {
 
     render() {
-
-        let items = ['', '', '', '','', '', '', '','', '', '', '','', '', '', ''];
 
         return (
             <Container>
                 <Content>
-                    <List
-                        dataArray={items}
-                        renderRow={(item) =>
-                            <ListItem>
-                                <Text>{item}</Text>
-                            </ListItem>
-                        }>
-                    </List>
+                    <Text>Project here</Text>
                 </Content>
             </Container>
         );
