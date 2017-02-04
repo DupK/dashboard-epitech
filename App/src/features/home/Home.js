@@ -63,7 +63,6 @@ const styles = StyleSheet.create ({
 export default class Home extends Component {
 
     menu = {
-        Profile: () => _.noop,
         News: () => Actions.news(),
         Projects: () => _.noop,
         Calendar: () => Actions.calendar(),
@@ -84,13 +83,6 @@ export default class Home extends Component {
             <Container>
                 <Content>
                     <List>
-                        <ListItem button onPress={this.menu.Profile}>
-                            <Icon name="ios-information-circle" style={ styles.iconStyle }/>
-                            <Text style={ styles.itemTitle }>Profile{"\n"}
-                                <Text style={ styles.itemDescr }>Insert profile description..</Text>
-                            </Text>
-                            <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
-                        </ListItem>
                         <ListItem button onPress={this.menu.News}>
                             <Icon name="ios-paper" style={ styles.iconStyle }/>
                             <Text style={ styles.itemTitle }>News{"\n"}
