@@ -9,19 +9,37 @@ import {
     Text,
     View,
     Image,
-    Alert,
-    ProgressBarAndroid,
 } from 'react-native';
+import {
+    Container,
+    Content,
+    List,
+    ListItem,
+    Icon,
+    Button,
+} from 'native-base';
 
 export default class News extends Component {
 
     render() {
+
+        let items = ['Merci', 'de', 'fetch', 'les', 'news', '<3'];
+
         return (
+            <Container>
+                <Content>
+                    <List
+                        dataArray={items}
+                        renderRow={(item) =>
 
-            <View>
+                            <ListItem>
+                                <Text>{item}</Text>
+                            </ListItem>
 
-            </View>
-
+                        }>
+                    </List>
+                </Content>
+            </Container>
         );
     }
 };
