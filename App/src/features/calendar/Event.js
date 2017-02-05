@@ -24,6 +24,8 @@ class Event extends Component {
                 top: ((start * HOUR_SIZE) - (8 * HOUR_SIZE)),
                 width: eventWidth,
                 left: 30 + ((eventWidth + 1) * (nthEvent - 1)),
+                borderBottomWidth: 1,
+                borderBottomColor: '#ffffff'
             }}>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                     <Text style={{ padding: 3, fontSize: 10, color: 'white' }}>

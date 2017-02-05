@@ -80,6 +80,7 @@ class Main extends Component {
                         key="calendar"
                         title="Calendar"
                         component={Calendar}
+                        panHandlers={null}
                     />
 
                     <Scene
