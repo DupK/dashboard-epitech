@@ -15,6 +15,8 @@ class Calendar {
     @observable calendar = null;
     @observable startingDate = moment();
     @observable selectedDate = moment();
+    @observable datePickerVisible = false;
+
     calendarStart = moment().subtract(3, 'w').format('YYYY-MM-DD');
     calendarEnd = moment().add(3, 'w').format('YYYY-MM-DD');
     lastFetchedStart = null;
@@ -112,6 +114,7 @@ class Calendar {
             }
         }
         this.startingDate = prevWeek;
+        this.selectedDate = moment(this.selectedDate).subtract(1, 'w');
     }
 
     //Set startingDate to the next week
@@ -127,6 +130,7 @@ class Calendar {
             }
         }
         this.startingDate = nextWeek;
+        this.selectedDate = moment(this.selectedDate).add(1, 'w');
     }
 
     getPreviousMonth() {
@@ -141,6 +145,7 @@ class Calendar {
             }
         }
         this.startingDate = prevMonth;
+        this.selectedDate = moment(this.selectedDate).subtract(1, 'M');
     }
 
     getNextMonth() {
@@ -155,6 +160,12 @@ class Calendar {
             }
         }
         this.startingDate = nextMonth;
+        this.selectedDate = moment(this.selectedDate).add(1, 'M');
+    }
+
+    today() {
+        this.startingDate = moment();
+        this.selectedDate = moment();
     }
 
     onDateSelected(date) {
@@ -172,6 +183,15 @@ class Calendar {
         return date.isSame(this.selectedDate, 'day');
     }
 
+    promptDatePicker() {
+        this.datePickerVisible = !this.datePickerVisible;
+    }
+
+    pickDate(date) {
+        this.startingDate = moment(date);
+        this.selectedDate = moment(date);
+        this.promptDatePicker();
+    }
 }
 
 const calendarStore = new Calendar();

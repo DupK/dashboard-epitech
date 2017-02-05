@@ -4,9 +4,27 @@
 
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Button, Icon } from 'native-base';
 import { observer } from 'mobx-react/native';
+import IconFO from 'react-native-vector-icons/Foundation';
+import IconFA from 'react-native-vector-icons/FontAwesome';
+import DayPicker from 'react-native-modal-datetime-picker';
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    selectorItems: {
+        alignSelf: 'center',
+    },
+    selectorIcons: {
+        color: '#FFFFFF',
+    }
+});
 
 @observer
 class MonthSelector extends Component {
@@ -33,14 +51,45 @@ class MonthSelector extends Component {
         const { calendarStore: calendar } = this.props;
 
         return (
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-                <Button title="previousMonth" transparent onPress={calendar.getPreviousMonth}>
-                    <Icon style={{ color: 'white' }} name="ios-arrow-back"/>
+            <View style={styles.container}>
+                <Button
+                    style={styles.selectorItems}
+                    title="today"
+                    transparent
+                    onPress={calendar.promptDatePicker}
+                >
+                    <IconFA style={styles.selectorIcons} name="calendar" size={20}/>
                 </Button>
-                <Text style={{ color: 'white' }}>{ this.formatCalendarHeader() }</Text>
-                <Button title="nextMonth" transparent onPress={calendar.getNextMonth}>
-                    <Icon style={{ color: 'white' }} name="ios-arrow-forward"/>
+                <Button
+                    style={styles.selectorItems}
+                    title="previousMonth"
+                    transparent
+                    onPress={calendar.getPreviousMonth}
+                >
+                    <Icon style={styles.selectorIcons} name="ios-arrow-back"/>
                 </Button>
+                <Text style={styles.selectorIcons}>{ this.formatCalendarHeader() }</Text>
+                <Button
+                    style={styles.selectorItems}
+                    title="nextMonth"
+                    transparent
+                    onPress={calendar.getNextMonth}
+                >
+                    <Icon style={styles.selectorIcons} name="ios-arrow-forward"/>
+                </Button>
+                <Button
+                    style={styles.selectorItems}
+                    title="today"
+                    transparent
+                    onPress={calendar.today}
+                >
+                    <IconFO style={styles.selectorIcons} name="calendar" size={29}/>
+                </Button>
+                <DayPicker
+                    isVisible={calendar.datePickerVisible}
+                    onConfirm={calendar.pickDate}
+                    onCancel={calendar.promptDatePicker}
+                />
             </View>
         );
     }

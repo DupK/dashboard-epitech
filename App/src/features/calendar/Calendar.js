@@ -93,7 +93,7 @@ export default class Calendar extends Component {
         return (
             <Container>
                 <Content contentContainerStyle={{ flex: 1, flexDirection: 'column' }}>
-                    <View style={{ flex: 7, backgroundColor: '#2c3e50', elevation: 10 }}>
+                    <View style={{ flex: 10, backgroundColor: '#2c3e50', elevation: 10 }}>
                         <MonthSelector
                             calendarHeaderFormat="MMMM YYYY"
                             calendarStore={calendar}
@@ -114,7 +114,11 @@ export default class Calendar extends Component {
                         <ScrollView style={{flex: 1, backgroundColor: 'white', marginLeft: 5 }}>
                             { this.renderHours() }
                             { this.renderEvents() }
-                            <CurrentTime/>
+                            {
+                                calendar.isDateSelected(moment())
+                                    ? <CurrentTime/>
+                                    : null
+                            }
                         </ScrollView>
                     </View>
                 </Content>

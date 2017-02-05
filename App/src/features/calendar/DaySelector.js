@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 import {
     View,
     Animated,
@@ -9,7 +8,6 @@ import {
     LayoutAnimation
 } from 'react-native';
 import moment from 'moment';
-import { WEEK_DAYS } from './constants';
 import Day from './Day';
 import { observer } from 'mobx-react/native';
 
@@ -19,113 +17,72 @@ export default class DaySelector extends Component {
     constructor(props) {
         super(props);
 
-        this.resetAnimation();
-        this.componentDidMount = this.componentDidMount.bind(this);
-        this.animate = this.animate.bind(this);
-        this.resetAnimation = this.resetAnimation.bind(this);
-    }
-
-    slide(dy) {
-        this.refs.wrapper.setNativeProps({
-            style: {
-                top: dy,
-            }
-        })
+        this.state = {
+            pan: new Animated.ValueXY(),
+        };
     }
 
     componentWillMount() {
         // Hook the pan responder to interpretate gestures.
-        this._panResponder = PanResponder.create({
-            onStartShouldSetPanResponder: (evt, gestureState) => true,
-            onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
-            onMoveShouldSetPanResponder: (evt, gestureState) => {
-                return Math.abs(gestureState.dy) > 5;
+        this.panResponder = PanResponder.create({
+            onMoveShouldSetResponderCapture: () => true,
+            onMoveShouldSetPanResponderCapture: () => true,
+            onPanResponderGrant: () => {
+                this.state.pan.setOffset({ x: 0, y: this.state.pan.y._value });
+                this.state.pan.setValue({ x: 0, y: 0 });
             },
-            onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
-                return Math.abs(gestureState.dy) > 5;
-            },
-            onPanResponderMove: (evt, gestureState) => {
-                this.slide(gestureState.dy);
-            },
-            onPanResponderTerminationRequest: (evt, gestureState) => true,
-            onPanResponderRelease: (evt, gestureState) => {
-                // The user has released all touches while this view is the
-                // responder. This typically means a gesture has succeeded
+            onPanResponderMove: Animated.event([
+                null, {dx: 0, dy: this.state.pan.y},
+            ]),
+            onPanResponderRelease: (e, { vy }) => {
+                this.state.pan.flattenOffset();
+                const { height } = Dimensions.get('window');
+                const threshold =  height / 4;
+                const dy = this.state.pan.y._value;
 
-                const {height } = Dimensions.get('window');
-                const threshold =  _.min([height / 3, 150]);
-                const dy = gestureState.dy;
 
                 if (Math.abs(dy) > threshold) {
-                    // Animate to the outside of the device the current scene.
                     dy < 0 ? this.props.calendarStore.getNextWeek() : this.props.calendarStore.getPreviousWeek();
-                    this.slide(0);
-                } else {
-                    // Otherwise cancel the animation.
-                    LayoutAnimation.spring();
-                    this.slide(0);
+
+                    Animated.decay(this.state.pan, {
+                        velocity: vy,
+                        deceleration: 0.98
+                    }).start();
+
+                    this.state.pan.setValue({ x: 0, y: dy < 0 ? 200 : -200 });
+
+                    Animated.spring(this.state.pan.y, {
+                        toValue: 0,
+                    }).start();
+
                 }
-            },
-            onPanResponderTerminate: (evt, gestureState) => {
-                // Another component has become the responder, so this gesture
-                // should be cancelled
-                LayoutAnimation.spring();
-                this.slide(0)
-            },
-            onShouldBlockNativeResponder: (evt, gestureState) => {
-                return true;
-            },
+                else {
+                    Animated.spring(this.state.pan, {
+                        toValue: 0
+                    }).start();
+                }
+            }
         });
     }
 
-    componentDidMount() {
-        this.animate();
-    }
+    getStyle() {
+        const { pan } = this.state;
+        const [translateX, translateY] = [pan.x, pan.y];
 
-    componentWillUpdate(nextProps) {
-        const { calendarStore: prevCalendar } = this.props;
-        const { calendarStore: nextCalendar } = nextProps;
-
-        if (nextCalendar.selectedDate === prevCalendar.selectedDate) {
-            this.resetAnimation();
-            this.animate();
-        }
-    }
-
-    resetAnimation() {
-        this.animatedValue = [];
-        WEEK_DAYS.forEach((value) => {
-            this.animatedValue[value] = new Animated.Value(0);
-        });
-    }
-
-    animate() {
-        if (this.props.calendarAnimation) {
-            const animations = WEEK_DAYS.map((item) => {
-                return Animated.timing(
-                    this.animatedValue[item],
-                    {
-                        toValue: 1,
-                        duration: this.props.calendarAnimation.duration,
-                        easing: Easing.inOut
-                    }
-                );
-            });
-
-            Animated.sequence(animations).start();
-        }
+        return {
+            flex: 1,
+            justifyContent: 'space-around',
+            transform: [{ translateX }, { translateY }],
+            opacity: pan.y.interpolate({ inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5] })
+        };
     }
 
     render() {
-        const { calendarStore: calendar, calendarAnimation } = this.props;
+        const { calendarStore: calendar } = this.props;
 
-        let opacityAnim = 1;
-        const datesRender = calendar.getDatesForWeek().map((date, index) => {
-            if (calendarAnimation) {
-                opacityAnim = this.animatedValue[index];
-            }
+        const datesRender = calendar.getDatesForWeek().map((date) => {
             return (
-                <Animated.View key={date} style={{opacity: opacityAnim}}>
+                <View key={date}>
                     <Day
                         key={date}
                         calendarStore={calendar}
@@ -139,19 +96,19 @@ export default class DaySelector extends Component {
                         weekendDateNumberStyle={this.props.weekendDateNumberStyle}
                         selectionAnimation={this.props.selectionAnimation}
                     />
-                </Animated.View>
+                </View>
             );
         });
 
         return (
-            <View
-                ref="wrapper" {...this._panResponder.panHandlers}
-                style={{ flex: 1, justifyContent: 'space-around' }}
+            <Animated.View
+                ref="wrapper" {...this.panResponder.panHandlers}
+                style={this.getStyle()}
             >
                 <View style={{ flex: 1, justifyContent: 'space-around' }}>
                     {datesRender}
                 </View>
-            </View>
+            </Animated.View>
         );
     }
 }
