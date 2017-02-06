@@ -2,9 +2,8 @@
  * Created by jules on 04/02/17.
  */
 
-//noinspection JSUnresolvedVariable
 import React, { Component } from 'react';
-//noinspection JSUnresolvedVariable
+import { observer } from 'mobx-react/native';
 import {
     AppRegistry,
     StyleSheet,
@@ -19,22 +18,39 @@ import {
     ListItem,
 } from 'native-base';
 
+const styles = StyleSheet.create({
+    title: {
+        fontWeight: 'bold',
+        fontSize: 12,
+    },
+    detail: {
+        fontWeight: 'normal',
+        fontSize: 11
+    }
+});
+
+@observer
 export default class News extends Component {
 
     render() {
-
-        let items = ['', '', '', '','', '', '', '','', '', '', '','', '', '', ''];
+        const { store: { session } } = this.props;
 
         return (
             <Container>
                 <Content>
                     <List
-                        dataArray={items}
-                        renderRow={(item) =>
-                            <ListItem>
-                                <Text>{item}</Text>
-                            </ListItem>
-                        }>
+                        dataArray={session.news}
+                        renderRow={(news) => {
+                            return (
+                                <ListItem>
+                                    <Text style={styles.title}>{news.title}{'\n'}
+                                        <Text style={styles.detail}>
+                                            { news.details }
+                                        </Text>
+                                    </Text>
+                                </ListItem>
+                            );
+                        }}>
                     </List>
                 </Content>
             </Container>

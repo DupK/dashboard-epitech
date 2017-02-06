@@ -76,6 +76,7 @@ export default class Loading extends Component {
 
         if (session.isLogged) {
             await calendar.fetchCalendar();
+            await session.userInformation();
             Actions.home();
         } else {
             console.error('This should never happen');
