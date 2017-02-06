@@ -15,7 +15,6 @@ import Ranking from './ranking/Ranking';
 import store from '../stores';
 import _ from 'lodash';
 
-
 const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) => {
     const style = {
         flex: 1,
@@ -116,6 +115,9 @@ class Main extends Component {
                         title="Ranking"
                         hideNavBar={false}
                         component={Ranking}
+                        onRight={() => store.ranking.computePromotion({ refreshCache: true })}
+                        rightButtonImage={require('../assets/reload.png')}
+                        rightButtonIconStyle={getImageStyle()}
                     />
 
                 </Scene>

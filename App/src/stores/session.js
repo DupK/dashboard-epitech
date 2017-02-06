@@ -12,8 +12,8 @@ import newsParser from '../features/news/newsParser';
 class Session {
     @observable isLogged = false;
     @observable session = null;
-    news = [];
-    username = '';
+    @observable news = [];
+    @observable username = '';
 
     async login(username = '', password = '') {
         try {
@@ -46,10 +46,15 @@ class Session {
                     gpa: information.gpa[0].gpa,
                     logtime: information.nsstat.active,
                     expectedLogtime: information.nsstat.nslog_norm,
-                    promo: information.promo,
-                    thumbnail: information.picture
+                    promo: `tek${information.studentyear}`,
+                    year: information.scolaryear,
+                    location: information.location,
+                    thumbnail: information.picture,
+                    uid: information.uid,
                 }
             };
+
+            this.username = information.login;
         } catch (e) {
             console.error(e);
             stores.ui.errorState();

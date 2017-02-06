@@ -39,7 +39,7 @@ export default class News extends Component {
             <Container>
                 <Content>
                     <List
-                        dataArray={session.news}
+                        dataArray={session.news.slice()}
                         renderRow={(news) => {
                             return (
                                 <ListItem>
