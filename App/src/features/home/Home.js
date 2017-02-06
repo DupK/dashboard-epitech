@@ -3,6 +3,7 @@
  */
 
 import React, { Component } from 'react';
+import _ from 'lodash';
 import moment from 'moment';
 import {
     AppRegistry,
@@ -22,8 +23,6 @@ import {
 } from 'native-base';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
-import avatar from '../../assets/jules.jpg';
-import greenLight from '../../assets/circle-green.png';
 
 const styles = StyleSheet.create ({
 
@@ -66,6 +65,9 @@ const styles = StyleSheet.create ({
     trafficLightStyle: {
         flex: 0.06,
         alignSelf: 'center',
+        width: 20,
+        height: 20,
+        borderRadius: 50
     },
 
     logoutStyle: {
@@ -93,9 +95,29 @@ export default class Home extends Component {
         }
     };
 
+    logTimeColor(logtime) {
+        if (logtime < 20) {
+            return '#b72218';
+        } else if (logtime >= 20 && logtime < 30) {
+            return '#e68803';
+        }
+
+        return '#45BB27';
+    }
+
     render() {
-        const { store: { calendar } } = this.props;
+        const {
+            store:
+                {
+                    session: { news, session: { user } },
+                    calendar
+                }
+        } = this.props;
+
         const nextEvent = calendar.getNextEvent();
+        const lastNews = _(news)
+            .orderBy((news) => moment(news.date, 'YYYY-MM-DD HH:mm:ss'))
+            .last();
 
         return (
             <Container>
@@ -103,19 +125,22 @@ export default class Home extends Component {
                     <List>
                         <ListItem>
                             <View style={styles.ThumbStyle}>
-                                 <Thumbnail size={42} source={avatar} />
+                                <Thumbnail size={42} source={{ uri: user.thumbnail }} />
                             </View>
-                                <Text style={ styles.profileTitle }>Jules DUPONT{"\n"}
-                                <Text style={ styles.itemDescr }>60 credits | 2.70 GPA {"\n"}Connect time : 23.2h / 50.0h</Text>
+                            <Text style={ styles.profileTitle }>{user.name}{"\n"}
+                                <Text style={ styles.itemDescr }>
+                                    {user.credits} credits | {user.gpa} GPA {"\n"}
+                                    Connect time : {user.logtime}h / {user.expectedLogtime}h
+                                </Text>
                             </Text>
-                            <View style={styles.trafficLightStyle}>
-                                <Thumbnail size={20} source={greenLight}/>
-                            </View>
+                            <View style={[styles.trafficLightStyle, { backgroundColor: this.logTimeColor(user.logtime) }]} />
                         </ListItem>
                         <ListItem button onPress={this.menu.News}>
                             <Icon name="ios-paper" style={ styles.iconStyle }/>
                             <Text style={ styles.itemTitle }>News{"\n"}
-                                <Text style={ styles.itemDescr }>Insert news description..</Text>
+                                <Text style={ styles.itemDescr }>Last news:
+                                    {_.truncate(lastNews.title, { length: 75, separator: '...'})}
+                                </Text>
                             </Text>
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
                         </ListItem>
