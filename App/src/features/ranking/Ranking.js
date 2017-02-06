@@ -4,9 +4,10 @@ import {
     Text,
     View,
     Image,
+    ListView,
 } from 'react-native';
 import { observer } from 'mobx-react/native';
-import { Container, Content, List } from 'native-base';
+import { Container, Content } from 'native-base';
 import styles from './styles.js';
 
 @observer
@@ -14,6 +15,8 @@ export default class Ranking extends Component {
 
     constructor(props) {
         super(props);
+
+        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     }
 
     async componentWillMount() {
@@ -64,10 +67,11 @@ export default class Ranking extends Component {
             <Container>
                 <Content>
                     { this.renderSelf(selfRank) }
-                    <List
-                        dataArray={ranking.promotion.slice()}
-                        renderRow={(student) => this.renderStudent(student)}>
-                    </List>
+                    <ListView
+                        style={styles.list}
+                        dataSource={this.ds.cloneWithRows(ranking.promotion.slice())}
+                        renderRow={this.renderStudent}
+                    />
                 </Content>
             </Container>
         );
