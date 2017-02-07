@@ -107,11 +107,11 @@ export default class Home extends Component {
 
     render() {
         const {
-            store:
-                {
-                    session: { news, session: { user } },
-                    calendar
-                }
+            store: {
+                session: { news, session: { user } },
+                calendar,
+                ranking
+            }
         } = this.props;
 
         const nextEvent = calendar.getNextEvent();
@@ -138,8 +138,8 @@ export default class Home extends Component {
                         <ListItem button onPress={this.menu.News}>
                             <Icon name="ios-paper" style={ styles.iconStyle }/>
                             <Text style={ styles.itemTitle }>News{"\n"}
-                                <Text style={ styles.itemDescr }>Last news:
-                                    {_.truncate(lastNews.title, { length: 75, separator: '...'})}
+                                <Text style={ styles.itemDescr }>
+                                    {_.truncate(lastNews.title, {length: 80, separator: '...'})}
                                 </Text>
                             </Text>
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
@@ -168,7 +168,13 @@ export default class Home extends Component {
                         <ListItem button onPress={this.menu.Ranking}>
                             <Icon name="md-medal" style={ styles.iconStyle }/>
                             <Text style={ styles.itemTitle }>Ranking{"\n"}
-                                <Text style={ styles.itemDescr }>Insert ranking description..</Text>
+                                <Text style={ styles.itemDescr }>
+                                    {
+                                        ranking.rankPosition !== '0th'
+                                            ? `You\'re currently ${ranking.rankPosition} in your promotion.`
+                                            : 'Click here to get your rank.'
+                                    }
+                                </Text>
                             </Text>
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
                         </ListItem>

@@ -14,7 +14,6 @@ import {
 import {
     Container,
     Content,
-    Icon,
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { observer } from 'mobx-react/native';
@@ -72,11 +71,16 @@ const styles = StyleSheet.create({
 export default class Loading extends Component {
 
     async componentWillMount() {
-        const { store: { session, calendar } } = this.props;
+        const { store: { session, calendar, ranking } } = this.props;
 
         if (session.isLogged) {
-            await calendar.fetchCalendar();
-            await session.userInformation();
+
+            await Promise.all([
+                calendar.fetchCalendar(),
+                session.userInformation(),
+            ]);
+            await ranking.selfRankPosition({ fromCache: true });
+
             Actions.home();
         } else {
             console.error('This should never happen');
