@@ -42,6 +42,12 @@ const getImageStyle = () => {
     return { width: 20, height: 20, marginRight: 5}
 };
 
+/*
+* type 'reset' on Login Scene forces all scenes to unmount when logging out.
+* This prevents mobx from re-rendering Home scene when logging in again (by changing variable that Home observes)
+* even though the scene is not in foreground, and therefore causing the app to crash.
+*/
+
 class Main extends Component {
     render() {
         return (
@@ -60,6 +66,7 @@ class Main extends Component {
                         key="login"
                         hideNavBar={true}
                         component={Login}
+                        type="reset"
                     />
 
                     <Scene

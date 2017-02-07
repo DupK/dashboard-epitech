@@ -19,13 +19,13 @@ class Session {
         try {
             const session = await Intra.login(username, password);
 
-            if (session.message !== "Veuillez vous connecter") {
+            if (session && session.message !== "Veuillez vous connecter") {
                 this.username = username;
-                this.isLogged = true;
                 this.session = {
                     board: session.board
                 };
                 this.news = newsParser(session.history);
+                this.isLogged = true;
             }
         } catch (e) {
             console.error(e);

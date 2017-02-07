@@ -74,11 +74,11 @@ export default class Loading extends Component {
         const { store: { session, calendar, ranking } } = this.props;
 
         if (session.isLogged) {
+
             await Promise.all([
                 calendar.fetchCalendar(),
                 session.userInformation(),
             ]);
-
             await ranking.selfRankPosition({ fromCache: true });
 
             Actions.home();

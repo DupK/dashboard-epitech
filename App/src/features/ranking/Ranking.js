@@ -6,6 +6,7 @@ import {
     Image,
     ListView,
 } from 'react-native';
+import LoadingIndicator from 'react-native-spinkit';
 import { observer } from 'mobx-react/native';
 import { Container, Content } from 'native-base';
 import styles from './styles.js';
@@ -40,13 +41,15 @@ export default class Ranking extends Component {
 
     renderSelf(student) {
         return (
-
-            <View style={styles.selfDataContainer}>
-                <Text style={styles.rank}>{student.rank}</Text>
-                <Image source={{uri: student.picture}} style={styles.picture} />
-                <Text style={styles.mainText}>{student.title}{'\n'}{student.credits} credits</Text>
-                <Image source={student.img} style={styles.flag} />
-                <Text style={styles.gpaText}>{student.gpa[0].gpa}</Text>
+            <View>
+                <View style={styles.dataContainer}>
+                    <Text style={styles.rank}>{student.rank}</Text>
+                    <Image source={{uri: student.picture}} style={styles.picture} />
+                    <Text style={styles.mainText}>{student.title}{'\n'}{student.credits} credits</Text>
+                    <Image source={student.img} style={styles.flag} />
+                    <Text style={styles.gpaText}>{student.gpa[0].gpa}</Text>
+                </View>
+                <View style={styles.separator} />
             </View>
         )
     }
@@ -57,8 +60,14 @@ export default class Ranking extends Component {
 
         if (!ranking.promotion.length) {
             return (
-                <View>
-                    <Text>Loading ranking. This may take a while...</Text>
+                <View style={styles.loadingContainer}>
+                    <LoadingIndicator
+                        isVisible={!ranking.promotion.length}
+                        color="#2c3e50"
+                        type="9CubeGrid"
+                        size={60}
+                    />
+                    <Text style={styles.loadingText}>Loading ranking... This may take some time.</Text>
                 </View>
             );
         }
@@ -71,6 +80,7 @@ export default class Ranking extends Component {
                         style={styles.list}
                         dataSource={this.ds.cloneWithRows(ranking.promotion.slice())}
                         renderRow={this.renderStudent}
+                        removeClippedSubviews
                     />
                 </Content>
             </Container>

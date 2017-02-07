@@ -21,8 +21,6 @@ import { Actions } from 'react-native-router-flux';
 import backgroundSource from '../../assets/background.png';
 import logoSource from '../../assets/logo.png';
 
-
-
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#2c3e50',
@@ -171,10 +169,10 @@ export default class Login extends Component {
 
                             <View style={styles.forgroundTitleBox}>
 
-                            <Text style={styles.boxTitle}>
-                                <Text style={styles.title}>Dashboard</Text>
-                                <Text style={styles.subTitle}> Epitech</Text>
-                            </Text>
+                                <Text style={styles.boxTitle}>
+                                    <Text style={styles.title}>Dashboard</Text>
+                                    <Text style={styles.subTitle}> Epitech</Text>
+                                </Text>
 
                             </View>
 

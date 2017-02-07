@@ -40,6 +40,7 @@ class Ranking {
         });
 
         const promotionSorted = _(promotionWithDetails)
+            .filter(({ gpa: [ value ] }) => value.gpa !== 'n/a')
             .orderBy(({ gpa: [ value ] }) => value.gpa, ['desc'])
             .map((student, i) => {
                 if (i == 0) {
@@ -52,6 +53,7 @@ class Ranking {
                 }
             })
             .value();
+
         this.promotion = promotionSorted;
         await this.selfRankPosition({ ranking: promotionSorted });
         await storage.save('ranking', promotionSorted);

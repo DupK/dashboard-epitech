@@ -5,18 +5,26 @@
 const BASE_URL = 'https://intra.epitech.eu';
 
 export function login(login, password) {
-    return fetch(BASE_URL, {
+    const formData = new FormData();
+    formData.append('login', login);
+    formData.append('password', password);
+    formData.append('remind', 'on');
+
+    return fetch(BASE_URL + '/', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
+            'Content-Type': 'multipart/form-data',
         },
-        body: JSON.stringify({
-            login,
-            password,
-        })
+        body: formData
     })
-        .then((response) => response.json());
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return null;
+            }
+        });
 }
 
 export function fetchStudent(student) {
