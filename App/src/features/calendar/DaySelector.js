@@ -26,7 +26,14 @@ export default class DaySelector extends Component {
         // Hook the pan responder to interpretate gestures.
         this.panResponder = PanResponder.create({
             onMoveShouldSetResponderCapture: () => true,
-            onMoveShouldSetPanResponderCapture: () => true,
+
+            //Prevent panResponder from overriding onPress() callbacks
+            onMoveShouldSetPanResponder: (evt, gestureState) => {
+                return Math.abs(gestureState.dy) > 5;
+            },
+            onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+                return Math.abs(gestureState.dy) > 5;
+            },
             onPanResponderGrant: () => {
                 this.state.pan.setOffset({ x: 0, y: this.state.pan.y._value });
                 this.state.pan.setValue({ x: 0, y: 0 });
