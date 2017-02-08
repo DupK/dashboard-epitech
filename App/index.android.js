@@ -8,12 +8,7 @@ import React, { Component } from 'react';
 
 /* Modules */
 
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { AppRegistry } from 'react-native';
 
 import Main from './src/features/main';
 

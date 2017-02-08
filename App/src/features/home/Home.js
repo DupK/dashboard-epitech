@@ -11,7 +11,7 @@ import {
     Text,
     View,
     Image,
-    Alert,
+    BackAndroid
 } from 'react-native';
 import {
     Container,
@@ -82,6 +82,12 @@ const styles = StyleSheet.create ({
 @observer
 export default class Home extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.handleBackAndroid = this.handleBackAndroid.bind(this);
+    }
+
     menu = {
         News: () => Actions.news(),
         Projects: () => Actions.projects(),
@@ -94,6 +100,20 @@ export default class Home extends Component {
             Actions.login();
         }
     };
+
+    handleBackAndroid() {
+        BackAndroid.exitApp();
+
+        return false;
+    }
+
+    componentDidMount() {
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBackAndroid);
+    }
+
+    componentWillUnmount() {
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBackAndroid);
+    }
 
     logTimeColor(logtime) {
         if (logtime < 20) {
