@@ -164,69 +164,30 @@ const PROJECTS = [
 const DAY_IN_PIXEL = 5;
 const WEEK_IN_PIXEL = DAY_IN_PIXEL * 7;
 const MONTH_IN_PIXEL = WEEK_IN_PIXEL * 4;
+const MONTH_OFFSET = 11;
 
 const PROJECT_LINE_HEIGHT = 12;
+const MONTH_BAR_HEIGHT = 20;
 
-const YEAR_BAR_HEIGHT = 20;
-const MONTHS_BAR_HEIGHT = 20;
-const CALENDAR_HEIGHT = MONTHS_BAR_HEIGHT;
-
-const currentYear = moment();
-const nextYear = moment().add(1, 'Y');
-
-const MONTHS = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-];
+const MONTHS = _.map(moment.monthsShort(), (month) => {
+    return {
+        name: month,
+        days: moment(month, 'MMM').daysInMonth()
+    }
+});
 
 const Month = ({ month }) => {
     return (
         <View style={{
-            width: MONTH_IN_PIXEL,
+            width: DAY_IN_PIXEL * month.days,
         }}>
-            <Text style={{ color: 'white' }}>{ month }</Text>
+            <Text style={{ color: 'white' }}>{ month.name }</Text>
         </View>
     );
 };
 
 Month.propTypes = {
-    month: React.PropTypes.string,
-};
-
-const YearBar = ({ scrollPosition }) => {
-    const { width } = Dimensions.get('window');
-    const year = scrollPosition < (MONTH_IN_PIXEL * 12)
-        ? currentYear.format('YYYY')
-        : nextYear.format('YYYY');
-
-    return (
-        <View style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'absolute',
-            top: 0,
-            height: YEAR_BAR_HEIGHT,
-            width: width,
-            backgroundColor: '#617487',
-        }}>
-            <Text style={{ color: 'white' }}>{year}</Text>
-        </View>
-    );
-};
-
-YearBar.propTypes = {
-    scrollPosition: React.PropTypes.number,
+    month: React.PropTypes.object,
 };
 
 const MonthBar = () =>  {
@@ -234,7 +195,7 @@ const MonthBar = () =>  {
         <View style={{
             position: 'absolute',
             top: 0,
-            height: MONTHS_BAR_HEIGHT,
+            height: MONTH_BAR_HEIGHT,
             width: (MONTH_IN_PIXEL * 12) * 2,
             backgroundColor: '#617487',
         }}>
@@ -243,8 +204,7 @@ const MonthBar = () =>  {
                 flexDirection: 'row',
                 alignItems: 'center',
             }}>
-                { _.map(MONTHS, (month) => <Month key={month} month={month}/>) }
-                { _.map(MONTHS, (month) => <Month key={month} month={month}/>) }
+                { _.map(MONTHS, (month) => <Month key={month.name} month={month}/>) }
             </View>
         </View>
     );
@@ -253,8 +213,8 @@ const MonthBar = () =>  {
 const ProjectLine = ({ projectName, nthProject, start, end }) => {
     const parsedStart = moment(start, 'DD-MM-YYYY, HH[h]mm');
     const parsedEnd = moment(end, 'DD-MM-YYYY, HH[h]mm');
-    const nbWeeks = parsedEnd.diff(parsedStart, 'day') / 7;
-    const timelineStart = parsedStart.diff(moment().startOf('year'), 'day') / 7;
+    const nbDays = parsedEnd.diff(parsedStart, 'day');
+    const timelineStart = parsedStart.diff(moment().startOf('year'), 'day');
 
     return (
         <View
@@ -263,8 +223,8 @@ const ProjectLine = ({ projectName, nthProject, start, end }) => {
                 position: 'absolute',
                 height: PROJECT_LINE_HEIGHT * 3,
                 width: (MONTH_IN_PIXEL * 12) * 2,
-                top: 40 + (CALENDAR_HEIGHT + ((PROJECT_LINE_HEIGHT + 25) * nthProject)),
-                left: timelineStart * WEEK_IN_PIXEL,
+                top: 40 + (MONTH_BAR_HEIGHT + ((PROJECT_LINE_HEIGHT + 25) * nthProject)),
+                left: MONTH_OFFSET + (timelineStart * DAY_IN_PIXEL),
             }}
         >
             <Text style={{ color: 'white', position: 'relative', fontSize: 10 }}>
@@ -274,7 +234,7 @@ const ProjectLine = ({ projectName, nthProject, start, end }) => {
                 position: 'relative',
                 top: (PROJECT_LINE_HEIGHT / 2) - 3,
                 height: PROJECT_LINE_HEIGHT,
-                width: nbWeeks * WEEK_IN_PIXEL,
+                width: nbDays * DAY_IN_PIXEL,
                 borderRadius: 30,
                 backgroundColor: 'rgba(255, 255, 255, 0.5)',
             }}/>
@@ -291,15 +251,16 @@ ProjectLine.propTypes = {
 
 const VerticalMonthDelimitors = ({ nthMonth }) => {
     const { height } = Dimensions.get('window');
+    const monthsInPixelBefore = _.sumBy(_.take(MONTHS, nthMonth), (month) => (month.days * DAY_IN_PIXEL));
 
     return (
         <View
             style={{
-                top: CALENDAR_HEIGHT,
+                top: MONTH_BAR_HEIGHT,
                 position: 'absolute',
                 width: 1,
                 height,
-                left: 11 + (nthMonth * MONTH_IN_PIXEL),
+                left: MONTH_OFFSET + monthsInPixelBefore,
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
             }}
         />
@@ -312,10 +273,42 @@ VerticalMonthDelimitors.propTypes = {
 
 const Today = () => {
     const { height } = Dimensions.get('window');
+    const daysSinceStartOfYear = moment().diff(moment().startOf('year'), 'day');
+    const dayNumber = moment().format('DD');
 
     return (
-        <View>
-
+        <View
+            style={{
+                top: MONTH_BAR_HEIGHT + 10,
+                position: 'absolute',
+                width: 20,
+                height,
+                left: MONTH_OFFSET + (daysSinceStartOfYear * DAY_IN_PIXEL) - 10,
+            }}
+        >
+            <View
+                style={{
+                    position: 'relative',
+                    width: 20,
+                    height: 20,
+                    left: 0,
+                    backgroundColor: '#1B3147',
+                    borderRadius: 5,
+                }}
+            >
+                <Text style={{ alignSelf: 'center', color: 'white' }}>
+                    {dayNumber}
+                </Text>
+            </View>
+            <View
+                style={{
+                    position: 'relative',
+                    width: 1,
+                    height,
+                    left: 10,
+                    backgroundColor: '#1B3147',
+                }}
+            />
         </View>
     );
 };
@@ -345,17 +338,17 @@ export default class Projects extends Component {
                 >
                     <ScrollView>
                         <View style={{
-                            width: (MONTH_IN_PIXEL * 12) * 2,
+                            width: (MONTH_IN_PIXEL * 12),
                             height
                         }}/>
 
+                        <Today/>
                         {
                             _.map(MONTHS, (month, i) => (
                                 <VerticalMonthDelimitors key={i} nthMonth={i}/>
                             ))
                         }
                         <MonthBar/>
-
                         {
                             _.map(PROJECTS, (project, i) => (
                                 <ProjectLine
