@@ -3,7 +3,7 @@ Dashboard Epitech
 ![react]
 (https://getsiphon.com/blog/images/future-of-apps/react-native.png "react")
 
-An **Epitech** intranet application
+An open source **Epitech** intranet application
 
 Library
 -
