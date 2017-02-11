@@ -1,4 +1,4 @@
-Version 1.0.0
+Dashboard Epitech
 -
 ![react]
 (https://getsiphon.com/blog/images/future-of-apps/react-native.png "react")
@@ -11,6 +11,12 @@ Library
 * [Native base](http://nativebase.io/)
 * [Lodash](https://lodash.com/)
 * [Bluebird](http://bluebirdjs.com/docs/getting-started.html)
+* [Router flux](https://github.com/aksonov/react-native-router-flux)
+
+API documentation
+-
+
+* [gist.github.com/DupK](https://gist.github.com/DupK)
 
 MIT License
 -
