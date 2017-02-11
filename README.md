@@ -2,8 +2,6 @@ Dashboard Epitech
 -
 ![react]
 (https://getsiphon.com/blog/images/future-of-apps/react-native.png "react")
-![hub]
-(http://data.bloggif.com/distant/user/store/e/1/1/5/02110691a57fcb18525ef4db299f511e.jpeg "hub")
 
 An **Epitech** intranet application
 
