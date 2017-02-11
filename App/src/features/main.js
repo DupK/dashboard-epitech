@@ -11,6 +11,7 @@ import Loading from './loading/Loading';
 import News from './news/News';
 import Projects from './projects/Projects';
 import Marks from './marks/Marks';
+import MarkDetails from './marks/MarkDetails';
 import Ranking from './ranking/Ranking';
 import store from '../stores';
 import _ from 'lodash';
@@ -115,6 +116,13 @@ class Main extends Component {
                         title="Marks"
                         hideNavBar={false}
                         component={Marks}
+                    />
+
+                    <Scene
+                        key="markDetails"
+                        title="marks-details"
+                        hideNavBar={false}
+                        component={MarkDetails}
                     />
 
                     <Scene
