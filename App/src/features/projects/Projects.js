@@ -161,20 +161,21 @@ const PROJECTS = [
     }
 ];
 
+//SCALE VALUE
 const DAY_IN_PIXEL = 5;
-const WEEK_IN_PIXEL = DAY_IN_PIXEL * 7;
-const MONTH_IN_PIXEL = WEEK_IN_PIXEL * 4;
-const MONTH_OFFSET = 11;
 
+const MONTH_OFFSET = 11;
 const PROJECT_LINE_HEIGHT = 12;
 const MONTH_BAR_HEIGHT = 20;
-
-const MONTHS = _.map(moment.monthsShort(), (month) => {
+const MONTHS = _.map([
+    ...moment.monthsShort(),
+    'Jan'], (month) => {
     return {
         name: month,
         days: moment(month, 'MMM').daysInMonth()
     }
 });
+const MONTH_BAR_WIDTH = _.sumBy(MONTHS, (month) => month.days * DAY_IN_PIXEL);
 
 const Month = ({ month }) => {
     return (
@@ -191,26 +192,31 @@ Month.propTypes = {
 };
 
 const MonthBar = () =>  {
+    const { width } = Dimensions.get('window');
+
     return (
         <View style={{
             position: 'absolute',
             top: 0,
             height: MONTH_BAR_HEIGHT,
-            width: (MONTH_IN_PIXEL * 12) * 2,
+            width: MONTH_BAR_WIDTH + width,
             backgroundColor: '#617487',
         }}>
             <View style={{
                 flex: 1,
                 flexDirection: 'row',
                 alignItems: 'center',
+                position: 'relative',
+                left: width / 2,
             }}>
-                { _.map(MONTHS, (month) => <Month key={month.name} month={month}/>) }
+                { _.map(MONTHS, (month, i) => <Month key={i} month={month}/>) }
             </View>
         </View>
     );
 };
 
 const ProjectLine = ({ projectName, nthProject, start, end }) => {
+    const { width } = Dimensions.get('window');
     const parsedStart = moment(start, 'DD-MM-YYYY, HH[h]mm');
     const parsedEnd = moment(end, 'DD-MM-YYYY, HH[h]mm');
     const nbDays = parsedEnd.diff(parsedStart, 'day');
@@ -222,9 +228,9 @@ const ProjectLine = ({ projectName, nthProject, start, end }) => {
                 flexDirection: 'column',
                 position: 'absolute',
                 height: PROJECT_LINE_HEIGHT * 3,
-                width: (MONTH_IN_PIXEL * 12) * 2,
+                width: 500,
                 top: 40 + (MONTH_BAR_HEIGHT + ((PROJECT_LINE_HEIGHT + 25) * nthProject)),
-                left: MONTH_OFFSET + (timelineStart * DAY_IN_PIXEL),
+                left: MONTH_OFFSET + (timelineStart * DAY_IN_PIXEL) + width / 2,
             }}
         >
             <Text style={{ color: 'white', position: 'relative', fontSize: 10 }}>
@@ -250,7 +256,7 @@ ProjectLine.propTypes = {
 };
 
 const VerticalMonthDelimitors = ({ nthMonth }) => {
-    const { height } = Dimensions.get('window');
+    const { height, width } = Dimensions.get('window');
     const monthsInPixelBefore = _.sumBy(_.take(MONTHS, nthMonth), (month) => (month.days * DAY_IN_PIXEL));
 
     return (
@@ -260,7 +266,7 @@ const VerticalMonthDelimitors = ({ nthMonth }) => {
                 position: 'absolute',
                 width: 1,
                 height,
-                left: MONTH_OFFSET + monthsInPixelBefore,
+                left: MONTH_OFFSET + monthsInPixelBefore + width / 2,
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
             }}
         />
@@ -272,7 +278,7 @@ VerticalMonthDelimitors.propTypes = {
 };
 
 const Today = () => {
-    const { height } = Dimensions.get('window');
+    const { height, width } = Dimensions.get('window');
     const daysSinceStartOfYear = moment().diff(moment().startOf('year'), 'day');
     const dayNumber = moment().format('DD');
 
@@ -283,7 +289,7 @@ const Today = () => {
                 position: 'absolute',
                 width: 20,
                 height,
-                left: MONTH_OFFSET + (daysSinceStartOfYear * DAY_IN_PIXEL) - 10,
+                left: MONTH_OFFSET + (daysSinceStartOfYear * DAY_IN_PIXEL) - 10 + width / 2,
             }}
         >
             <View
@@ -313,6 +319,53 @@ const Today = () => {
     );
 };
 
+const SelectedDay = ({ scrollPosition }) => {
+    const { height, width } = Dimensions.get('window');
+    const todayPosition = scrollPosition / DAY_IN_PIXEL;
+
+    const date = moment().startOf('year').add(todayPosition, 'd');
+
+    return (
+        <View
+            style={{
+                top: MONTH_BAR_HEIGHT + 10,
+                position: 'absolute',
+                width: 20,
+                height,
+                left: (width / 2) - 10 + MONTH_OFFSET,
+            }}
+        >
+            <View
+                style={{
+                    position: 'relative',
+                    width: 20,
+                    height: 20,
+                    left: 0,
+                    backgroundColor: '#1B3147',
+                    borderRadius: 5,
+                }}
+            >
+                <Text style={{ alignSelf: 'center', color: 'white' }}>
+                    {date.format('DD') }
+                </Text>
+            </View>
+            <View
+                style={{
+                    position: 'relative',
+                    width: 1,
+                    height,
+                    left: 10,
+                    backgroundColor: '#1B3147',
+                }}
+            />
+        </View>
+    );
+};
+
+SelectedDay.propTypes = {
+    scrollPosition: React.PropTypes.number,
+};
+
 export default class Projects extends Component {
 
     constructor(props) {
@@ -322,10 +375,30 @@ export default class Projects extends Component {
             scrollPosition: 0,
         };
 
+        this.handleScroll = this.handleScroll.bind(this);
+    }
+
+    componentDidMount() {
+        const daysSinceStartOfYear = moment().diff(moment().startOf('year'), 'day');
+        const todayPosition = (daysSinceStartOfYear * DAY_IN_PIXEL);
+
+        setTimeout(() => {
+            this.scrollView.scrollTo({ x: todayPosition, animated: true });
+            this.setState({ scrollPosition: todayPosition });
+        }, 0);
+    }
+
+    handleScroll(e) {
+        const currentScrollPosition = e.nativeEvent.contentOffset.x;
+
+        this.setState({
+            scrollPosition: currentScrollPosition,
+        });
     }
 
     render() {
-        const { height } = Dimensions.get('window');
+        const { height, width } = Dimensions.get('window');
+        const viewWidth = MONTH_BAR_WIDTH - ( moment().startOf('year').daysInMonth() * DAY_IN_PIXEL) + width;
 
         return (
             <View style={{
@@ -333,12 +406,14 @@ export default class Projects extends Component {
                 backgroundColor: '#42586E'
             }}>
                 <ScrollView
+                    ref={(ref) => this.scrollView = ref}
                     style={{ position: 'absolute' }}
                     horizontal
+                    onScroll={this.handleScroll}
                 >
                     <ScrollView>
                         <View style={{
-                            width: (MONTH_IN_PIXEL * 12),
+                            width: viewWidth,
                             height
                         }}/>
 
@@ -363,6 +438,7 @@ export default class Projects extends Component {
 
                     </ScrollView>
                 </ScrollView>
+                <SelectedDay scrollPosition={this.state.scrollPosition}/>
             </View>
         );
     }
