@@ -44,6 +44,13 @@ const styles = StyleSheet.create ({
         fontFamily: 'Nunito-ExtraLight',
     },
 
+    itemTitleLogout: {
+        flex: 0.75,
+        fontWeight: 'bold',
+        fontFamily: 'Nunito-ExtraLight',
+        alignSelf: 'center',
+    },
+
     profileTitle: {
         flex: 0.75,
         fontWeight: 'bold',
@@ -200,8 +207,7 @@ export default class Home extends Component {
                         </ListItem>
                         <ListItem button onPress={this.menu.Logout}>
                             <Icon name="md-log-out" style={ styles.logoutStyle }/>
-                            <Text style={ styles.itemTitle }>Logout{"\n"}
-                                <Text style={ styles.itemDescr }>Insert logout description..</Text>
+                            <Text style={ styles.itemTitleLogout }>Logout{"\n"}
                             </Text>
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
                         </ListItem>
