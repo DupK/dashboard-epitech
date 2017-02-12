@@ -26,6 +26,28 @@ API documentation
 <br><br>
 * [gist.github.com/DupK](https://gist.github.com/DupK)
 
+General API endpoints
+
+
+#### <hr id="general-home">GET `/?format=json` <sup><sup>[SESSION REQUIRED](#authentication)</sup></sup>
+Return general information
+
+
+#### <hr id="general-coming">GET `/user/notification/coming?format=json` <sup><sup>[SESSION REQUIRED](#authentication)</sup></sup>
+Return upcoming appointments
+
+
+#### <hr id="general-message">GET `/user/notification/message?format=json` <sup><sup>[SESSION REQUIRED](#authentication)</sup></sup>
+Return notification messages
+
+
+#### <hr id="general-alert">GET `/user/notification/alert?format=json` <sup><sup>[SESSION REQUIRED](#authentication)</sup></sup>
+Return notification alerts
+
+
+#### <hr id="general-absences">GET `/user/notification/missed?format=json` <sup><sup>[SESSION REQUIRED](#authentication)</sup></sup>
+Return notification alerts
+
 MIT License
 -
 
