@@ -6,7 +6,6 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react/native';
 import {
     AppRegistry,
-    StyleSheet,
     Text,
     View,
     Image,
@@ -17,23 +16,7 @@ import {
     List,
     ListItem,
 } from 'native-base';
-
-const styles = StyleSheet.create({
-    title: {
-        fontWeight: 'bold',
-        fontSize: 12,
-        color: "#FFFFFF",
-    },
-    detail: {
-        fontWeight: 'normal',
-        fontSize: 11,
-        color: "#FFFFFF",
-    },
-
-    container: {
-        backgroundColor: "#2c3e50"
-    },
-});
+import styles from './styles.js';
 
 @observer
 export default class News extends Component {
