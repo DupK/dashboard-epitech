@@ -26,9 +26,6 @@ API documentation
 <br><br>
 * [gist.github.com/DupK](https://gist.github.com/DupK)
 
-General API endpoints
-
-
 #### <hr id="general-home">GET `/?format=json` <sup><sup>[SESSION REQUIRED](#authentication)</sup></sup>
 Return general information
 
