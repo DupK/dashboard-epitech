@@ -22,7 +22,7 @@ API documentation
 -
 <br>
 ![epitech]
-(http://data.bloggif.com/distant/user/store/2/a/1/4/b53f50d530aa2fc8a8fc3583bfac41a2.png "epitech")
+(http://img15.hostingpics.net/pics/11857358ko.png "epitech")
 <br><br>
 * [gist.github.com/DupK](https://gist.github.com/DupK)
 
