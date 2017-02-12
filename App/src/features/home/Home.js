@@ -27,6 +27,7 @@ export default class Home extends Component {
         Calendar: () => Actions.calendar(),
         Marks: () => Actions.marks(),
         Ranking: () => Actions.ranking(),
+        Token: () => Actions.token(),
         Logout: async () => {
             await this.props.store.session.logout();
             this.props.store.ui.defaultState();
@@ -128,6 +129,13 @@ export default class Home extends Component {
                                             : 'Click here to get your rank.'
                                     }
                                 </Text>
+                            </Text>
+                            <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
+                        </ListItem>
+                        <ListItem button onPress={this.menu.Token}>
+                            <IconFA name="ticket" style={ styles.iconStyleFA }/>
+                            <Text style={ styles.itemTitle }>Token{"\n"}
+                                <Text style={ styles.itemDescr }>Insert token description..</Text>
                             </Text>
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
                         </ListItem>
