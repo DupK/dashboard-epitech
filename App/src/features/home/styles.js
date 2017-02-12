@@ -12,6 +12,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
+    iconStyleFA: {
+        flex: 0.15,
+        fontSize: 40,
+        color: "#2c3e50",
+        justifyContent: 'center',
+    },
+
     ThumbStyle: {
         flex: 0.15,
         justifyContent: 'center',

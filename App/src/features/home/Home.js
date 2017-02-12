@@ -5,23 +5,11 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
-import {
-    AppRegistry,
-    Text,
-    View,
-    Image,
-    BackAndroid
-} from 'react-native';
-import {
-    Container,
-    Content,
-    Icon,
-    List,
-    ListItem,
-    Thumbnail,
-} from 'native-base';
+import { AppRegistry, Text, View, Image, BackAndroid} from 'react-native';
+import { Container, Content, Icon, List, ListItem, Thumbnail,} from 'native-base';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
+import IconFA from 'react-native-vector-icons/FontAwesome';
 import styles from './styles.js';
 
 @observer
@@ -110,7 +98,7 @@ export default class Home extends Component {
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
                         </ListItem>
                         <ListItem button onPress={this.menu.Projects}>
-                            <Icon name="ios-code" style={ styles.iconStyle }/>
+                            <IconFA name="tasks" style={ styles.iconStyleFA }/>
                             <Text style={ styles.itemTitle }>Projects{"\n"}
                                 <Text style={ styles.itemDescr }>Insert projects description..</Text>
                             </Text>
@@ -131,7 +119,7 @@ export default class Home extends Component {
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
                         </ListItem>
                         <ListItem button onPress={this.menu.Ranking}>
-                            <Icon name="md-medal" style={ styles.iconStyle }/>
+                            <IconFA name="rocket" style={ styles.iconStyleFA }/>
                             <Text style={ styles.itemTitle }>Ranking{"\n"}
                                 <Text style={ styles.itemDescr }>
                                     {
