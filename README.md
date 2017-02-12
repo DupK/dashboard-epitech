@@ -4,14 +4,14 @@ Dashboard Epitech
 ![rocket]
 (http://data.bloggif.com/distant/user/store/1/1/e/2/c6baf604efae8cab50435d4689d02e11.png "rocket")
 
-An open source **Epitech** intranet application
+An open source **Epitech** intranet application with awesome features
 
 Library
 -
 <br>
 ![react]
 (https://getsiphon.com/blog/images/future-of-apps/react-native.png "react")
-<br>
+<br><br>
 * [React native](https://facebook.github.io/react-native/)
 * [Native base](http://nativebase.io/)
 * [Lodash](https://lodash.com/)
@@ -20,7 +20,10 @@ Library
 
 API documentation
 -
-
+<br>
+![epitech]
+(http://data.bloggif.com/distant/user/store/2/a/1/4/b53f50d530aa2fc8a8fc3583bfac41a2.png "epitech")
+<br><br>
 * [gist.github.com/DupK](https://gist.github.com/DupK)
 
 MIT License
