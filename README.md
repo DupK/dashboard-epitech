@@ -1,5 +1,7 @@
 Dashboard Epitech
 -
+![rocket]
+(http://img15.hostingpics.net/pics/395699rocket.png "rocket")
 ![react]
 (https://getsiphon.com/blog/images/future-of-apps/react-native.png "react")
 
