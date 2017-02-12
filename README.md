@@ -8,7 +8,7 @@ An open source **Epitech** intranet application
 
 Library
 -
-
+<br>
 
 ![rocket]
 (http://data.bloggif.com/distant/user/store/1/1/e/2/c6baf604efae8cab50435d4689d02e11.png "rocket")<br>
