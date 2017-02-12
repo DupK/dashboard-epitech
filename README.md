@@ -8,8 +8,10 @@ An open source **Epitech** intranet application
 
 Library
 -
+<br>
 ![react]
 (https://getsiphon.com/blog/images/future-of-apps/react-native.png "react")
+<br>
 * [React native](https://facebook.github.io/react-native/)
 * [Native base](http://nativebase.io/)
 * [Lodash](https://lodash.com/)
