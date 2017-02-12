@@ -5,7 +5,6 @@
 import React, { Component } from 'react';
 import {
     AppRegistry,
-    StyleSheet,
     Text,
     View,
     Image,
@@ -17,57 +16,7 @@ import {
     Content,
     List,
 } from 'native-base';
-
-const styles = StyleSheet.create({
-
-    listContainerStyle: {
-        flex: 0.6,
-    },
-
-    scoringContainerStyle: {
-        backgroundColor: '#39516a',
-        flex: 0.4,
-    },
-
-    itemStyle: {
-        flex: 0.95,
-        color: '#FFFFFF',
-        fontFamily: 'Nunito-ExtraLight',
-        fontSize: 13,
-    },
-
-    markStyle: {
-        flex: 0.05,
-        color: '#FFFFFF',
-    },
-
-    itemContainerStyle: {
-        flexDirection: 'row',
-    },
-
-    container: {
-        flexDirection: 'row',
-        margin: 5,
-        height: 30,
-        borderBottomWidth: 1,
-        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
-    },
-
-    name: {
-        flex: 0.95,
-        color: '#FFFFFF',
-        fontFamily: 'Nunito-ExtraLight',
-        alignSelf: 'center',
-    },
-
-    mark: {
-        flex: 0.05,
-        color: '#FFFFFF',
-        fontFamily: 'Nunito-ExtraLight',
-        alignSelf: 'center',
-    },
-
-});
+import styles from './styles.js';
 
 const MarkDetails = ({ mark }) => {
 

@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 //noinspection JSUnresolvedVariable
 import {
     AppRegistry,
-    StyleSheet,
     Text,
     View,
     Image,
@@ -23,75 +22,7 @@ import {
 import _ from "lodash";
 import Accordion from 'react-native-collapsible/Accordion';
 import { Actions } from 'react-native-router-flux';
-
-const styles = StyleSheet.create({
-
-    headerContainer: {
-        backgroundColor: '#2c3e50',
-        flex: 0.1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-
-    headerArrow: {
-        alignSelf: 'center',
-        margin: 20,
-    },
-
-    headerIcon: {
-        color: '#FFFFFF',
-    },
-
-    bodyContainer: {
-        flex: 0.9,
-    },
-
-    header: {
-        backgroundColor: '#2c3e50',
-        height: 35,
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderLeftWidth: 3,
-        borderLeftColor: '#62c462',
-    },
-
-    headerText: {
-        color: '#FFFFFF',
-        fontFamily: 'Nunito-Light',
-        marginLeft: 10,
-    },
-
-    subHeaderText: {
-        borderBottomWidth: 1,
-        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
-    },
-
-    content: {
-        alignItems: 'center',
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        margin: 5,
-        borderLeftWidth: 1,
-        borderLeftColor: 'rgba(255, 255, 255, 0.3)',
-    },
-
-    textContent: {
-        color: '#FFFFFF',
-        fontFamily: 'Nunito-ExtraLight',
-        marginLeft: 10,
-        fontSize: 13,
-    },
-
-    markContent: {
-        color: '#FFFFFF',
-        fontFamily: 'Nunito-ExtraLight',
-        marginRight: 10,
-    },
-
-});
+import styles from './styles.js';
 
 const section = [
     {
