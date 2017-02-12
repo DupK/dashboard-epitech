@@ -12,6 +12,7 @@ import News from './news/News';
 import Projects from './projects/Projects';
 import Marks from './marks/Marks';
 import MarkDetails from './marks/MarkDetails';
+import Token from './token/Token';
 import Ranking from './ranking/Ranking';
 import store from '../stores';
 import _ from 'lodash';
@@ -133,6 +134,13 @@ class Main extends Component {
                         onRight={() => store.ranking.computePromotion({ refreshCache: true })}
                         rightButtonImage={require('../assets/reload.png')}
                         rightButtonIconStyle={getImageStyle()}
+                    />
+
+                    <Scene
+                        key="token"
+                        title="Token"
+                        hideNavBar={false}
+                        component={Token}
                     />
 
                 </Scene>
