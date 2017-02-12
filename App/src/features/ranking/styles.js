@@ -4,25 +4,27 @@ const styles = StyleSheet.create({
 
     container: {
         paddingBottom: 40,
-        backgroundColor: "#bdc3c7"
+        backgroundColor: "#39516a"
     },
 
     loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#2c3e50',
     },
 
     loadingText: {
         fontFamily: 'Nunito-ExtraLight',
         fontSize: 14,
-        marginTop: 5,
+        color: "#FFFFFF",
+        margin: 15,
     },
 
     dataContainer: {
         margin: 1,
         padding: 10,
-        backgroundColor: '#ecf0f1',
+        backgroundColor: '#2c3e50',
         flexDirection: 'row',
         alignItems: 'center',
     },
@@ -31,13 +33,14 @@ const styles = StyleSheet.create({
         height: 8,
         borderBottomWidth: 1,
         borderBottomColor: 'white',
-        backgroundColor: '#2c3e50'
+        backgroundColor: '#FFF'
     },
 
     gpaText: {
         fontWeight: 'bold',
         fontSize: 15,
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        color: "#FFFFFF",
     },
 
     mainText: {
@@ -45,6 +48,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         flex: 1,
         alignItems: 'center',
+        color: "#FFFFFF",
     },
 
     picture: {
@@ -66,7 +70,8 @@ const styles = StyleSheet.create({
     rank: {
         fontWeight: 'bold',
         fontSize: 15,
-        marginRight: 10
+        marginRight: 10,
+        color: "#FFFFFF",
     }
 
 });
