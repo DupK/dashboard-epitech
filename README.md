@@ -23,7 +23,7 @@ API documentation
 <br>
 ![epitech]
 (http://img15.hostingpics.net/pics/11857358ko.png "epitech")
-<br><br>
+<br>
 * [gist.github.com/DupK](https://gist.github.com/DupK)
 
 #### <hr id="general-home">GET `/?format=json` <sup><sup>[SESSION REQUIRED](#authentication)</sup></sup>
