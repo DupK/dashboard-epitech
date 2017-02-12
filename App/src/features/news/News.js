@@ -22,11 +22,17 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: 'bold',
         fontSize: 12,
+        color: "#FFFFFF",
     },
     detail: {
         fontWeight: 'normal',
-        fontSize: 11
-    }
+        fontSize: 11,
+        color: "#FFFFFF",
+    },
+
+    container: {
+        backgroundColor: "#2c3e50"
+    },
 });
 
 @observer
@@ -36,8 +42,8 @@ export default class News extends Component {
         const { store: { session } } = this.props;
 
         return (
-            <Container>
-                <Content>
+            <Container style={styles.container}>
+                <Content contentContainerStyle={{backgroundColor: '#2c3e50'}}>
                     <List
                         dataArray={session.news.slice()}
                         renderRow={(news) => {
