@@ -23,13 +23,14 @@ import styles from './styles.js';
 export default class Loading extends Component {
 
     async componentWillMount() {
-        const { store: { session, calendar, ranking, marks } } = this.props;
+        const { store: { session, calendar, ranking, marks, projects } } = this.props;
 
         if (session.isLogged) {
             session.finishedLoading = false;
             await Promise.all([
                 calendar.fetchCalendar(),
                 session.userInformation(),
+                projects.fetchProjects(),
             ]);
             await Promise.all([
                 marks.fetchMarks(session.username),
