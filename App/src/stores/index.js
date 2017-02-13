@@ -13,4 +13,5 @@ export default {
     marks: MarksStore,
     projects: ProjectsStore,
     marks: MarksStore,
+    projects: ProjectsStore,
 };
