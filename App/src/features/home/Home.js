@@ -55,7 +55,6 @@ export default class Home extends Component {
         } else if (logtime >= 20 && logtime < 30) {
             return '#e68803';
         }
-
         return '#45BB27';
     }
 
@@ -87,7 +86,7 @@ export default class Home extends Component {
                                     Connect time : {user.logtime}h / {user.expectedLogtime}h
                                 </Text>
                             </Text>
-                            <View style={[styles.trafficLightStyle, { backgroundColor: this.logTimeColor(user.logtime) }]} />
+                            <IconFA name="flag" style={[styles.trafficLightStyle, { color: this.logTimeColor(user.logtime) }]} />
                         </ListItem>
                         <ListItem button onPress={this.menu.News}>
                             <Icon name="ios-paper" style={ styles.iconStyle }/>

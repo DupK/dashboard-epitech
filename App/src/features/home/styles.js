@@ -56,11 +56,10 @@ const styles = StyleSheet.create({
     },
 
     trafficLightStyle: {
-        flex: 0.06,
+        flex: 0.05,
+        fontSize: 17,
         alignSelf: 'center',
-        width: 20,
-        height: 20,
-        borderRadius: 50
+
     },
 
     logoutStyle: {
