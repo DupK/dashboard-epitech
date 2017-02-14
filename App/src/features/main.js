@@ -64,7 +64,6 @@ class Main extends Component {
                 <Scene key="root">
 
                     <Scene
-                        initial
                         key="login"
                         hideNavBar={true}
                         component={Login}
@@ -113,6 +112,7 @@ class Main extends Component {
                     />
 
                     <Scene
+                        initial
                         key="marks"
                         title="Marks"
                         hideNavBar={false}
