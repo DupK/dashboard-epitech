@@ -31,15 +31,23 @@ const styles = StyleSheet.create({
         height: 35,
         flex: 1,
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        borderLeftWidth: 3,
-        borderLeftColor: '#62c462',
+        borderLeftWidth: 5,
     },
 
-    headerText: {
+    moduleText: {
+        flex: 10,
         color: '#FFFFFF',
         fontFamily: 'Nunito-Light',
         marginLeft: 10,
+    },
+
+    gradeText: {
+        flex: 0.8,
+        color: '#FFFFFF',
+        fontFamily: 'Nunito-Light',
+        fontWeight: 'bold',
     },
 
     subHeaderText: {
@@ -76,9 +84,16 @@ const styles = StyleSheet.create({
         flex: 0.6,
     },
 
+    selectedMark: {
+        backgroundColor: '#FFFFFF'
+    },
+
     scoringContainerStyle: {
         backgroundColor: '#39516a',
-        flex: 0.4,
+        flex: 0.25,
+        padding: 10,
+        borderTopWidth: 0.5,
+        borderTopColor: 'white',
     },
 
     itemStyle: {
@@ -99,6 +114,7 @@ const styles = StyleSheet.create({
 
     container: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         margin: 5,
         height: 30,
         borderBottomWidth: 1,
@@ -106,17 +122,31 @@ const styles = StyleSheet.create({
     },
 
     name: {
-        flex: 0.95,
         color: '#FFFFFF',
         fontFamily: 'Nunito-ExtraLight',
         alignSelf: 'center',
+        marginLeft: 5,
     },
 
     mark: {
-        flex: 0.05,
         color: '#FFFFFF',
         fontFamily: 'Nunito-ExtraLight',
         alignSelf: 'center',
+        marginRight: 5,
+    },
+
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#2c3e50',
+    },
+
+    loadingText: {
+        fontFamily: 'Nunito-ExtraLight',
+        fontSize: 14,
+        color: "#FFFFFF",
+        margin: 15,
     },
 });
 

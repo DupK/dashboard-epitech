@@ -23,160 +23,108 @@ import _ from "lodash";
 import Accordion from 'react-native-collapsible/Accordion';
 import { Actions } from 'react-native-router-flux';
 import styles from './styles.js';
-import MARKS from './data';
 
-const section = [
-    {
-        title: 'B4 - Memory Unix',
-        content: 'Malloc',
-        mark: '12',
-    },
-    {
-        title: 'B4 - System Unix',
-        content: 'myFtp',
-        mark: '12',
-    },
-    {
-        title: 'B4 - Internship',
-        content: 'myUnd',
-        mark: '12',
-    },
-    {
-        title: 'B4 - Memory Unix',
-        content: 'Malloc',
-        mark: '12',
-    },
-    {
-        title: 'B4 - System Unix',
-        content: 'myFtp',
-        mark: '12',
-    },
-];
+import { observer } from 'mobx-react/native';
 
+const gradeColors = {
+    A: '#62c462',
+    B: '#62c462',
+    C: '#62c462',
+    D: '#62c462',
+    E: '#F44336',
+    '-': '#FFD783',
+};
+
+@observer
 export default class Marks extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            nbSemester: 0,
-            currentSemester: 0,
-            marks: {},
-        };
-
         this.nextSemester = this.nextSemester.bind(this);
         this.previousSemester = this.previousSemester.bind(this);
     };
 
-    componentWillMount() {
-        this.parseMarks();
-    }
-
-
-    _renderHeader(semester) {
-        const [, semesterMarks] = semester;
-        const title = _.first(semesterMarks).title;
+    _renderHeader(module) {
+        const title = module.title;
+        const grade = module.grade;
 
         return (
             <View>
-                <View style={styles.header}>
-                    <Text style={styles.headerText}>{title}</Text>
+                <View style={[styles.header, { borderLeftColor: gradeColors[grade] }]}>
+                    <Text style={styles.moduleText}>{title}</Text>
+                    <Text style={styles.gradeText}>{grade}</Text>
                 </View>
                 <View style={styles.subHeaderText} />
             </View>
         );
     }
 
-    _renderContent(semester) {
-        const [, semesterMarks] = semester;
-
-        console.log('semesterMarks', semesterMarks);
-
+    _renderContent(module) {
         return (
-            <TouchableOpacity onPress={() => Actions.markDetails({ mark: section })}>
-                <View>
-                    {
-                        _.map(semesterMarks, (marks, i) => (
-                            _.map(marks, (mark, j) => (
-                                <View key={`${i}-${j}`} style={styles.content}>
-                                    <Text style={styles.textContent}> {mark.title}</Text>
-                                    <Text style={styles.markContent}> {mark.final_note}</Text>
-                                </View>
-                            ))
-                        ))
+            <View>
+                {
+                    module.marks.length
+                        ? (
+                            _.map(module.marks, (mark, i) => (
+                                <TouchableOpacity
+                                    key={`${mark.date}-${i}`}
+                                    onPress={() => Actions.markDetails({ mark, title: mark.title })}
+                                >
+                                    <View style={styles.content}>
+                                        <Text style={styles.textContent}> {mark.title}</Text>
+                                        <Text style={styles.markContent}> {mark.note}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            )))
+                        : (
 
-                    }
-                </View>
-            </TouchableOpacity>
+                            <View style={styles.content}>
+                                <Text style={styles.textContent}> {module.title}</Text>
+                                <Text style={styles.markContent}> {module.grade}</Text>
+                            </View>
+                        )
+                }
+            </View>
         );
     }
 
+    getOrdinalNumber(n) {
+        const s = ['th', 'st', 'nd', 'rd'];
+        const v = n % 100;
 
-    parseMarks() {
-        const notes = _(MARKS.notes)
-            .filter((note) => _.startsWith(note.titlemodule, 'B'))
-            .groupBy((note) => note.codemodule)
-            .value();
-
-        const marks = _(MARKS.modules)
-            .filter((module) => _.startsWith(module.title, 'B'))
-            .groupBy((module) => module.title.substring(0, 2))
-            .toPairs()
-            .map(([semester, modules]) => {
-                const modulesWithMark = _(modules)
-                    .groupBy((module) => module.codemodule)
-                    .toPairs()
-                    .map(([codemodule, modules]) => {
-                        const newModule = _.map(modules, (module) =>({
-                            marks: _.filter(notes[codemodule], (note) => note.codeinstance === module.codeinstance),
-                            grade: module.grade,
-                            date: module.date_ins,
-                            title: module.title,
-                        }));
-
-                        return [
-                            codemodule,
-                            _.uniq(newModule),
-                        ]
-                    })
-                    .value();
-
-                return [
-                    semester,
-                    modulesWithMark,
-                ];
-            })
-            .fromPairs()
-            .value();
-
-        console.log(marks);
-
-        this.setState({
-            marks,
-            nbSemester: _.size(marks),
-        })
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
     }
 
-    nextSemester() {
-        const { nbSemester, currentSemester } = this.state;
-        const nextSemester = (currentSemester > nbSemester) ? 0 : currentSemester + 1;
 
-        this.setState({ currentSemester: nextSemester });
+    nextSemester() {
+        const { store: { marks } } = this.props;
+        const { nbSemester, currentSemester } = marks;
+
+        marks.setCurrentSemester((currentSemester >= nbSemester) ? 1 : currentSemester + 1);
     }
 
     previousSemester() {
-        const { nbSemester, currentSemester } = this.state;
-        const previousSemester = (currentSemester < 0) ? nbSemester : currentSemester - 1;
+        const { store: { marks } } = this.props;
+        const { nbSemester, currentSemester } = marks;
 
-        this.setState({ currentSemester: previousSemester });
+        marks.setCurrentSemester((currentSemester <= 1) ? nbSemester : currentSemester - 1);
     }
 
     render() {
-        const { marks, currentSemester } = this.state;
+        const { store: { marks } } = this.props;
+        const { marksBySemesters, currentSemester, nbSemester } = marks;
+
+        const semesterId = (currentSemester < nbSemester)
+            ? `B${currentSemester}`
+            : 'Others';
+        const semesterText = (currentSemester < nbSemester)
+            ? `${this.getOrdinalNumber(currentSemester)} semester`
+            : 'Others';
 
         return (
             <Container>
-                <Content contentContainerStyle={{flex:1, backgroundColor: '#39516a'}}>
+                <Content contentContainerStyle={{ flex: 1, backgroundColor: '#39516a' }}>
                     <View style={styles.headerContainer}>
                         <Button
                             style={styles.headerArrow}
@@ -187,7 +135,7 @@ export default class Marks extends Component {
                             <Icon style={styles.headerIcon} name="ios-arrow-back"/>
                         </Button>
                         <Text style={styles.headerIcon}>
-                            First semester
+                            { semesterText }
                         </Text>
                         <Button
                             style={styles.headerArrow}
@@ -201,7 +149,7 @@ export default class Marks extends Component {
                     <View style={styles.bodyContainer}>
                         <ScrollView>
                             <Accordion
-                                sections={marks[`B${currentSemester}`]}
+                                sections={marksBySemesters[semesterId].slice()}
                                 renderHeader={this._renderHeader}
                                 renderContent={this._renderContent}
                             />

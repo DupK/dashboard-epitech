@@ -64,6 +64,7 @@ class Main extends Component {
                 <Scene key="root">
 
                     <Scene
+                        initial
                         key="login"
                         hideNavBar={true}
                         component={Login}
@@ -112,7 +113,6 @@ class Main extends Component {
                     />
 
                     <Scene
-                        initial
                         key="marks"
                         title="Marks"
                         hideNavBar={false}
@@ -124,6 +124,9 @@ class Main extends Component {
                         title="marks-details"
                         hideNavBar={false}
                         component={MarkDetails}
+                        onRight={() => store.marks.sort()}
+                        rightButtonImage={require('../assets/sort.png')}
+                        rightButtonIconStyle={getImageStyle()}
                     />
 
                     <Scene

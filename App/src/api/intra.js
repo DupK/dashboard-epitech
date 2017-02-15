@@ -92,3 +92,25 @@ export async function fetchPromotion(location, year, promo) {
         console.error(e.message)
     }
 }
+
+export function fetchMarks(user) {
+    return fetch(`${BASE_URL}/user/${user}/notes?format=json`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
+}
+
+export function fetchProjectMarks(year, module, instance, activity) {
+    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/note?format=json`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
+}

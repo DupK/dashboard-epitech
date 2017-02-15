@@ -23,7 +23,7 @@ import styles from './styles.js';
 export default class Loading extends Component {
 
     async componentWillMount() {
-        const { store: { session, calendar, ranking } } = this.props;
+        const { store: { session, calendar, ranking, marks } } = this.props;
 
         if (session.isLogged) {
             session.finishedLoading = false;
@@ -31,7 +31,10 @@ export default class Loading extends Component {
                 calendar.fetchCalendar(),
                 session.userInformation(),
             ]);
-            await ranking.selfRankPosition({ fromCache: true });
+            await Promise.all([
+                marks.fetchMarks(session.username),
+                ranking.selfRankPosition({ fromCache: true }),
+            ]);
 
             session.finishedLoading = true;
             Actions.home();
