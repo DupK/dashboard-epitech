@@ -28,6 +28,7 @@ export default class Home extends Component {
         Marks: () => Actions.marks(),
         Ranking: () => Actions.ranking(),
         Token: () => Actions.token(),
+        Stats: () => Actions.stats(),
         Logout: async () => {
             await this.props.store.session.logout();
             this.props.store.ui.defaultState();
@@ -125,9 +126,16 @@ export default class Home extends Component {
                                     {
                                         ranking.rankPosition !== '0th'
                                             ? `You\'re currently ${ranking.rankPosition} in your promotion.`
-                                            : 'Click here to get your rank.'
+                                            : 'Click here to get your rank.'    
                                     }
                                 </Text>
+                            </Text>
+                            <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
+                        </ListItem>
+                        <ListItem button onPress={this.menu.Stats}>
+                            <IconFA name="pie-chart" style={ styles.iconStyleFA }/>
+                            <Text style={ styles.itemTitle }>Statistics{"\n"}
+                                <Text style={ styles.itemDescr }>Insert statistics description..</Text>
                             </Text>
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
                         </ListItem>
