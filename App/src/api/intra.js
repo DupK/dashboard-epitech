@@ -95,8 +95,11 @@ export async function fetchPromotion(location, year, promo) {
     }
 }
 
-export function fetchMarks(user) {
-    return fetch(`${BASE_URL}/user/${user}/notes?format=json`, {
+export function fetchProjects() {
+    const start = moment().startOf('year').format('YYYY-MM-DD');
+    const end = moment().add(1, 'year').format('YYYY-MM-DD');
+
+    return fetch(`${BASE_URL}/module/board?format=json&start=${start}&end=${end}`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -138,11 +141,8 @@ export function fetchProjectMarks(year, module, instance, activity) {
         .then((response) => response.json());
 }
 
-export function fetchProjects() {
-    const start = moment().startOf('year').format('YYYY-MM-DD');
-    const end = moment().add(1, 'year').format('YYYY-MM-DD');
-
-    return fetch(`${BASE_URL}/module/board?format=json&start=${start}&end=${end}`, {
+export function fetchMarks(user) {
+    return fetch(`${BASE_URL}/user/${user}/notes?format=json`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',

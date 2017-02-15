@@ -12,4 +12,5 @@ export default {
     ranking: RankingStore,
     marks: MarksStore,
     projects: ProjectsStore,
+    marks: MarksStore,
 };
