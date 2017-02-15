@@ -26,7 +26,7 @@ export default class News extends Component {
 
         return (
             <Container style={styles.container}>
-                <Content contentContainerStyle={{backgroundColor: '#2c3e50'}}>
+                <Content contentContainerStyle={{backgroundColor: '#FFFFFF'}}>
                     <List
                         dataArray={session.news.slice()}
                         renderRow={(news) => {
