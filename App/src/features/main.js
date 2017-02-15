@@ -12,6 +12,7 @@ import News from './news/News';
 import Projects from './projects/Projects';
 import Marks from './marks/Marks';
 import MarkDetails from './marks/MarkDetails';
+import Stats from './stats/Stats';
 import Token from './token/Token';
 import Ranking from './ranking/Ranking';
 import store from '../stores';
@@ -141,6 +142,13 @@ class Main extends Component {
                         title="Token"
                         hideNavBar={false}
                         component={Token}
+                    />
+
+                    <Scene
+                        key="stats"
+                        title="Statistics"
+                        hideNavBar={false}
+                        component={Stats}
                     />
 
                 </Scene>
