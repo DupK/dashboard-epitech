@@ -28,7 +28,6 @@ export default class Ranking extends Component {
 
     renderStudent(student) {
         return (
-
             <View style={styles.dataContainer}>
                 <Text style={styles.rank}>{student.rank}</Text>
                 <Image source={{uri: student.picture}} style={styles.picture} />

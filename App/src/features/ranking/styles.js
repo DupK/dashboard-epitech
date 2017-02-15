@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     },
 
     separator: {
-        height: 8,
+        height: 2,
         borderBottomWidth: 1,
         borderBottomColor: 'white',
         backgroundColor: '#FFF'
