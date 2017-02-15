@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 100,
         flexDirection: 'row',
-        height: 8,
+        height: 15,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "#ffffff",
@@ -48,7 +48,7 @@ ProgressBar.propTypes = {
 
 ProgressBar.defaultProps = {
     progressColor: "#2c3e50",
-    backgroundColor: "#49657f",
+    backgroundColor: "#597895",
     borderColor: "#ffffff",
     completePercentage: 50,
 };

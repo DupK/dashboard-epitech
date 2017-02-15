@@ -7,6 +7,7 @@ import {
     ScrollView,
     Text,
     View,
+    TouchableOpacity
 } from 'react-native';
 import {
     Container,
@@ -32,44 +33,59 @@ export default class Projects extends Component {
         const parsedEnd = moment(project.end_acti, 'YYYY-MM-DD, HH:mm:ss');
         const projectDuration = parsedEnd.diff(parsedStart, 'days');
         const durationSoFar = moment().diff(parsedStart, 'days');
-        const progress = Math.max(0, Math.min((durationSoFar / projectDuration) * 100, 100));
+        const progress = Math.max(1, Math.min((durationSoFar / projectDuration) * 100, 100));
 
         return (
             <ListItem>
-                <View style={{
-                    flex: 1,
-                    flexDirection: 'row'
-                }}>
+                <TouchableOpacity>
                     <View style={{
-                        flex: 100,
+                        flex: 1,
+                        flexDirection: 'row',
                     }}>
                         <View style={{
-                            flex: 1,
-                            flexDirection: 'column',
-                            margin: 5,
+                            flex: 100,
                         }}>
-                            <Text>{ project.acti_title }</Text>
-                            <Text>{ project.title_module }</Text>
-                            <View style={{ marginTop: 10 }}>
-                                <View style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between'
-                                }}>
-                                    <Text>{ parsedStart.fromNow() }</Text>
-                                    <Text>{ parsedEnd.fromNow() }</Text>
+                            <View style={{
+                                flex: 1,
+                                flexDirection: 'column',
+                            }}>
+                                <Text style={{
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Nunito-Light',
+                                }}>{ project.acti_title }</Text>
+                                <Text style={{
+                                    fontFamily: 'Nunito-Light',
+                                    fontSize: 12,
+                                }}>{ project.title_module }</Text>
+                                <View style={{ marginTop: 10 }}>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                    }}>
+                                        <Text style={{
+                                            fontFamily: 'Nunito-Light',
+                                            fontSize: 10,
+                                        }}>{ parsedStart.fromNow() }</Text>
+                                        <Text style={{
+                                            fontFamily: 'Nunito-Light',
+                                            fontSize: 10,
+                                        }}>{ parsedEnd.fromNow() }</Text>
+                                    </View>
+                                    <ProgressBar completePercentage={progress}/>
                                 </View>
-                                <ProgressBar completePercentage={progress}/>
                             </View>
                         </View>
+                        <View style={{
+                            flex: 15,
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                        }}>
+                            <Icon name="ios-arrow-forward-outline" style={{
+                                fontSize: 14,
+                            }}/>
+                        </View>
                     </View>
-                    <View style={{
-                        flex: 15,
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                    }}>
-                        <Icon name="ios-arrow-forward-outline"/>
-                    </View>
-                </View>
+                </TouchableOpacity>
             </ListItem>
         );
     }
