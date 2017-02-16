@@ -5,6 +5,7 @@ import {
     View,
     Image,
     Alert,
+    ScrollView,
 } from 'react-native';
 import {
     Container,
@@ -26,13 +27,13 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            username: '',
+            password: '',
+        };
+
         this.login = this.login.bind(this);
     }
-
-    state = {
-        username: '',
-        password: '',
-    };
 
     async componentWillMount() {
         const { store: { session } } = this.props;
@@ -97,16 +98,20 @@ export default class Login extends Component {
 
                         <View style={{flex: 0.15}}/>
 
-                        <View style={{ flex: 0.45, justifyContent: 'center'}}>
-
+                        <View  style={{ flex: 0.45, justifyContent: 'center'}}>
                             <InputGroup>
 
                                 <Icon name="ios-mail-outline" style={styles.iconInputMail} />
                                 <Input
+                                    maxLength={40}
+                                    keyboardType="email-address"
+                                    spellCheck={false}
+                                    multiline={false}
                                     placeholder="Email Address"
                                     placeholderTextColor="#FFFFFF"
                                     style={styles.mailInput}
                                     onChangeText={(text) => this.setState({ username: text })}
+                                    onSubmitEditing={() => { this.passwordInput._root.focus()} }
                                 />
 
                             </InputGroup>
@@ -115,11 +120,16 @@ export default class Login extends Component {
 
                                 <Icon name="ios-lock-outline" style={styles.iconInputPwd} />
                                 <Input
+                                    ref={(input) => this.passwordInput = input}
+                                    multiline={false}
+                                    focus={true}
+                                    maxLength={8}
                                     placeholder="Unix Password"
                                     placeholderTextColor="#FFFFFF"
                                     secureTextEntry
                                     style={styles.pwdInput}
                                     onChangeText={(text) => this.setState({ password: text })}
+                                    onSubmitEditing={this.login}
                                 />
 
                             </InputGroup>
