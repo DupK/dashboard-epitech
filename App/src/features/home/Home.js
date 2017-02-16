@@ -64,7 +64,8 @@ export default class Home extends Component {
             store: {
                 session: { news, session: { user } },
                 calendar,
-                ranking
+                ranking,
+                marks
             }
         } = this.props;
 
@@ -72,6 +73,7 @@ export default class Home extends Component {
         const lastNews = _(news)
             .orderBy((news) => moment(news.date, 'YYYY-MM-DD HH:mm:ss'))
             .last();
+        const lastMark = marks.lastMark;
 
         return (
             <Container>
@@ -108,14 +110,16 @@ export default class Home extends Component {
                         <ListItem button onPress={this.menu.Calendar}>
                             <Icon name="ios-calendar" style={ styles.iconStyle }/>
                             <Text style={ styles.itemTitle }>Calendar{"\n"}
-                                <Text style={ styles.itemDescr }>Next event: {nextEvent.title} {moment(nextEvent.start).fromNow()}</Text>
+                                <Text style={ styles.itemDescr }>Your next event "{nextEvent.title}" starts {moment(nextEvent.start).fromNow()}</Text>
                             </Text>
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
                         </ListItem>
                         <ListItem button onPress={this.menu.Marks}>
                             <Icon name="md-bookmarks" style={ styles.iconStyle }/>
                             <Text style={ styles.itemTitle }>Marks{"\n"}
-                                <Text style={ styles.itemDescr }>Insert marks description..</Text>
+                                <Text style={ styles.itemDescr }>
+                                    Your last mark from { lastMark.titlemodule } - { lastMark.title } is {lastMark.final_note}
+                                </Text>
                             </Text>
                             <Icon name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
                         </ListItem>

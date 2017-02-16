@@ -125,6 +125,9 @@ class Main extends Component {
                         title="marks-details"
                         hideNavBar={false}
                         component={MarkDetails}
+                        onRight={() => store.marks.sort()}
+                        rightButtonImage={require('../assets/sort.png')}
+                        rightButtonIconStyle={getImageStyle()}
                     />
 
                     <Scene
