@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import moment from 'moment';
 import { observer } from 'mobx-react/native';
+import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import {
     AppRegistry,
     StyleSheet,
@@ -9,14 +9,19 @@ import {
     View,
     TouchableOpacity
 } from 'react-native';
-import {
-    Container,
-    Content,
-    List,
-    ListItem,
-    Icon
-} from 'native-base';
-import ProgressBar from './ProgressBar';
+import ProjectsTimeline from './ProjectsTimeline';
+import ProjectsList from './ProjectsList';
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    page: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
 
 @observer
 export default class Projects extends Component {
@@ -24,86 +29,60 @@ export default class Projects extends Component {
     constructor(props) {
         super(props);
 
-        this.renderProject = this.renderProject.bind(this);
+        this.state = {
+            index: 0,
+            routes: [
+                { key: '1', title: 'Listing' },
+                { key: '2', title: 'Overview' },
+            ],
+        };
 
     }
 
-    renderProject(project) {
-        const parsedStart = moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss');
-        const parsedEnd = moment(project.end_acti, 'YYYY-MM-DD, HH:mm:ss');
-        const projectDuration = parsedEnd.diff(parsedStart, 'days');
-        const durationSoFar = moment().diff(parsedStart, 'days');
-        const progress = Math.max(1, Math.min((durationSoFar / projectDuration) * 100, 100));
+    _handleChangeTab = (index) => {
+        this.setState({ index });
+    };
 
-        return (
-            <ListItem>
-                <TouchableOpacity>
-                    <View style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                    }}>
-                        <View style={{
-                            flex: 100,
-                        }}>
-                            <View style={{
-                                flex: 1,
-                                flexDirection: 'column',
-                            }}>
-                                <Text style={{
-                                    fontWeight: 'bold',
-                                    fontFamily: 'Nunito-Light',
-                                }}>{ project.acti_title }</Text>
-                                <Text style={{
-                                    fontFamily: 'Nunito-Light',
-                                    fontSize: 12,
-                                }}>{ project.title_module }</Text>
-                                <View style={{ marginTop: 10 }}>
-                                    <View style={{
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                    }}>
-                                        <Text style={{
-                                            fontFamily: 'Nunito-Light',
-                                            fontSize: 10,
-                                        }}>{ parsedStart.fromNow() }</Text>
-                                        <Text style={{
-                                            fontFamily: 'Nunito-Light',
-                                            fontSize: 10,
-                                        }}>{ parsedEnd.fromNow() }</Text>
-                                    </View>
-                                    <ProgressBar completePercentage={progress}/>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={{
-                            flex: 15,
-                            justifyContent: 'center',
-                            alignItems: 'flex-end',
-                        }}>
-                            <Icon name="ios-arrow-forward-outline" style={{
-                                fontSize: 14,
-                            }}/>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </ListItem>
-        );
-    }
+    _renderFooter = (props) => {
+        return <TabBar
+            {...props}
+            indicatorStyle={{
+                backgroundColor: 'white',
+            }}
+            style={{
+                backgroundColor: '#2c3e50',
+                height: 50,
+            }}
+            labelStyle={{
+                fontFamily: 'Nunito-Light',
+                fontSize: 14,
+            }}
+
+        />;
+    };
+
+    _renderScene = ({ route }) => {
+        const { store: { projects: projectsStore } } = this.props;
+
+        switch (route.key) {
+            case '1':
+                return <ProjectsList projectsStore={projectsStore} />;
+            case '2':
+                return <ProjectsTimeline projectsStore={projectsStore} />;
+            default:
+                return null;
+        }
+    };
 
     render() {
-        const { store: { projects: projectsStore } } = this.props;
-        const projects = projectsStore.projects.slice();
-
         return (
-            <Container>
-                <Content>
-                    <List
-                        dataArray={projects}
-                        renderRow={this.renderProject}
-                    >
-                    </List>
-                </Content>
-            </Container>
+            <TabViewAnimated
+                style={styles.container}
+                navigationState={this.state}
+                renderScene={this._renderScene}
+                renderFooter={this._renderFooter}
+                onRequestChangeTab={this._handleChangeTab}
+            />
         );
     }
 }
