@@ -15,6 +15,7 @@ import {
     Container,
     Content,
     List,
+    Icon,
 } from 'native-base';
 import LoadingIndicator from 'react-native-spinkit';
 import { observer } from 'mobx-react/native';
@@ -39,12 +40,23 @@ class MarkDetails extends Component {
         await marks.fetchProjectNotes(year, codeModule, instance, activity);
     }
 
+    formatName(name) {
+        return name
+            .split(' ')
+            .map(_.capitalize)
+            .join(' ');
+    }
+
+    formatMark(mark) {
+        return Math.round(mark * 100) / 100;
+    }
+
     renderComment() {
         const { store: { marks } } = this.props;
 
         return (
-            <Text style={{ color: 'white' }}>
-            {
+            <Text style={{ color: 'white', fontSize: 12, }}>
+                {
                     marks.selectedMark
                         ? marks.selectedMark.comment
                         : 'Select a user'
@@ -60,7 +72,7 @@ class MarkDetails extends Component {
             return '#2c3e50';
         }
 
-        return (mark.user_title === marks.selectedMark.user_title) ? '#39516a' : '#2c3e50';
+        return (mark.login === marks.selectedMark.login) ? '#39516a' : '#2c3e50';
     }
 
     renderRow(mark) {
@@ -74,21 +86,38 @@ class MarkDetails extends Component {
                         borderRadius: 5,
                     }]}
                 >
-                    <View style={{
-                        flexDirection: 'row',
-                    }}>
+                    <View style={{ flexDirection: 'row' }}>
                         <Image
-                            style={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 5,
-                                marginRight: 10,
-                            }}
+                            style={styles.avatar}
                             source={{ uri: mark.picture }}
                         />
-                        <Text style={styles.name}>{mark.user_title}</Text>
+                        <Text style={styles.name}>{ this.formatName(mark.user_title) }</Text>
                     </View>
-                    <Text style={[styles.mark]}>{Math.round(mark.note * 100) / 100}</Text>
+                    <Text style={[styles.mark]}>{this.formatMark(mark.note)}</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
+    renderSelf(mark) {
+        const { store: { marks } } = this.props;
+
+        return (
+            <TouchableOpacity onPress={() => marks.selectMark(mark)}>
+                <View
+                    style={[styles.container, {
+                        backgroundColor: '#39516a',
+                        borderRadius: 5,
+                    }]}
+                >
+                    <View style={{ flexDirection: 'row' }}>
+                        <Image
+                            style={styles.avatar}
+                            source={{ uri: mark.picture }}
+                        />
+                        <Text style={styles.name}>{ this.formatName(mark.user_title) }</Text>
+                    </View>
+                    <Text style={[styles.mark]}>{this.formatMark(mark.note)}</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -110,6 +139,20 @@ class MarkDetails extends Component {
         );
     }
 
+    renderArrowDown() {
+        const { store: { marks } } = this.props;
+
+        if (marks.arrowDownHidden) {
+            return null;
+        }
+
+        return (
+            <View style={{ position: 'absolute', bottom: 0, left: 40, right: 0 }}>
+                <Icon style={{ color: 'white', fontSize: 20, alignSelf: 'center' }} name="ios-arrow-down"/>
+            </View>
+        );
+    }
+
     render() {
         const { store: { marks, ui } } = this.props;
 
@@ -122,19 +165,24 @@ class MarkDetails extends Component {
         return (
             <Container>
                 <Content contentContainerStyle={{flex: 1, backgroundColor: '#2c3e50'}}>
-                    <View style={{
-                        borderBottomWidth: 1,
-                        borderBottomColor: 'white',
-                    }}>
-                        { this.renderRow(selfMark) }
-                    </View>
+                    <View style={styles.selfRow}>{ this.renderSelf(selfMark) }</View>
                     <View style={styles.listContainerStyle}>
                         <List
                             dataArray={marks.projectMarks.slice()}
                             renderRow={this.renderRow}
+                            onScroll={() => marks.hideArrowDown()}
                         />
+                        { this.renderArrowDown() }
                     </View>
                     <View style={styles.scoringContainerStyle}>
+                        <View style={styles.studentMarkContainer}>
+                            <Text style={styles.studentMarkText}>
+                                { this.formatName(marks.selectedMark.user_title) }
+                            </Text>
+                            <Text style={styles.studentMarkText}>
+                                {this.formatMark(marks.selectedMark.note)}
+                            </Text>
+                        </View>
                         <ScrollView>{ this.renderComment() }</ScrollView>
                     </View>
                 </Content>

@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import autobind from 'autobind-decorator';
+import moment from 'moment';
 import { observable, computed, action } from 'mobx';
 import ui from './uiState'
 import session from './session'
@@ -22,12 +23,14 @@ const sortMethods = {
 
 @autobind
 class Marks {
+    @observable rawMarks = {};
     @observable marksBySemesters = {};
     @observable nbSemester = 0;
     @observable currentSemester = 1;
 
     @observable projectMarks = [];
     @observable selectedMark = null;
+    @observable arrowDownHidden = false;
 
     constructor() {
         this.sortMethod = sortMethods.byName;
@@ -36,6 +39,7 @@ class Marks {
     async fetchMarks(user) {
         const rawMarks = await Intra.fetchMarks(user);
 
+        this.rawMarks = rawMarks;
         this.marksBySemesters = this.parseMarks(rawMarks);
         this.nbSemester = _.size(this.marksBySemesters);
     }
@@ -45,10 +49,6 @@ class Marks {
         this.projectMarks = await Intra.fetchProjectMarks(year, module, instance, activity);
         this.selectedMark = this.selfMark;
         ui.defaultState();
-    }
-
-    @computed get selfMark() {
-        return _.find(this.projectMarks.slice(), (mark) => mark.login === session.username);
     }
 
     parseMarks(rawMarks) {
@@ -106,6 +106,16 @@ class Marks {
             .value();
     }
 
+    @computed get selfMark() {
+        return _.find(this.projectMarks, (mark) => mark.login === session.username);
+    }
+
+    @computed get lastMark() {
+        return _(this.rawMarks.notes)
+            .orderBy(({ date }) => moment(date, 'YYYY-MM-DD HH:mm:ss'))
+            .last();
+    }
+
     @action
     setCurrentSemester(semester) {
         this.currentSemester = semester;
@@ -121,6 +131,11 @@ class Marks {
         this.sortMethod = (this.sortMethod === sortMethods.byMark) ? sortMethods.byName :sortMethods.byMark;
         const sortOrder = (this.sortMethod === sortMethods.byMark) ? 'desc' : 'asc';
         this.projectMarks = _.orderBy(this.projectMarks, this.sortMethod, [sortOrder]);
+    }
+
+    @action
+    hideArrowDown() {
+        this.arrowDownHidden = true;
     }
 }
 

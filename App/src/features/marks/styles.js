@@ -84,13 +84,18 @@ const styles = StyleSheet.create({
         flex: 0.6,
     },
 
+    selfRow: {
+        backgroundColor: '#39516a',
+        elevation: 10,
+    },
+
     selectedMark: {
         backgroundColor: '#FFFFFF'
     },
 
     scoringContainerStyle: {
         backgroundColor: '#39516a',
-        flex: 0.25,
+        flex: 0.3,
         padding: 10,
         borderTopWidth: 0.5,
         borderTopColor: 'white',
@@ -112,6 +117,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
 
+    selfContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'white',
+    },
+
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -119,6 +129,19 @@ const styles = StyleSheet.create({
         height: 30,
         borderBottomWidth: 1,
         borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+    },
+
+    studentMarkContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+        borderBottomWidth: 0.5,
+        borderBottomColor: 'white',
+    },
+
+    studentMarkText: {
+        color: 'white',
+        fontWeight: 'bold',
     },
 
     name: {
@@ -148,6 +171,14 @@ const styles = StyleSheet.create({
         color: "#FFFFFF",
         margin: 15,
     },
+
+    avatar: {
+        width: 30,
+        height: 30,
+        borderRadius: 5,
+        marginRight: 10,
+    },
+
 });
 
 export default styles;
