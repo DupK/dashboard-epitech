@@ -122,7 +122,6 @@ export default class Login extends Component {
                                 <Input
                                     ref={(input) => this.passwordInput = input}
                                     multiline={false}
-                                    focus={true}
                                     maxLength={8}
                                     placeholder="Unix Password"
                                     placeholderTextColor="#FFFFFF"
