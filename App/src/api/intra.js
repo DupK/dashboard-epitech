@@ -106,6 +106,27 @@ export function fetchMarks(user) {
         .then((response) => response.json());
 }
 
+export function fetchProjectDetails({ year, module, instance, activity }) {
+    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${instance}/project/?format=json`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
+}
+
+export function fetchProjectFiles({ year, module, instance, activity }) {
+    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${instance}/project/file/?format=json`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
+}
 export function fetchProjectMarks(year, module, instance, activity) {
     return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/note?format=json`, {
         method: 'GET',
