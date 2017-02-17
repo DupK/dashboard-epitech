@@ -17,6 +17,7 @@ import {
     Icon
 } from 'native-base';
 import ProgressBar from './ProgressBar';
+import { Actions } from 'react-native-router-flux';
 
 @observer
 export default class ProjectsList extends Component {
@@ -37,7 +38,7 @@ export default class ProjectsList extends Component {
 
         return (
             <ListItem>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => Actions.projectDetails({ project: project, title: project.acti_title }) }>
                     <View style={{
                         flex: 1,
                         flexDirection: 'row',
@@ -49,15 +50,21 @@ export default class ProjectsList extends Component {
                                 flex: 1,
                                 flexDirection: 'column',
                             }}>
-                                <Text style={{
-                                    fontWeight: 'bold',
-                                    fontFamily: 'Nunito-Light',
-                                }}>{ project.acti_title }</Text>
-                                <Text style={{
-                                    fontFamily: 'Nunito-Light',
-                                    fontSize: 12,
-                                }}>{ project.title_module }</Text>
-                                <View style={{ marginTop: 10 }}>
+
+                                <View style={{ flexDirection: 'row' }}>
+
+                                    <Text style={{
+                                        fontWeight: 'bold',
+                                        fontFamily: 'Nunito-Light',
+                                    }}>{ project.acti_title }</Text>
+                                    <Text style={{
+                                        fontFamily: 'Nunito-Light',
+                                        fontSize: 12,
+                                    }}> / { project.title_module }</Text>
+
+                                </View>
+
+                                <View style={{ marginTop: 2 }}>
                                     <View style={{
                                         flexDirection: 'row',
                                         justifyContent: 'space-between',
