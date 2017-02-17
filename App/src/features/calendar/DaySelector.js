@@ -86,6 +86,7 @@ export default class DaySelector extends Component {
 
     render() {
         const { calendarStore: calendar } = this.props;
+        const eventsOfWeek = calendar.hasEventsPerDay;
 
         const datesRender = calendar.getDatesForWeek().map((date) => {
             return (
@@ -102,6 +103,7 @@ export default class DaySelector extends Component {
                         weekendDateNameStyle={this.props.weekendDateNameStyle}
                         weekendDateNumberStyle={this.props.weekendDateNumberStyle}
                         selectionAnimation={this.props.selectionAnimation}
+                        hasEvent={eventsOfWeek[date]}
                     />
                 </View>
             );

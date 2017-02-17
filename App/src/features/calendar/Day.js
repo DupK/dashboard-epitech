@@ -43,7 +43,7 @@ export default class Day extends Component {
     }
 
     render() {
-        const { calendarStore: calendar, date } = this.props;
+        const { calendarStore: calendar, date, hasEvent } = this.props;
         const animValue = this.animValue.interpolate({
             inputRange: [0, 1],
             outputRange: [this.props.calendarColor, this.props.highlightColor]
@@ -64,6 +64,19 @@ export default class Day extends Component {
                     <Text style={dateNameStyle}>{date.format('ddd').toUpperCase()}</Text>
                     <Text style={dateNumberStyle}>{date.date()}</Text>
                 </TouchableOpacity>
+                {
+                    hasEvent
+                        ? <Animated.View
+                            style={{
+                                backgroundColor: 'red',
+                                height: 3,
+                                width: 3,
+                                top: 3,
+                                borderRadius: 50,
+                            }}
+                        />
+                        : null
+                }
             </Animated.View>
         );
     }
@@ -82,5 +95,6 @@ Day.propTypes = {
     weekendDateNameStyle: React.PropTypes.any,
     weekendDateNumberStyle: React.PropTypes.any,
 
-    selectionAnimation: React.PropTypes.object
+    selectionAnimation: React.PropTypes.object,
+    hasEvent: React.PropTypes.bool,
 };

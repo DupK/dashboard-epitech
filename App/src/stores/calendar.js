@@ -4,7 +4,7 @@
 import _ from 'lodash';
 import autobind from "autobind-decorator";
 import moment from "moment";
-import { observable } from "mobx";
+import { observable, computed } from "mobx";
 
 import {WEEK_DAYS} from "../features/calendar/constants";
 import * as Intra from "../api/intra";
@@ -68,6 +68,8 @@ class Calendar {
                 room: event.room,
                 duration: moment(event.end).diff(moment(event.start), 'minutes'),
                 uid: event.codeevent,
+                registered: event.event_registered === 'registered',
+                canRegister: event.allow_register,
             }))
             .groupBy((event) => moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY'))
             .toPairs()
@@ -86,6 +88,29 @@ class Calendar {
             ...this.calendar,
             ...remappedCalendar
         }
+    }
+
+    @computed get hasEventsPerDay() {
+
+       const eventsPerDay = _(this.getDatesForWeek())
+            .map((date) => {
+                const formattedDate = date.format('DD-MM-YYYY');
+                const registeredEvents = _(this.calendar[formattedDate])
+                    .flatMap((events) => (
+                        _.flatMap(events, (event) => event.registered))
+                    )
+                    .value();
+                const isRegisteredToAnEvent = _.some(registeredEvents, (registered) => registered);
+
+                return [
+                    date,
+                    isRegisteredToAnEvent
+                ]
+            })
+            .fromPairs()
+            .value();
+
+        return eventsPerDay;
     }
 
     getNextEvent() {

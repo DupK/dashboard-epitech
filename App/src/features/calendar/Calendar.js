@@ -93,12 +93,6 @@ export default class Calendar extends Component {
         return (
             <Container>
                 <Content contentContainerStyle={{ flex: 1, flexDirection: 'column' }}>
-                    <View style={{ flex: 10, backgroundColor: '#2c3e50', elevation: 10 }}>
-                        <MonthSelector
-                            calendarHeaderFormat="MMMM YYYY"
-                            calendarStore={calendar}
-                        />
-                    </View>
                     <View style={{ flex: 100, flexDirection: 'row' }}>
                         <View style={{ flex: 0.2, backgroundColor: '#2c3e50' }}>
                             <DaySelector
@@ -120,6 +114,12 @@ export default class Calendar extends Component {
                                     : null
                             }
                         </ScrollView>
+                    </View>
+                    <View style={{ flex: 10, backgroundColor: '#2c3e50', elevation: 10 }}>
+                        <MonthSelector
+                            calendarHeaderFormat="MMMM YYYY"
+                            calendarStore={calendar}
+                        />
                     </View>
                 </Content>
             </Container>
