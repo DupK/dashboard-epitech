@@ -8,7 +8,7 @@ import {
     ScrollView,
     Text,
     View,
-    TouchableOpacity
+    TouchableOpacity,
 } from 'react-native';
 import {
     Icon
@@ -42,6 +42,8 @@ class ProjectDetails extends Component {
         this._renderBanner = this._renderBanner.bind(this);
         this._renderHeader = this._renderHeader.bind(this);
         this._renderContent = this._renderContent.bind(this);
+        this._renderDescription = this._renderDescription.bind(this);
+        this._renderRepositoryName = this._renderRepositoryName.bind(this);
     }
 
     _renderHeader(sections) {
@@ -53,18 +55,19 @@ class ProjectDetails extends Component {
                 marginBottom: 2,
                 borderBottomWidth: 0.5,
                 borderTopWidth: 0.5,
+                alignItems: 'center',
             }}>
+                <View style={{
+                    flex: 0.05,
+                }} />
                 <IconFA style={{
                     color: "#FFF",
                     fontSize: 24,
-                    alignSelf: 'center',
-                    flex: 0.09,
-                    marginLeft: 20
+                    flex: 0.1,
                 }} name={sections.icon} />
                     <Text style={{
                         color: "#FFF",
-                        alignSelf: 'center',
-                        flex: 0.91,
+                        flex: 0.6,
                 }}>{sections.title}</Text>
             </View>
         )
@@ -79,9 +82,7 @@ class ProjectDetails extends Component {
     }
 
     _renderBanner(registered) {
-
         const notification = registered ? "  You are registered to this project" : "  You are not registered for this project";
-
         return (
             <View style={{
                 flex: 0.05,
@@ -102,6 +103,34 @@ class ProjectDetails extends Component {
         )
     }
 
+    _renderDescription() {
+        return (
+            <View>
+                <Text style={{
+                    color: "#FFF",
+                    fontSize: 12,
+                    marginLeft: 10,
+                    marginTop: 5,
+                    fontFamily: "Nunito-ExtraLight",
+                }}>Insert description</Text>
+            </View>
+        )
+    }
+
+    _renderRepositoryName() {
+        return (
+            <View>
+                <Text style={{
+                    color: "#FFF",
+                    fontSize: 12,
+                    marginTop: 5,
+                    fontFamily: "Nunito-ExtraLight",
+                }}>cpp_nanotekspice</Text>
+            </View>
+        )
+
+    }
+
     render() {
         const { project } = this.props;
 
@@ -109,24 +138,17 @@ class ProjectDetails extends Component {
             <View style={{
                 flex: 1
             }}>
-
                 {this._renderBanner(project.registered)}
-
                 <View style={{
                     flex: 0.4,
                     backgroundColor: "#2c3e50",
                     elevation: 10,
                 }}>
-
                     <View style={{
                         flexDirection: 'row',
                         marginLeft: 8,
                         marginTop: 12,
                     }}>
-                        <IconFA style={{
-                            color: "#FFF",
-                            fontSize: 15,
-                            margin: 1,}} name="info-circle" />
                         <Text style={{
                             fontWeight: "bold",
                             fontSize: 12,
@@ -134,22 +156,9 @@ class ProjectDetails extends Component {
                             color: "#FFF",
                         }}> Information</Text>
                     </View>
-
-                    <View>
-                        <Text style={{
-                            color: "#FFF",
-                            fontSize: 12,
-                            marginLeft: 10,
-                            marginTop: 5,
-                            lineHeight: 20,
-                            fontFamily: "Nunito-ExtraLight",
-                        }}>
-                            Create a logical machine manager. This classic topic will allow you to consolidate your bases in C ++
-                        </Text>
-                    </View>
-
+                    {this._renderDescription()}
                     <View style={{
-                        marginLeft: 8,
+                        marginLeft: 10,
                         marginTop: 12,
                     }}>
                         <Text style={{
@@ -158,30 +167,21 @@ class ProjectDetails extends Component {
                             fontFamily: "Nunito-Light",
                             color: "#FFF",
                         }}>Repository name :</Text>
-                        <Text style={{
-                            color: "#FFF",
-                            fontSize: 12,
-                            marginTop: 5,
-                            lineHeight: 20,
-                            fontFamily: "Nunito-ExtraLight",
-                        }}>cpp_nanotekspice</Text>
+                        {this._renderRepositoryName()}
                     </View>
-
                 </View>
-
                 <View style={{
                     flex: 0.55,
                     backgroundColor: "#42586E"
                 }}>
-
-                    <Accordion
-                        sections={sections}
-                        renderHeader={this._renderHeader}
-                        renderContent={this._renderContent}
-                    />
-
+                    <ScrollView style={{ flex: 1,}}>
+                        <Accordion
+                            sections={sections}
+                            renderHeader={this._renderHeader}
+                            renderContent={this._renderContent}
+                        />
+                    </ScrollView>
                 </View>
-
             </View>
         );
     }
