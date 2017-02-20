@@ -53,7 +53,7 @@ export default class DaySelector extends Component {
             onPanResponderMove: Animated.event([
                 null, {dx: 0, dy: this.pan.y},
             ]),
-            onPanResponderRelease: (e, { vy }) => {
+            onPanResponderRelease: () => {
                 this.pan.flattenOffset();
                 const { height } = Dimensions.get('window');
                 const threshold =  height / 4;
@@ -63,9 +63,8 @@ export default class DaySelector extends Component {
                 if (Math.abs(dy) > threshold) {
                     dy < 0 ? this.props.calendarStore.nextWeek() : this.props.calendarStore.previousWeek();
 
-                    Animated.decay(this.pan, {
-                        velocity: vy,
-                        deceleration: 0.98
+                    Animated.spring(this.pan, {
+                       toValue: dy < 0 ? 200 : -200,
                     }).start();
 
                     this.pan.setValue({ x: 0, y: dy < 0 ? 200 : -200 });
