@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import {
     StyleSheet,
     Text,
@@ -42,21 +43,38 @@ export default class Day extends Component {
         ).start();
     }
 
+    renderHasEvent() {
+        if (!this.props.hasEvent) {
+            return null;
+        }
+
+        return (
+            <Animated.View
+                style={{
+                    backgroundColor: 'red',
+                    height: 3,
+                    width: 3,
+                    top: 3,
+                    borderRadius: 50,
+                }}
+            />
+        );
+    }
+
     render() {
-        const { calendarStore: calendar, date, hasEvent } = this.props;
+        const { calendarStore: calendar, date, selected } = this.props;
         const animValue = this.animValue.interpolate({
             inputRange: [0, 1],
             outputRange: [this.props.calendarColor, this.props.highlightColor]
         });
         const animObject = {backgroundColor: animValue};
+        const isToday = moment().isSame(date, 'day') && !selected;
+        const dateNameColor = isToday ? { color: '#62c462' } : this.props.dateNameStyle;
+        const dateNumberColor = isToday ? { color: '#62c462' } : this.props.dateNumberStyle;
 
 
-        let dateNameStyle = [styles.dateName, this.props.dateNameStyle];
-        let dateNumberStyle = [styles.dateNumber, this.props.dateNumberStyle];
-        if (this.props.date.isoWeekday() === 7) {
-            dateNameStyle = [styles.weekendDateName, this.props.weekendDateNameStyle];
-            dateNumberStyle = [styles.weekendDateNumber, this.props.weekendDateNumberStyle];
-        }
+        const dateNameStyle = [styles.dateName, dateNameColor];
+        const dateNumberStyle = [styles.dateNumber, dateNumberColor];
 
         return (
             <Animated.View style={[styles.dateContainer, animObject]}>
@@ -64,19 +82,7 @@ export default class Day extends Component {
                     <Text style={dateNameStyle}>{date.format('ddd').toUpperCase()}</Text>
                     <Text style={dateNumberStyle}>{date.date()}</Text>
                 </TouchableOpacity>
-                {
-                    hasEvent
-                        ? <Animated.View
-                            style={{
-                                backgroundColor: 'red',
-                                height: 3,
-                                width: 3,
-                                top: 3,
-                                borderRadius: 50,
-                            }}
-                        />
-                        : null
-                }
+                { this.renderHasEvent() }
             </Animated.View>
         );
     }

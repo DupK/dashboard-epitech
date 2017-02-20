@@ -17,9 +17,21 @@ export default class DaySelector extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            pan: new Animated.ValueXY(),
-        };
+        this.pan = new Animated.ValueXY();
+    }
+
+    animateFirstLaunchOfCalendar() {
+        const { height } = Dimensions.get('window');
+        this.pan.setValue({ y: -height });
+        Animated.timing(
+            this.pan.y,
+            {
+                toValue: 0,
+                duration: 1500,
+                easing: Easing.bounce,
+                delay: 100,
+            }
+        ).start();
     }
 
     componentWillMount() {
@@ -35,52 +47,53 @@ export default class DaySelector extends Component {
                 return Math.abs(gestureState.dy) > 5;
             },
             onPanResponderGrant: () => {
-                this.state.pan.setOffset({ x: 0, y: this.state.pan.y._value });
-                this.state.pan.setValue({ x: 0, y: 0 });
+                this.pan.setOffset({ x: 0, y: this.pan.y._value });
+                this.pan.setValue({ x: 0, y: 0 });
             },
             onPanResponderMove: Animated.event([
-                null, {dx: 0, dy: this.state.pan.y},
+                null, {dx: 0, dy: this.pan.y},
             ]),
             onPanResponderRelease: (e, { vy }) => {
-                this.state.pan.flattenOffset();
+                this.pan.flattenOffset();
                 const { height } = Dimensions.get('window');
                 const threshold =  height / 4;
-                const dy = this.state.pan.y._value;
+                const dy = this.pan.y._value;
 
 
                 if (Math.abs(dy) > threshold) {
-                    dy < 0 ? this.props.calendarStore.getNextWeek() : this.props.calendarStore.getPreviousWeek();
+                    dy < 0 ? this.props.calendarStore.nextWeek() : this.props.calendarStore.previousWeek();
 
-                    Animated.decay(this.state.pan, {
+                    Animated.decay(this.pan, {
                         velocity: vy,
                         deceleration: 0.98
                     }).start();
 
-                    this.state.pan.setValue({ x: 0, y: dy < 0 ? 200 : -200 });
+                    this.pan.setValue({ x: 0, y: dy < 0 ? 200 : -200 });
 
-                    Animated.spring(this.state.pan.y, {
+                    Animated.spring(this.pan.y, {
                         toValue: 0,
                     }).start();
 
                 }
                 else {
-                    Animated.spring(this.state.pan, {
+                    Animated.spring(this.pan, {
                         toValue: 0
                     }).start();
                 }
             }
         });
+
+
+        this.animateFirstLaunchOfCalendar();
+
     }
 
     getStyle() {
-        const { pan } = this.state;
-        const [translateX, translateY] = [pan.x, pan.y];
-
         return {
             flex: 1,
             justifyContent: 'space-around',
-            transform: [{ translateX }, { translateY }],
-            opacity: pan.y.interpolate({ inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5] })
+            transform: [{ translateY: this.pan.y }],
+            opacity: this.pan.y.interpolate({ inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5] }),
         };
     }
 
@@ -88,7 +101,7 @@ export default class DaySelector extends Component {
         const { calendarStore: calendar } = this.props;
         const eventsOfWeek = calendar.hasEventsPerDay;
 
-        const datesRender = calendar.getDatesForWeek().map((date) => {
+        const datesRender = calendar.datesForWeek.map((date) => {
             return (
                 <View key={date}>
                     <Day
@@ -100,8 +113,6 @@ export default class DaySelector extends Component {
                         highlightColor={this.props.highlightColor}
                         dateNameStyle={this.props.dateNameStyle}
                         dateNumberStyle={this.props.dateNumberStyle}
-                        weekendDateNameStyle={this.props.weekendDateNameStyle}
-                        weekendDateNumberStyle={this.props.weekendDateNumberStyle}
                         selectionAnimation={this.props.selectionAnimation}
                         hasEvent={eventsOfWeek[date]}
                     />
