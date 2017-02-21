@@ -127,6 +127,7 @@ const VerticalMonthDelimitors = observer(({ nthMonth, viewHeight }) => {
                 height: viewHeight,
                 left: MONTH_OFFSET + monthsInPixelBefore + width / 2,
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                zIndex: 1,
             }}
         />
     );
@@ -147,6 +148,7 @@ const DayIndicator = observer(({ dayNumber, position, colorBar, colorBox, colorB
                 width: 20,
                 height: viewHeight,
                 left: position,
+                zIndex: 1,
             }}
         >
             <View
@@ -241,14 +243,14 @@ export default class ProjectsTimeline extends Component {
         return <DayIndicator
             dayNumber={dayNumber}
             position={position}
-            colorBar="#ffffff"
-            colorBox="#ffffff"
+            colorBar="rgba(255, 255, 255, 0.7)"
+            colorBox="rgba(255, 255, 255, 0.7)"
             colorBoxText="#1B3147"
             viewHeight={viewHeight}
         />;
     }
 
-    renderSelectedDayIndicator() {
+    renderSelectedDayIndicator() {
         const { width } = Dimensions.get('window');
         const todayPosition = this.state.scrollPosition / DAY_IN_PIXEL;
         const dayNumber = moment().startOf('year').add(todayPosition, 'd').format('DD');
@@ -295,6 +297,7 @@ export default class ProjectsTimeline extends Component {
                     }}
                     horizontal
                     onScroll={this.handleScroll}
+                    scrollEventThrottle={30}
                 >
                     { this.renderMonthTimeline() }
                     <ScrollView>

@@ -47,8 +47,8 @@ ProgressBar.propTypes = {
 };
 
 ProgressBar.defaultProps = {
-    progressColor: "#2c3e50",
-    backgroundColor: "#49657f",
+    progressColor: "#62c462",
+    backgroundColor: "#446181",
     borderColor: "#ffffff",
     completePercentage: 50,
 };

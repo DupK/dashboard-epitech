@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react/native';
-import { TabViewAnimated, TabBar } from 'react-native-tab-view';
+import { TabViewAnimated, TabBar, TabViewPagerPan } from 'react-native-tab-view';
 import {
     AppRegistry,
     StyleSheet,
@@ -74,6 +74,11 @@ export default class Projects extends Component {
         }
     };
 
+    _renderPager = (props) => {
+        return <TabViewPagerPan {...props} swipeEnabled={false} />;
+
+    };
+
     render() {
         return (
             <TabViewAnimated
@@ -81,6 +86,7 @@ export default class Projects extends Component {
                 navigationState={this.state}
                 renderScene={this._renderScene}
                 renderFooter={this._renderFooter}
+                renderPager={this._renderPager}
                 onRequestChangeTab={this._handleChangeTab}
             />
         );
