@@ -31,7 +31,7 @@ class MonthSelector extends Component {
 
     formatCalendarHeader() {
         const { calendarStore: calendar, calendarHeaderFormat } = this.props;
-        const datesForWeek = calendar.getDatesForWeek();
+        const datesForWeek = calendar.datesForWeek;
         const firstDay = _.first(datesForWeek);
         const lastDay = _.last(datesForWeek);
         const monthFormatting = 'MMMM';
@@ -49,6 +49,7 @@ class MonthSelector extends Component {
 
     render() {
         const { calendarStore: calendar } = this.props;
+        const isToday = calendar.isToday ? '#62c462' : '#FFFFFF';
 
         return (
             <View style={styles.container}>
@@ -64,7 +65,7 @@ class MonthSelector extends Component {
                     style={styles.selectorItems}
                     title="previousMonth"
                     transparent
-                    onPress={calendar.getPreviousMonth}
+                    onPress={calendar.previousMonth}
                 >
                     <Icon style={styles.selectorIcons} name="ios-arrow-back"/>
                 </Button>
@@ -73,7 +74,7 @@ class MonthSelector extends Component {
                     style={styles.selectorItems}
                     title="nextMonth"
                     transparent
-                    onPress={calendar.getNextMonth}
+                    onPress={calendar.nextMonth}
                 >
                     <Icon style={styles.selectorIcons} name="ios-arrow-forward"/>
                 </Button>
@@ -83,7 +84,9 @@ class MonthSelector extends Component {
                     transparent
                     onPress={calendar.today}
                 >
-                    <IconFO style={styles.selectorIcons} name="calendar" size={29}/>
+                    <IconFO style={{
+                        color: isToday,
+                    }} name="calendar" size={29}/>
                 </Button>
                 <DayPicker
                     isVisible={calendar.datePickerVisible}

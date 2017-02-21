@@ -69,7 +69,7 @@ export default class Home extends Component {
             }
         } = this.props;
 
-        const nextEvent = calendar.getNextEvent();
+        const nextEvent = calendar.nextEvent;
         const lastNews = _(news)
             .orderBy((news) => moment(news.date, 'YYYY-MM-DD HH:mm:ss'))
             .last();

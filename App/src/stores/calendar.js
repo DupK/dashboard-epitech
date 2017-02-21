@@ -1,11 +1,11 @@
 /**
  * Created by desver_f on 26/01/17.
  */
-import _ from 'lodash';
+import _ from "lodash";
 import autobind from "autobind-decorator";
 import moment from "moment";
-import { observable } from "mobx";
-
+import { observable, action, computed } from "mobx";
+import ui from "./uiState";
 import {WEEK_DAYS} from "../features/calendar/constants";
 import * as Intra from "../api/intra";
 
@@ -17,10 +17,10 @@ class Calendar {
     @observable selectedDate = moment();
     @observable datePickerVisible = false;
 
-    calendarStart = moment().subtract(3, 'w').format('YYYY-MM-DD');
-    calendarEnd = moment().add(3, 'w').format('YYYY-MM-DD');
-    lastFetchedStart = null;
-    lastFetchedEnd = null;
+    calendarStart = moment().subtract(3, 'w');
+    calendarEnd = moment().add(3, 'w');
+    lastFetchedStart = this.calendarStart;
+    lastFetchedEnd = this.calendarEnd;
 
     groupByOverlappingRanges(ranges) {
         const endDatesValues = ranges.map((r) => moment(r.end).unix()).sort((a, b) => a - b);
@@ -43,12 +43,13 @@ class Calendar {
         return groups
     }
 
+    @action
     async fetchCalendar(start = this.calendarStart, end = this.calendarEnd) {
         try {
-            this.lastFetchedStart = start;
-            this.lastFetchedEnd = end;
+            this.lastFetchedStart = start.isBefore(this.lastFetchedStart) ? start : this.lastFetchedStart;
+            this.lastFetchedEnd = end.isAfter(this.lastFetchedEnd) ? end : this.lastFetchedEnd;
 
-            const rawCalendar = await Intra.fetchCalendar(start, end);
+            const rawCalendar = await Intra.fetchCalendar(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
 
             this.calendar = this.remapCalendar(rawCalendar);
         } catch (e) {
@@ -68,6 +69,8 @@ class Calendar {
                 room: event.room,
                 duration: moment(event.end).diff(moment(event.start), 'minutes'),
                 uid: event.codeevent,
+                registered: event.event_registered === 'registered',
+                canRegister: event.allow_register,
             }))
             .groupBy((event) => moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY'))
             .toPairs()
@@ -88,7 +91,27 @@ class Calendar {
         }
     }
 
-    getNextEvent() {
+    @computed get hasEventsPerDay() {
+        return _(this.datesForWeek)
+            .map((date) => {
+                const formattedDate = date.format('DD-MM-YYYY');
+                const registeredEvents = _(this.calendar[formattedDate])
+                    .flatMap((events) => (
+                        _.flatMap(events, (event) => event.registered))
+                    )
+                    .value();
+                const isRegisteredToAnEvent = _.some(registeredEvents, (registered) => registered);
+
+                return [
+                    date,
+                    isRegisteredToAnEvent
+                ]
+            })
+            .fromPairs()
+            .value();
+    }
+
+    @computed get nextEvent() {
         const flattenedEvents = _(this.calendar)
             .flatMap((dayWithEvents) => (
                 _.flatMap(dayWithEvents, (events) => (
@@ -102,78 +125,94 @@ class Calendar {
     }
 
     //Set startingDate to the previous week
-    getPreviousWeek() {
+    @action
+    async previousWeek() {
         const prevWeek = moment(this.startingDate).subtract(1, 'w');
-        const shouldFetchMore = moment(prevWeek).isBefore(moment(this.lastFetchedStart).add(1, 'w'));
+        const shouldFetchMore = moment(prevWeek).isBefore(moment(this.lastFetchedStart));
+        this.startingDate = prevWeek;
+        this.selectedDate = prevWeek;
 
         if (shouldFetchMore) {
             try {
-                this.fetchCalendar(moment(prevWeek).subtract(1, 'M').format('YYYY-MM-DD'), this.lastFetchedStart);
+                ui.fetchingState();
+                await this.fetchCalendar(moment(prevWeek).subtract(1, 'M'), this.lastFetchedStart);
+                ui.defaultState();
             } catch (e) {
                 console.error(e);
             }
         }
-        this.startingDate = prevWeek;
-        this.selectedDate = moment(this.selectedDate).subtract(1, 'w');
     }
 
     //Set startingDate to the next week
-    getNextWeek() {
+    @action
+    async nextWeek() {
         const nextWeek = moment(this.startingDate).add(1, 'w');
-        const shouldFetchMore = moment(nextWeek).isAfter(moment(this.lastFetchedEnd).subtract(1, 'w'));
-
-        if (shouldFetchMore) {
-            try {
-                this.fetchCalendar(this.lastFetchedEnd, moment(nextWeek).add(1, 'M').format('YYYY-MM-DD'));
-            } catch (e) {
-                console.error(e);
-            }
-        }
+        const shouldFetchMore = moment(nextWeek).isAfter(moment(this.lastFetchedEnd));
         this.startingDate = nextWeek;
-        this.selectedDate = moment(this.selectedDate).add(1, 'w');
+        this.selectedDate = nextWeek;
+
+        if (shouldFetchMore) {
+            try {
+                ui.fetchingState();
+                await this.fetchCalendar(this.lastFetchedEnd, moment(nextWeek).add(1, 'M'));
+                ui.defaultState();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
     }
 
-    getPreviousMonth() {
+    @action
+    async previousMonth() {
         const prevMonth = moment(this.startingDate).subtract(1, 'M');
-        const shouldFetchMore = moment(prevMonth).isBefore(moment(this.lastFetchedStart).add(1, 'w'));
-
-        if (shouldFetchMore) {
-            try {
-                this.fetchCalendar(moment(prevMonth).subtract(1, 'M').format('YYYY-MM-DD'), this.lastFetchedStart);
-            } catch (e) {
-                console.error(e);
-            }
-        }
+        const shouldFetchMore = moment(prevMonth).isBefore(moment(this.lastFetchedStart));
         this.startingDate = prevMonth;
-        this.selectedDate = moment(this.selectedDate).subtract(1, 'M');
-    }
-
-    getNextMonth() {
-        const nextMonth = moment(this.startingDate).add(1, 'M');
-        const shouldFetchMore = moment(nextMonth).isAfter(moment(this.lastFetchedEnd).subtract(1, 'w'));
+        this.selectedDate = prevMonth;
 
         if (shouldFetchMore) {
             try {
-                this.fetchCalendar(this.lastFetchedEnd, moment(nextMonth).add(1, 'M').format('YYYY-MM-DD'));
+                ui.fetchingState();
+                await this.fetchCalendar(moment(prevMonth).subtract(1, 'M'), this.lastFetchedStart);
+                ui.defaultState();
             } catch (e) {
                 console.error(e);
             }
         }
-        this.startingDate = nextMonth;
-        this.selectedDate = moment(this.selectedDate).add(1, 'M');
+
     }
 
+    @action
+    async nextMonth() {
+        const nextMonth = moment(this.startingDate).add(1, 'M');
+        const shouldFetchMore = moment(nextMonth).isAfter(moment(this.lastFetchedEnd));
+        this.startingDate = nextMonth;
+        this.selectedDate = nextMonth;
+
+        if (shouldFetchMore) {
+            try {
+                ui.fetchingState();
+                await this.fetchCalendar(this.lastFetchedEnd, moment(nextMonth).add(1, 'M'));
+                ui.defaultState();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }
+
+    @action
     today() {
         this.startingDate = moment();
         this.selectedDate = moment();
     }
 
+    @action
     onDateSelected(date) {
         this.selectedDate = moment(date);
     }
 
     //Using isoWeekday so that it will start from Monday
-    getDatesForWeek() {
+    @computed get datesForWeek() {
         const startDate = moment(this.startingDate);
 
         return WEEK_DAYS.map((day, i) => moment(startDate.isoWeekday(i + 1)));
@@ -183,14 +222,34 @@ class Calendar {
         return date.isSame(this.selectedDate, 'day');
     }
 
+    @computed get isToday() {
+        return this.isDateSelected(moment());
+    }
+
+    @action
     promptDatePicker() {
         this.datePickerVisible = !this.datePickerVisible;
     }
 
-    pickDate(date) {
-        this.startingDate = moment(date);
-        this.selectedDate = moment(date);
+    @action
+    async pickDate(date) {
+        const pickedDate = moment(date);
+        const currentSelectedDate = this.selectedDate;
+        this.startingDate = pickedDate;
+        this.selectedDate = pickedDate;
         this.promptDatePicker();
+
+        if (pickedDate.isAfter(currentSelectedDate) && this.selectedDate.isAfter(this.lastFetchedEnd)) {
+            ui.fetchingState();
+            await this.fetchCalendar(this.lastFetchedEnd, moment(date).add(1, 'M'));
+            ui.defaultState();
+        }
+
+        if (pickedDate.isBefore(currentSelectedDate) && this.selectedDate.isBefore(this.lastFetchedStart)) {
+            ui.fetchingState();
+            await this.fetchCalendar(moment(date).subtract(1, 'M'), this.lastFetchedStart);
+            ui.defaultState();
+        }
     }
 }
 

@@ -14,6 +14,7 @@ import {
     ScrollView,
     Dimensions
 } from 'react-native';
+import LoadingIndicator from 'react-native-spinkit';
 import { Container, Content } from 'native-base';
 import { observable } from 'react-native-mobx';
 import { WORKING_HOURS, HOUR_SIZE } from './constants'
@@ -24,7 +25,12 @@ import Event from './Event';
 
 import { observer } from 'mobx-react/native';
 
-const CurrentTime = () => {
+const CurrentTime = observer(({ isToday }) => {
+
+    if (!isToday) {
+        return null;
+    }
+
     const { width } = Dimensions.get('window');
     const currentTime = moment();
     const numericTime = currentTime.hours() + (currentTime.minutes() / 60);
@@ -51,6 +57,10 @@ const CurrentTime = () => {
             }}/>
         </View>
     );
+});
+
+CurrentTime.propTypes = {
+    isToday: React.PropTypes.bool,
 };
 
 @observer
@@ -83,22 +93,49 @@ export default class Calendar extends Component {
         });
     }
 
+    renderCalendar() {
+        const { store: { calendar, ui } } = this.props;
+
+        if (ui.currentState === ui.state.fetching) {
+            return (
+                <View style={{
+                    flex: 1,
+                    backgroundColor: 'white',
+                    marginLeft: 5,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <LoadingIndicator
+                        isVisible={ui.currentState === ui.state.fetching}
+                        color="#2c3e50"
+                        type="9CubeGrid"
+                        size={100}
+                    />
+                    <Text style={{
+                        fontFamily: 'Nunito-ExtraLight',
+                        fontSize: 14,
+                        color: "#2c3e50",
+                        margin: 15,
+                    }}>Loading calendar...</Text>
+                </View>
+            );
+        }
+
+        return (
+            <ScrollView style={{flex: 1, backgroundColor: 'white', marginLeft: 5 }}>
+                { this.renderHours() }
+                { this.renderEvents() }
+                <CurrentTime isToday={calendar.isToday}/>
+            </ScrollView>
+        );
+    }
+
     render() {
         const { store: { calendar } } = this.props;
-
-        if (!calendar.calendar) {
-            return <Text>Loading calendar...</Text>;
-        }
 
         return (
             <Container>
                 <Content contentContainerStyle={{ flex: 1, flexDirection: 'column' }}>
-                    <View style={{ flex: 10, backgroundColor: '#2c3e50', elevation: 10 }}>
-                        <MonthSelector
-                            calendarHeaderFormat="MMMM YYYY"
-                            calendarStore={calendar}
-                        />
-                    </View>
                     <View style={{ flex: 100, flexDirection: 'row' }}>
                         <View style={{ flex: 0.2, backgroundColor: '#2c3e50' }}>
                             <DaySelector
@@ -111,15 +148,13 @@ export default class Calendar extends Component {
                                 dateNameStyle={{color: '#FFFFFF'}}
                             />
                         </View>
-                        <ScrollView style={{flex: 1, backgroundColor: 'white', marginLeft: 5 }}>
-                            { this.renderHours() }
-                            { this.renderEvents() }
-                            {
-                                calendar.isDateSelected(moment())
-                                    ? <CurrentTime/>
-                                    : null
-                            }
-                        </ScrollView>
+                        { this.renderCalendar() }
+                    </View>
+                    <View style={{ flex: 10, backgroundColor: '#2c3e50', elevation: 20 }}>
+                        <MonthSelector
+                            calendarHeaderFormat="MMMM YYYY"
+                            calendarStore={calendar}
+                        />
                     </View>
                 </Content>
             </Container>
