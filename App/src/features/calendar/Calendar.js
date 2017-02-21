@@ -15,7 +15,6 @@ import {
     Dimensions
 } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
-import { Container, Content } from 'native-base';
 import { observable } from 'react-native-mobx';
 import { WORKING_HOURS, HOUR_SIZE } from './constants'
 import DaySelector from './DaySelector';
@@ -134,30 +133,28 @@ export default class Calendar extends Component {
         const { store: { calendar } } = this.props;
 
         return (
-            <Container>
-                <Content contentContainerStyle={{ flex: 1, flexDirection: 'column' }}>
-                    <View style={{ flex: 100, flexDirection: 'row' }}>
-                        <View style={{ flex: 0.2, backgroundColor: '#2c3e50' }}>
-                            <DaySelector
-                                calendarStore={calendar}
-                                calendarAnimation={{ duration: 30 }}
-                                selectionAnimation={{ duration: 100 }}
-                                calendarColor={'#2c3e50'}
-                                highlightColor={'#62c462'}
-                                dateNumberStyle={{color: '#FFFFFF'}}
-                                dateNameStyle={{color: '#FFFFFF'}}
-                            />
-                        </View>
-                        { this.renderCalendar() }
-                    </View>
-                    <View style={{ flex: 10, backgroundColor: '#2c3e50', elevation: 20 }}>
-                        <MonthSelector
-                            calendarHeaderFormat="MMMM YYYY"
+            <View style={{ flex: 1, flexDirection: 'column' }}>
+                <View style={{ flex: 100, flexDirection: 'row' }}>
+                    <View style={{ flex: 0.2, backgroundColor: '#2c3e50' }}>
+                        <DaySelector
                             calendarStore={calendar}
+                            calendarAnimation={{ duration: 30 }}
+                            selectionAnimation={{ duration: 100 }}
+                            calendarColor={'#2c3e50'}
+                            highlightColor={'#62c462'}
+                            dateNumberStyle={{color: '#FFFFFF'}}
+                            dateNameStyle={{color: '#FFFFFF'}}
                         />
                     </View>
-                </Content>
-            </Container>
+                    { this.renderCalendar() }
+                </View>
+                <View style={{ flex: 10, backgroundColor: '#2c3e50', elevation: 20 }}>
+                    <MonthSelector
+                        calendarHeaderFormat="MMMM YYYY"
+                        calendarStore={calendar}
+                    />
+                </View>
+            </View>
         );
     }
 }

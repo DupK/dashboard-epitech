@@ -10,6 +10,8 @@ const styles = StyleSheet.create({
         fontSize: 50,
         color: "#2c3e50",
         justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
     },
 
     iconStyleFA: {

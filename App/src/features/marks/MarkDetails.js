@@ -12,8 +12,6 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import {
-    Container,
-    Content,
     List,
     Icon,
 } from 'native-base';
@@ -103,13 +101,14 @@ class MarkDetails extends Component {
         const { store: { marks } } = this.props;
 
         return (
-            <TouchableOpacity onPress={() => marks.selectMark(mark)}>
-                <View
-                    style={[styles.container, {
-                        backgroundColor: '#39516a',
-                        borderRadius: 5,
-                    }]}
-                >
+            <TouchableOpacity
+                onPress={() => marks.selectMark(mark)}
+                style={{
+                    borderBottomWidth: 1,
+                    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+                }}
+            >
+                <View style={styles.selfContainer}>
                     <View style={{ flexDirection: 'row' }}>
                         <Image
                             style={styles.avatar}
@@ -163,30 +162,28 @@ class MarkDetails extends Component {
         const selfMark = marks.selfMark;
 
         return (
-            <Container>
-                <Content contentContainerStyle={{flex: 1, backgroundColor: '#2c3e50'}}>
-                    <View style={styles.selfRow}>{ this.renderSelf(selfMark) }</View>
-                    <View style={styles.listContainerStyle}>
-                        <List
-                            dataArray={marks.projectMarks.slice()}
-                            renderRow={this.renderRow}
-                            onScroll={() => marks.hideArrowDown()}
-                        />
-                        { this.renderArrowDown() }
+            <View style={{flex: 1, backgroundColor: '#2c3e50'}}>
+                <View style={styles.selfRow}>{ this.renderSelf(selfMark) }</View>
+                <View style={styles.listContainerStyle}>
+                    <List
+                        dataArray={marks.projectMarks.slice()}
+                        renderRow={this.renderRow}
+                        onScroll={() => marks.hideArrowDown()}
+                    />
+                    { this.renderArrowDown() }
+                </View>
+                <View style={styles.scoringContainerStyle}>
+                    <View style={styles.studentMarkContainer}>
+                        <Text style={styles.studentMarkText}>
+                            { this.formatName(marks.selectedMark.user_title) }
+                        </Text>
+                        <Text style={styles.studentMarkText}>
+                            {this.formatMark(marks.selectedMark.note)}
+                        </Text>
                     </View>
-                    <View style={styles.scoringContainerStyle}>
-                        <View style={styles.studentMarkContainer}>
-                            <Text style={styles.studentMarkText}>
-                                { this.formatName(marks.selectedMark.user_title) }
-                            </Text>
-                            <Text style={styles.studentMarkText}>
-                                {this.formatMark(marks.selectedMark.note)}
-                            </Text>
-                        </View>
-                        <ScrollView>{ this.renderComment() }</ScrollView>
-                    </View>
-                </Content>
-            </Container>
+                    <ScrollView>{ this.renderComment() }</ScrollView>
+                </View>
+            </View>
         );
     }
 }

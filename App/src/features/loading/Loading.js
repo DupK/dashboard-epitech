@@ -63,7 +63,7 @@ export default class Loading extends Component {
                     }}>
                         <LoadingIndicator
                             isVisible={!session.finishedLoading}
-                            color="white"
+                            color="#FFFFFF"
                             type="9CubeGrid"
                             size={100}
                         />
