@@ -2,9 +2,7 @@
  * Created by jules on 04/02/17.
  */
 
-//noinspection JSUnresolvedVariable
 import React, { Component } from 'react';
-//noinspection JSUnresolvedVariable
 import {
     AppRegistry,
     Text,
@@ -14,8 +12,6 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import {
-    Container,
-    Content,
     Button,
     Icon,
 } from 'native-base';
@@ -123,40 +119,38 @@ export default class Marks extends Component {
             : 'Others';
 
         return (
-            <Container>
-                <Content contentContainerStyle={{ flex: 1, backgroundColor: '#39516a' }}>
-                    <View style={styles.headerContainer}>
-                        <Button
-                            style={styles.headerArrow}
-                            title="prev"
-                            onPress={this.previousSemester}
-                            transparent
-                        >
-                            <Icon style={styles.headerIcon} name="ios-arrow-back"/>
-                        </Button>
-                        <Text style={styles.headerIcon}>
-                            { semesterText }
-                        </Text>
-                        <Button
-                            style={styles.headerArrow}
-                            title="next"
-                            onPress={this.nextSemester}
-                            transparent
-                        >
-                            <Icon style={styles.headerIcon} name="ios-arrow-forward"/>
-                        </Button>
-                    </View>
-                    <View style={styles.bodyContainer}>
-                        <ScrollView>
-                            <Accordion
-                                sections={marksBySemesters[semesterId].slice()}
-                                renderHeader={this._renderHeader}
-                                renderContent={this._renderContent}
-                            />
-                        </ScrollView>
-                    </View>
-                </Content>
-            </Container>
+            <View style={{ flex: 1, backgroundColor: '#39516a' }}>
+                <View style={styles.headerContainer}>
+                    <Button
+                        style={styles.headerArrow}
+                        title="prev"
+                        onPress={this.previousSemester}
+                        transparent
+                    >
+                        <Icon style={styles.headerIcon} name="ios-arrow-back"/>
+                    </Button>
+                    <Text style={styles.headerIcon}>
+                        { semesterText }
+                    </Text>
+                    <Button
+                        style={styles.headerArrow}
+                        title="next"
+                        onPress={this.nextSemester}
+                        transparent
+                    >
+                        <Icon style={styles.headerIcon} name="ios-arrow-forward"/>
+                    </Button>
+                </View>
+                <View style={styles.bodyContainer}>
+                    <ScrollView>
+                        <Accordion
+                            sections={marksBySemesters[semesterId].slice()}
+                            renderHeader={this._renderHeader}
+                            renderContent={this._renderContent}
+                        />
+                    </ScrollView>
+                </View>
+            </View>
         );
     }
 };

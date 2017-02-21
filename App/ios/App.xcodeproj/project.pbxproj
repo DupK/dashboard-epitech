@@ -34,6 +34,8 @@
 		464DFFED841F47E688AA1197 /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C8883EC93F1B4DA1AEFD90E0 /* SF-UI-Text-Regular.otf */; };
 		46EFFD94793346C09516238A /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D0CFA6985B9A4A45B34FC13F /* MaterialIcons.ttf */; };
 		4ECA851CF18B43F0A35AC661 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C58344F220EA44C7894D4131 /* FontAwesome.ttf */; };
+		528CD00B1E5C908B001175EC /* Nunito-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 528CD0091E5C908B001175EC /* Nunito-ExtraLight.ttf */; };
+		528CD00C1E5C908B001175EC /* Nunito-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 528CD00A1E5C908B001175EC /* Nunito-Light.ttf */; };
 		5523004DBA4043808BC474AB /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA34176A198840FDBA96D5A1 /* Foundation.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		6A4A746334214CAA95CFB897 /* Andale Mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 90F65BE34073446DB3AEAF40 /* Andale Mono.ttf */; };
@@ -275,6 +277,8 @@
 		223C25FC41B1414B8B999CFE /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
 		31CD1C59D8DC4C03AAB21DB1 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		41301E043456499AACF37EEA /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		528CD0091E5C908B001175EC /* Nunito-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Nunito-ExtraLight.ttf"; path = "../android/app/src/main/assets/fonts/Nunito-ExtraLight.ttf"; sourceTree = "<group>"; };
+		528CD00A1E5C908B001175EC /* Nunito-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Nunito-Light.ttf"; path = "../android/app/src/main/assets/fonts/Nunito-Light.ttf"; sourceTree = "<group>"; };
 		57FE1E14585441209079E21E /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -441,6 +445,8 @@
 		2B08CCBD54484519AF3DA38D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				528CD0091E5C908B001175EC /* Nunito-ExtraLight.ttf */,
+				528CD00A1E5C908B001175EC /* Nunito-Light.ttf */,
 				CE0EB00F43F44664826C39DC /* Entypo.ttf */,
 				A4DCDE1E3EB64FCB8CBCA896 /* EvilIcons.ttf */,
 				C58344F220EA44C7894D4131 /* FontAwesome.ttf */,
@@ -602,7 +608,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 9CCUZC9B9N;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 9CCUZC9B9N;
 					};
 				};
 			};
@@ -902,8 +912,10 @@
 				EFDDF11D734F46D48EE830DD /* Courier New.ttf in Resources */,
 				F1D11AD5ADD34384B322BD3D /* Georgia.ttf in Resources */,
 				F3B5765EBF904EC8B7468008 /* Microsoft Sans Serif.ttf in Resources */,
+				528CD00B1E5C908B001175EC /* Nunito-ExtraLight.ttf in Resources */,
 				2ED0CD57139845A0869DF353 /* Roboto_medium.ttf in Resources */,
 				ECA2C8B786C74147A5833ED7 /* Roboto.ttf in Resources */,
+				528CD00C1E5C908B001175EC /* Nunito-Light.ttf in Resources */,
 				464DFFED841F47E688AA1197 /* SF-UI-Text-Regular.otf in Resources */,
 				6B37EB885711456AA9BF4932 /* Skia.ttf in Resources */,
 				0D358A2F77BA4F2ABAF507DB /* Times New Roman.ttf in Resources */,
@@ -974,6 +986,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 9CCUZC9B9N;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -986,6 +999,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.testomg.App;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/App.app/App";
 			};
@@ -996,6 +1010,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 9CCUZC9B9N;
 				INFOPLIST_FILE = AppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1004,6 +1019,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.testomg.App;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/App.app/App";
 			};
@@ -1015,14 +1031,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 9CCUZC9B9N;
 				INFOPLIST_FILE = App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.testomg.App;
 				PRODUCT_NAME = App;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1032,14 +1052,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9CCUZC9B9N;
 				INFOPLIST_FILE = App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.testomg.App;
 				PRODUCT_NAME = App;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

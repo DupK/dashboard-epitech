@@ -118,8 +118,12 @@ const styles = StyleSheet.create({
     },
 
     selfContainer: {
-        borderBottomWidth: 1,
-        borderBottomColor: 'white',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        margin: 5,
+        height: 30,
+        backgroundColor: '#39516a',
+        borderRadius: 5,
     },
 
     container: {

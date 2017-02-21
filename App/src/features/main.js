@@ -3,6 +3,7 @@
  **/
 
 import React, { Component } from 'react';
+import { Platform } from 'react-native';
 import { Router, Scene } from 'react-native-mobx';
 import Login from './login/Login';
 import Home from './home/Home'
@@ -28,7 +29,7 @@ const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) 
         shadowRadius: null,
     };
     if (computedProps.isActive) {
-        style.marginTop = computedProps.hideNavBar ? 0 : 54;
+        style.marginTop = computedProps.hideNavBar ? 0 : Platform.OS === 'android' ? 54 : 64;
     }
     return style;
 };
