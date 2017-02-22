@@ -5,12 +5,13 @@ import _ from 'lodash';
 import moment from 'moment';
 import autobind from 'autobind-decorator';
 import { observable } from 'mobx';
-
+import ui from './uiState'
 import * as Intra from '../api/intra';
 
 @autobind
 class Projects {
     @observable projects = [];
+    @observable projectDetails = [];
 
     async fetchProjects() {
         const rawProjects = await Intra.fetchProjects();
@@ -21,6 +22,12 @@ class Projects {
 
             return isProject && isNotInPast;
         });
+    }
+
+    async fetchProjectDetails(year, module, instance, activity) {
+        ui.fetchingState();
+        this.projectDetails = await Intra.fetchProjectDetails({year, module, instance, activity});
+        ui.defaultState();
     }
 }
 

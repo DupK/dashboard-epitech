@@ -110,7 +110,7 @@ export function fetchProjects() {
 }
 
 export function fetchProjectDetails({ year, module, instance, activity }) {
-    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${instance}/project/?format=json`, {
+    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/project/?format=json`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -121,7 +121,7 @@ export function fetchProjectDetails({ year, module, instance, activity }) {
 }
 
 export function fetchProjectFiles({ year, module, instance, activity }) {
-    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${instance}/project/file/?format=json`, {
+    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/project/file/?format=json`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',

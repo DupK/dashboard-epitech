@@ -192,7 +192,7 @@ MarkDetails.propTypes = {
     mark: React.PropTypes.object,
 };
 
-MarkDetails.defaultPropos = {
+MarkDetails.defaultProps = {
     mark: [],
 };
 
