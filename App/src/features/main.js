@@ -84,6 +84,7 @@ class Main extends Component {
                         onRight={_.noop}
                         rightButtonImage={ require('../assets/reload.png')}
                         rightButtonIconStyle={getImageStyle()}
+                        type="reset"
                     />
 
                     <Scene

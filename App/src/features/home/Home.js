@@ -18,8 +18,6 @@ export default class Home extends Component {
 
     constructor(props) {
         super(props);
-
-        this.handleBackAndroid = this.handleBackAndroid.bind(this);
     }
 
     menu = {
@@ -36,20 +34,6 @@ export default class Home extends Component {
             Actions.login();
         }
     };
-
-    handleBackAndroid() {
-        BackAndroid.exitApp();
-
-        return false;
-    }
-
-    componentDidMount() {
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackAndroid);
-    }
-
-    componentWillUnmount() {
-        BackAndroid.addEventListener('hardwareBackPress', this.handleBackAndroid);
-    }
 
     logTimeColor(logtime) {
         if (logtime < 20) {
