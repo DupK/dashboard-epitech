@@ -11,10 +11,44 @@ import {
     Dimensions,
 } from 'react-native';
 
-const HEADER_MAX_HEIGHT = 180;
+const HEADER_MAX_HEIGHT = 200;
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 64 : 54;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 const AVATAR_SIZE = 80;
+
+const BlockInfo = ({ number, numberType }) => {
+    return (
+        <View style={{
+            flex: 5,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            backgroundColor: '#42586E',
+            borderRightWidth: 1,
+            borderRightColor: '#617487',
+        }}>
+            <Text style={{
+                alignSelf: 'center',
+                color: '#FFFFFF',
+                fontSize: 17,
+                fontFamily: 'Nunito-Light',
+            }}>
+                { number }
+            </Text>
+            <Text style={{
+                alignSelf: 'center',
+                color: '#c4c4c4',
+                fontSize: 10,
+            }}>
+                { numberType }
+            </Text>
+        </View>
+    );
+};
+
+BlockInfo.propTypes = {
+    number: React.PropTypes.string,
+    numberType: React.PropTypes.string,
+};
 
 export default class ScrollableHeader extends Component {
 
@@ -54,19 +88,13 @@ export default class ScrollableHeader extends Component {
 
         const imageTranslate = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE],
-            outputRange: [0, -50],
-            extrapolate: 'clamp',
-        });
-
-        const titleScale = this.state.scrollY.interpolate({
-            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [1, 1, 1],
+            outputRange: [0, -75],
             extrapolate: 'clamp',
         });
 
         const titleTranslate = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [0, HEADER_MIN_HEIGHT / 2, 0],
+            outputRange: [0, -10, 0],
             extrapolate: 'clamp',
         });
 
@@ -75,8 +103,6 @@ export default class ScrollableHeader extends Component {
             outputRange: [0, 0, 1],
             extrapolate: 'clamp',
         });
-
-        const { width } = Dimensions.get('window');
 
         return (
             <View style={styles.fill}>
@@ -102,24 +128,13 @@ export default class ScrollableHeader extends Component {
                             },
                         ]}
                     >
-                        <View
-                            style={{
-                                flex: 1,
-                                flexDirection: 'row',
-                                justifyContent: 'space-around',
-                                alignItems: 'center',
-                                // borderColor: 'white',
-                                // borderWidth: 1,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    color: 'white',
-                                }}
-                            >
-                                GPA: 4.00
-                            </Text>
-                            <Image
+                        <View style={{
+                            flex: 10,
+                            alignSelf: 'center',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                        }}>
+                            <Animated.Image
                                 style={[
                                     {
                                         width: AVATAR_SIZE,
@@ -130,34 +145,40 @@ export default class ScrollableHeader extends Component {
                                 ]}
                                 source={{ uri: 'https://cdn.local.epitech.eu/userprofil/profilview/flavian.desverne.jpg' }}
                             />
-                            <Text
-                                style={{
-                                    color: 'white',
-                                }}
-                            >
-                                Credits: 1337
-                            </Text>
-                        </View>
-                        <View
-                            style={{
-                                flex: 0.4,
-                                alignItems: 'center',
+                            <Text style={{
+                                color: 'white',
+                                fontSize: 17,
+                                fontFamily: 'Nunito-ExtraLight',
+                                marginBottom: 10,
                             }}
-                        >
-                            <Text
-                                style={{
-                                    color: 'white',
-                                }}
-                            >
-                                Flavian DESVERNE
-                            </Text>
+                            >Flavian DESVERNE</Text>
+                        </View>
+                        <View style={{
+                            flex: 3,
+                            flexDirection: 'row',
+                            borderWidth: 0.5,
+                            borderColor: '#617487',
+                            justifyContent: 'space-around',
+                        }}>
+                            <BlockInfo
+                                number="84"
+                                numberType="Credits"
+                            />
+                            <BlockInfo
+                                number="4.00"
+                                numberType="GPA"
+                            />
+                            <BlockInfo
+                                number="39.4h"
+                                numberType="Log"
+                            />
                         </View>
                     </Animated.View>
                     <Animated.View
                         style={[
                             styles.bar,
                             {
-                                transform: [{scale: titleScale}, {translateY: titleTranslate}],
+                                transform: [ {translateY: titleTranslate} ],
                                 opacity: titleOpacity,
                             },
                         ]}

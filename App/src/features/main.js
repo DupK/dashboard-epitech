@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { Platform } from 'react-native';
 import { Router, Scene } from 'react-native-mobx';
 import Login from './login/Login';
-import Home from './home/NewHome'
+import Home from './home/Home'
 import Calendar from './calendar/Calendar';
 import Loading from './loading/Loading';
 import News from './news/News';
@@ -66,6 +66,7 @@ class Main extends Component {
                 <Scene key="root">
 
                     <Scene
+                        initial
                         key="login"
                         hideNavBar={true}
                         component={Login}
@@ -73,25 +74,14 @@ class Main extends Component {
                     />
 
                     <Scene
-                        initial
                         key="home"
-                        title="Home"
                         component={Home}
                         panHandlers={null}
                         hideBackImage={true}
                         hideNavBar
                         onBack={_.noop}
                         onRight={_.noop}
-                        rightButtonImage={ require('../assets/reload.png')}
-                        rightButtonIconStyle={getImageStyle()}
                         type="reset"
-                    />
-
-                    <Scene
-                        key="calendar"
-                        title="Calendar"
-                        component={Calendar}
-                        panHandlers={null}
                     />
 
                     <Scene
@@ -99,6 +89,14 @@ class Main extends Component {
                         title="Loading"
                         hideNavBar={true}
                         component={Loading}
+                    />
+
+                    <Scene
+                        key="calendar"
+                        title="Calendar"
+                        hideNavBar={false}
+                        component={Calendar}
+                        panHandlers={null}
                     />
 
                     <Scene
