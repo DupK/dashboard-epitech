@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { Platform } from 'react-native';
 import { Router, Scene } from 'react-native-mobx';
 import Login from './login/Login';
-import Home from './home/Home'
+import Home from './home/NewHome'
 import Calendar from './calendar/Calendar';
 import Loading from './loading/Loading';
 import News from './news/News';
@@ -66,7 +66,6 @@ class Main extends Component {
                 <Scene key="root">
 
                     <Scene
-                        initial
                         key="login"
                         hideNavBar={true}
                         component={Login}
@@ -74,12 +73,13 @@ class Main extends Component {
                     />
 
                     <Scene
+                        initial
                         key="home"
                         title="Home"
-                        hideNavBar={false}
                         component={Home}
                         panHandlers={null}
                         hideBackImage={true}
+                        hideNavBar
                         onBack={_.noop}
                         onRight={_.noop}
                         rightButtonImage={ require('../assets/reload.png')}
