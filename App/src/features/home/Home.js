@@ -25,7 +25,7 @@ import IconIO from 'react-native-vector-icons/Ionicons';
 import styles from './styles.js';
 
 
-export const HEADER_MAX_HEIGHT = 220;
+export const HEADER_MAX_HEIGHT = 240;
 export const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 64 : 54;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 const AVATAR_SIZE = 80;
@@ -280,38 +280,6 @@ export default class Home extends Component {
                         ]}
                     >
                         <View style={{
-                            position: 'absolute',
-                            top: HEADER_MAX_HEIGHT / 3 - (100 / 2) - 6,
-                            left: width / 2 - 100 + 20,
-                            zIndex: 10,
-                        }}>
-                            <AnimatedGaugeProgress
-                                size={100}
-                                width={5}
-                                fill={50}
-                                rotation={0}
-                                cropDegree={220}
-                                tintColor="#4682b4"
-                                backgroundColor="#b0c4de"
-                                strokeCap="circle" />
-                        </View>
-                        <View style={{
-                            position: 'absolute',
-                            top: HEADER_MAX_HEIGHT / 3 - (100 / 2) - 6,
-                            left: (width / 2 - 100) * 2,
-                            zIndex: 10,
-                        }}>
-                            <AnimatedGaugeProgress
-                                size={100}
-                                width={5}
-                                fill={50}
-                                rotation={180}
-                                cropDegree={220}
-                                tintColor="#4682b4"
-                                backgroundColor="#b0c4de"
-                                strokeCap="circle" />
-                        </View>
-                        <View style={{
                             flex: 10,
                             flexDirection: 'column',
                         }}>
@@ -347,10 +315,41 @@ export default class Home extends Component {
                                            height: AVATAR_SIZE,
                                            resizeMode: 'cover',
                                            borderRadius: 40,
+                                           zIndex: 10,
                                        },
                                    ]}
                                    source={{ uri: 'https://cdn.local.epitech.eu/userprofil/profilview/flavian.desverne.jpg' }}
                                />
+                               <View style={{
+                                   position: 'absolute',
+                                   top: HEADER_MAX_HEIGHT / 3 - (100 / 2) - 6,
+                                   left: width / 4,
+                               }}>
+                                   <AnimatedGaugeProgress
+                                       size={100}
+                                       width={5}
+                                       fill={50}
+                                       rotation={0}
+                                       cropDegree={230}
+                                       tintColor="#4682b4"
+                                       backgroundColor="#b0c4de"
+                                   />
+                               </View>
+                               <View style={{
+                                   position: 'absolute',
+                                   top: HEADER_MAX_HEIGHT / 3 - (100 / 2) - 6,
+                                   right: width / 4
+                               }}>
+                                   <AnimatedGaugeProgress
+                                       size={100}
+                                       width={5}
+                                       fill={50}
+                                       rotation={180}
+                                       cropDegree={230}
+                                       tintColor="#4682b4"
+                                       backgroundColor="#b0c4de"
+                                   />
+                               </View>
                                <View style={{ flexDirection: 'column'}}>
                                    <Text style={{
                                        color: '#FFFFFF',
@@ -374,7 +373,7 @@ export default class Home extends Component {
                                     color: 'white',
                                     fontSize: 17,
                                     fontFamily: 'Nunito-ExtraLight',
-                                    marginBottom: 10,
+                                    marginBottom: 20,
                                     alignSelf: 'center',
                                 }}
                                 >Flavian DESVERNE</Text>
