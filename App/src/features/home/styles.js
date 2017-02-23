@@ -3,25 +3,24 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT } from './Home';
 
 const styles = StyleSheet.create({
     iconStyle: {
         flex: 0.15,
-        fontSize: 50,
-        color: "#2c3e50",
+        fontSize: 40,
+        color: "rgba(255, 255, 255, 1)",
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
-        marginLeft: 5,
+        marginLeft: 15,
     },
 
     iconStyleFA: {
         flex: 0.15,
         fontSize: 40,
-        color: "#2c3e50",
+        color: "rgba(255, 255, 255, 1)",
         justifyContent: 'center',
-        marginLeft: 5,
+        marginLeft: 10,
     },
 
     ThumbStyle: {
@@ -30,9 +29,9 @@ const styles = StyleSheet.create({
     },
 
     itemTitle: {
-        flex: 0.75,
         fontWeight: 'bold',
         fontFamily: 'Nunito-ExtraLight',
+        color: 'white',
     },
 
     itemTitleLogout: {
@@ -45,19 +44,23 @@ const styles = StyleSheet.create({
     profileTitle: {
         flex: 0.75,
         fontWeight: 'bold',
-        fontFamily: 'Nunito-ExtraLight',
+        fontFamily: 'Nunito-Light',
     },
 
     itemDescr: {
+        fontFamily: 'Nunito-Light',
         fontWeight: 'normal',
         fontSize: 12,
+        color: 'white',
+        lineHeight: 22,
     },
 
     arrowStyle: {
-        flex: 0.03,
-        fontSize: 20,
+        flex: 0.05,
+        fontSize: 10,
         alignSelf: 'center',
-        color: '#2c3e50',
+        color: 'white',
+        marginRight: 3,
     },
 
     trafficLightStyle: {
@@ -69,57 +72,13 @@ const styles = StyleSheet.create({
 
     logoutStyle: {
         flex: 0.15,
-        fontSize: 50,
-        marginRight: 5,
-        marginLeft: 5,
+        fontSize: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginLeft: 15,
         color: "#b24c42",
     },
-
-    //scrollable header
-    fill: {
-        flex: 1,
-    },
-    content: {
-        flex: 1,
-    },
-
-    header: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: '#2c3e50',
-        overflow: 'hidden',
-    },
-    backgroundImage: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        width: null,
-        height: HEADER_MAX_HEIGHT,
-    },
-    bar: {
-        height: HEADER_MIN_HEIGHT,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        color: 'white',
-        fontFamily: 'Nunito-Light',
-        fontSize: 16,
-    },
-    scrollViewContent: {
-        marginTop: HEADER_MAX_HEIGHT,
-    },
-    row: {
-        height: 40,
-        margin: 16,
-        backgroundColor: '#D3D3D3',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
 });
 
 export default styles;

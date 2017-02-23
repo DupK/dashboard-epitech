@@ -9,7 +9,6 @@ import {
     Text,
     View,
     Image,
-    BackAndroid,
     ScrollView,
     Animated,
     Platform,
@@ -20,25 +19,24 @@ import {
 import { AnimatedGaugeProgress } from 'react-native-simple-gauge';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
-import IconFA from 'react-native-vector-icons/FontAwesome';
+import IconSL from 'react-native-vector-icons/SimpleLineIcons';
 import IconIO from 'react-native-vector-icons/Ionicons';
 import styles from './styles.js';
 
-
-export const HEADER_MAX_HEIGHT = 240;
-export const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 64 : 54;
+const HEADER_MAX_HEIGHT = 180;
+const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 64 : 54;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
-const AVATAR_SIZE = 80;
+const AVATAR_SIZE = 70;
 
-const BlockInfo = ({ number, numberType }) => {
+const BlockInfo = observer(({ number, numberType }) => {
     return (
         <View style={{
             flex: 5,
             flexDirection: 'column',
             justifyContent: 'center',
-            backgroundColor: '#42586E',
+            backgroundColor: '#2c3e50',
             borderRightWidth: 1,
-            borderRightColor: '#617487',
+            borderRightColor: '#495a6d',
         }}>
             <Text style={{
                 alignSelf: 'center',
@@ -57,20 +55,21 @@ const BlockInfo = ({ number, numberType }) => {
             </Text>
         </View>
     );
-};
+});
 
 BlockInfo.propTypes = {
     number: React.PropTypes.string,
     numberType: React.PropTypes.string,
 };
 
-const Cell = (props) => {
+const Cell = observer((props) => {
 
     const {
         title,
         description,
         icon,
-        onPress
+        onPress,
+        color,
     } = props;
 
     return (
@@ -79,34 +78,40 @@ const Cell = (props) => {
             onPress={onPress}
             style={{
                 flex: 1,
-                flexDirection: 'column',
-                borderBottomWidth: 0.5,
-                borderBottomColor: 'grey',
+                backgroundColor: color,
+                height: 80,
             }}
         >
             <View style={{
-                height: 80,
+                flex: 1,
                 flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
             }}>
                 { icon }
-                <Text style={ styles.itemTitle }>{title}{"\n"}
-                    <Text style={ styles.itemDescr }>
-                        {_.truncate(description, {length: 80, separator: '...'})}
-                    </Text>
-                </Text>
-                <IconIO name="ios-arrow-forward-outline" style={ styles.arrowStyle }/>
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'column',
+                    marginTop: 10,
+                    marginLeft: 10,
+                }}>
+                    <View style={{ flex: 0.35 }}>
+                        <Text style={styles.itemTitle}>{ title }</Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.itemDescr}>{ description }</Text>
+                    </View>
+                </View>
+                <IconSL name="arrow-right" style={ styles.arrowStyle }/>
             </View>
         </TouchableOpacity>
     );
-};
+});
 
 Cell.propTypes = {
     title: React.PropTypes.string,
     description: React.PropTypes.string,
     icon: React.PropTypes.node,
     onPress: React.PropTypes.func,
+    color: React.PropTypes.string,
 };
 
 @observer
@@ -138,7 +143,7 @@ export default class Home extends Component {
     renderScrollView() {
         const {
             store: {
-                session: { news, session: { user } },
+                session: { news },
                 calendar,
                 ranking,
                 marks
@@ -156,26 +161,30 @@ export default class Home extends Component {
                 <Cell
                     title="News"
                     description={lastNews.title}
-                    icon={<IconIO name="ios-paper" style={ styles.iconStyle }/>}
+                    icon={<IconIO name="ios-pulse-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.news}
+                    color="#233445"
                 />
                 <Cell
                     title="Projects"
                     description="Insert projects description.."
-                    icon={<IconFA name="tasks" style={ styles.iconStyleFA }/>}
+                    icon={<IconIO name="ios-cafe-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.projects}
+                    color="#203040"
                 />
                 <Cell
                     title="Calendar"
-                    description={`Your next event \"{nextEvent.title}\" starts ${moment(nextEvent.start).fromNow()}`}
-                    icon={<IconIO name="ios-calendar" style={ styles.iconStyle }/>}
+                    description={`Your next event \"${nextEvent.title}\" starts ${moment(nextEvent.start).fromNow()}`}
+                    icon={<IconIO name="ios-calendar-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.calendar}
+                    color="#1E2C3B"
                 />
                 <Cell
                     title="Marks"
                     description={`Your last mark from ${ lastMark.titlemodule } - ${ lastMark.title } is ${lastMark.final_note}`}
-                    icon={<IconIO name="md-bookmarks" style={ styles.iconStyle }/>}
+                    icon={<IconIO name="ios-school-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.marks}
+                    color="#1B2836"
                 />
                 <Cell
                     title="Ranking"
@@ -184,42 +193,74 @@ export default class Home extends Component {
                             ? `You\'re currently ${ranking.rankPosition} in your promotion.`
                             : 'Click here to get your rank.'
                     }
-                    icon={<IconFA name="rocket" style={ styles.iconStyleFA }/>}
+                    icon={<IconIO name="ios-trophy-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.ranking}
+                    color="#192531"
                 />
                 <Cell
                     title="Statistics"
                     description="Insert statistics description.."
-                    icon={<IconFA name="pie-chart" style={ styles.iconStyleFA }/>}
+                    icon={<IconIO name="ios-speedometer-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.stats}
+                    color="#16212C"
                 />
                 <Cell
                     title="Tokens"
                     description="Insert token description.."
-                    icon={<IconFA name="ticket" style={ styles.iconStyleFA }/>}
+                    icon={<IconIO name="ios-pricetags-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.tokens}
+                    color="#141D27"
                 />
                 <Cell
                     title="Logout"
-                    description=""
-                    icon={<IconIO name="md-log-out" style={ styles.logoutStyle }/>}
+                    description="Flav"
+                    icon={<IconIO name="ios-power-outline" style={ styles.logoutStyle }/>}
                     onPress={this.menu.logout}
+                    color="#111A22"
                 />
             </View>
         );
     }
 
-    _renderScrollViewContent() {
-        const data = Array.from({ length: 10 });
-        return (
-            <View style={scrollStyle.scrollViewContent}>
-                {data.map((_, i) =>
-                    <View key={i} style={scrollStyle.row}>
-                        <Text>{i}</Text>
-                    </View>
-                )}
-            </View>
-        );
+    renderGauges(translateLeft, translateRight) {
+        const {
+            store: {
+                session: { session: { user } },
+            }
+        } = this.props;
+        const creditsPercentage = (user.credits / (user.studentyear * 60)) * 100;
+        const gpaPercentage = (user.gpa / 4) * 100;
+
+        return [
+            <AnimatedGaugeProgress
+                key="left"
+                style={[
+                    scrollStyle.leftGauge,
+                    { transform: [{ translateX: translateLeft }] },
+                ]}
+                size={100}
+                width={5}
+                fill={gpaPercentage}
+                rotation={0}
+                cropDegree={230}
+                tintColor="#62c462"
+                backgroundColor="#152839"
+            />,
+            <AnimatedGaugeProgress
+                key="right"
+                style={[
+                    scrollStyle.rightGauge,
+                    { transform: [{ translateX: translateRight }] }
+                ]}
+                size={100}
+                width={5}
+                fill={creditsPercentage}
+                rotation={180}
+                cropDegree={230}
+                tintColor="#62c462"
+                backgroundColor="#152839"
+            />
+        ];
     }
 
     render() {
@@ -230,7 +271,7 @@ export default class Home extends Component {
         });
 
         const imageOpacity = this.state.scrollY.interpolate({
-            inputRange: [0, HEADER_SCROLL_DISTANCE],
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2],
             outputRange: [1, 0],
             extrapolate: 'clamp',
         });
@@ -243,7 +284,7 @@ export default class Home extends Component {
 
         const titleTranslate = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [0, -10, 0],
+            outputRange: [0, -50, 0],
             extrapolate: 'clamp',
         });
 
@@ -253,7 +294,54 @@ export default class Home extends Component {
             extrapolate: 'clamp',
         });
 
-        const { width } = Dimensions.get('window');
+        const gpaTranslate = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+            outputRange: [0, -50, 0],
+            extrapolate: 'clamp',
+        });
+
+        const creditsTranslate = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+            outputRange: [0, 50, 0],
+            extrapolate: 'clamp',
+        });
+
+        const nameTranslate = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+            outputRange: [0, 50, 0],
+            extrapolate: 'clamp',
+        });
+
+        const gaugeLeftTranslate = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+            outputRange: [0, 30, 0],
+            extrapolate: 'clamp',
+        });
+
+        const gaugeRightTranslate = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+            outputRange: [0, -30, 0],
+            extrapolate: 'clamp',
+        });
+
+        const shadow = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+            outputRange: [0, 0, 10],
+            extrapolate: 'clamp',
+        });
+
+        const rotateIcon = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2],
+            outputRange: ['0deg', '360deg'],
+            extrapolate: 'clamp',
+        });
+
+
+        const {
+            store: {
+                session: { session: { user } },
+            }
+        } = this.props;
 
         return (
             <View style={scrollStyle.fill}>
@@ -266,134 +354,52 @@ export default class Home extends Component {
                 >
                     { this.renderScrollView() }
                 </ScrollView>
-                <Animated.View style={[scrollStyle.header, { height: headerHeight }]}>
+                <Animated.View style={[
+                    scrollStyle.header,
+                    { height: headerHeight, elevation: shadow }
+                ]}>
                     <Animated.View
                         style={[
-                            scrollStyle.backgroundImage,
+                            scrollStyle.headerContainer,
                             {
                                 opacity: imageOpacity,
                                 transform: [{ translateY: imageTranslate }],
-                                flex: 1,
-                                flexDirection: 'column',
-                                justifyContent: 'center',
                             },
                         ]}
                     >
-                        <View style={{
-                            flex: 10,
-                            flexDirection: 'column',
-                        }}>
-                           <View
-                               style={{
-                                   flex: 1,
-                                   flexDirection: 'row',
-                                   alignItems: 'center',
-                                   justifyContent: 'space-around',
-                               }}
-                           >
-                               <View style={{ flexDirection: 'column'}}>
-                                   <Text style={{
-                                       color: '#FFFFFF',
-                                       fontSize: 17,
-                                       fontFamily: 'Nunito-Light',
-                                       alignSelf: 'center',
-                                   }}>
-                                       4.00
-                                   </Text>
-                                   <Text style={{
-                                       color: '#c4c4c4',
-                                       fontSize: 10,
-                                       alignSelf: 'center',
-                                   }}>
-                                       GPA
-                                   </Text>
-                               </View>
-                               <Animated.Image
-                                   style={[
-                                       {
-                                           width: AVATAR_SIZE,
-                                           height: AVATAR_SIZE,
-                                           resizeMode: 'cover',
-                                           borderRadius: 40,
-                                           zIndex: 10,
-                                       },
-                                   ]}
-                                   source={{ uri: 'https://cdn.local.epitech.eu/userprofil/profilview/flavian.desverne.jpg' }}
-                               />
-                               <View style={{
-                                   position: 'absolute',
-                                   top: HEADER_MAX_HEIGHT / 3 - (100 / 2) - 6,
-                                   left: width / 4,
-                               }}>
-                                   <AnimatedGaugeProgress
-                                       size={100}
-                                       width={5}
-                                       fill={50}
-                                       rotation={0}
-                                       cropDegree={230}
-                                       tintColor="#4682b4"
-                                       backgroundColor="#b0c4de"
-                                   />
-                               </View>
-                               <View style={{
-                                   position: 'absolute',
-                                   top: HEADER_MAX_HEIGHT / 3 - (100 / 2) - 6,
-                                   right: width / 4
-                               }}>
-                                   <AnimatedGaugeProgress
-                                       size={100}
-                                       width={5}
-                                       fill={50}
-                                       rotation={180}
-                                       cropDegree={230}
-                                       tintColor="#4682b4"
-                                       backgroundColor="#b0c4de"
-                                   />
-                               </View>
-                               <View style={{ flexDirection: 'column'}}>
-                                   <Text style={{
-                                       color: '#FFFFFF',
-                                       fontSize: 17,
-                                       fontFamily: 'Nunito-Light',
-                                       alignSelf: 'center',
-                                   }}>
-                                       69
-                                   </Text>
-                                   <Text style={{
-                                       color: '#c4c4c4',
-                                       fontSize: 10,
-                                       alignSelf: 'center',
-                                   }}>
-                                       Credits
-                                   </Text>
-                               </View>
-                           </View>
-                            <View>
-                                <Text style={{
-                                    color: 'white',
-                                    fontSize: 17,
-                                    fontFamily: 'Nunito-ExtraLight',
-                                    marginBottom: 20,
-                                    alignSelf: 'center',
-                                }}
-                                >Flavian DESVERNE</Text>
+                        <View style={scrollStyle.pictureAndGaugesContainer}>
+                            <View style={scrollStyle.pictureAndGauges}>
+                                <View style={{ flexDirection: 'column'}}>
+                                    <Animated.View style={{
+                                        transform: [{ translateX: gpaTranslate }],
+                                    }}>
+                                        <Text style={scrollStyle.gaugeValue}>{ user.gpa }</Text>
+                                        <Text style={scrollStyle.gaugeDescription}>GPA</Text>
+                                    </Animated.View>
+                                </View>
+                                <Animated.Image
+                                    style={[
+                                        scrollStyle.picture,
+                                        { transform: [ { rotate: rotateIcon }  ] }
+                                    ]}
+                                    source={require('../../assets/epitech.png')}
+                                />
+                                { this.renderGauges(gaugeLeftTranslate, gaugeRightTranslate) }
+                                <Animated.View style={{
+                                    transform: [{ translateX: creditsTranslate }],
+                                }}>
+                                    <View style={{ flexDirection: 'column'}}>
+                                        <Text style={scrollStyle.gaugeValue}>{ user.credits }</Text>
+                                        <Text style={scrollStyle.gaugeDescription}>Credits</Text>
+                                    </View>
+                                </Animated.View>
                             </View>
-                        </View>
-                        <View style={{
-                            flex: 3,
-                            flexDirection: 'row',
-                            borderWidth: 0.5,
-                            borderColor: '#617487',
-                            justifyContent: 'space-around',
-                        }}>
-                            <BlockInfo
-                                number="39.4h"
-                                numberType="Log"
-                            />
-                            <BlockInfo
-                                number="18"
-                                numberType="Epices"
-                            />
+                            <Animated.View style={{
+                                flex: 0.3,
+                                transform: [{ translateY: nameTranslate }],
+                            }}>
+                                <Text style={scrollStyle.username}>{ user.name }</Text>
+                            </Animated.View>
                         </View>
                     </Animated.View>
                     <Animated.View
@@ -416,6 +422,7 @@ export default class Home extends Component {
 const scrollStyle = StyleSheet.create({
     fill: {
         flex: 1,
+        backgroundColor: '#233445',
     },
     content: {
         flex: 1,
@@ -425,11 +432,14 @@ const scrollStyle = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        backgroundColor: '#2c3e50',
+        backgroundColor: '#233445',
         overflow: 'hidden',
     },
-    backgroundImage: {
+    headerContainer: {
         position: 'absolute',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
         top: 0,
         left: 0,
         right: 0,
@@ -456,4 +466,57 @@ const scrollStyle = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    pictureAndGaugesContainer: {
+        flex: 1,
+        flexDirection: 'column',
+    },
+    pictureAndGauges: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+    },
+    leftGauge: {
+        position: 'absolute',
+        top: (HEADER_MAX_HEIGHT / 3) - (100 / 2) + 8,
+        left: Dimensions.get('window').width / 4,
+    },
+    rightGauge: {
+        position: 'absolute',
+        top: (HEADER_MAX_HEIGHT / 3) - (100 / 2) + 8,
+        right: Dimensions.get('window').width / 4
+    },
+    gaugeValue: {
+        color: '#FFFFFF',
+        fontSize: 17,
+        fontFamily: 'Nunito-Light',
+        alignSelf: 'center',
+    },
+    gaugeDescription: {
+        color: '#c4c4c4',
+        fontSize: 10,
+        alignSelf: 'center',
+    },
+    picture: {
+        width: AVATAR_SIZE,
+        height: AVATAR_SIZE,
+        resizeMode: 'contain',
+        zIndex: 10,
+    },
+    username: {
+        color: 'white',
+        fontSize: 17,
+        fontFamily: 'Nunito-ExtraLight',
+        marginBottom: 20,
+        alignSelf: 'center',
+    },
+    blockInfoContainer: {
+        flex: 2,
+        flexDirection: 'row',
+        borderWidth: 0.5,
+        borderColor: '#617487',
+        justifyContent: 'space-around',
+        elevation: 30,
+        backgroundColor: 'black',
+    }
 });

@@ -44,10 +44,12 @@ class Session {
                 user: {
                     name: information.title,
                     credits: information.credits,
+                    spices: information.spice || '0',
                     gpa: information.gpa[0].gpa,
                     logtime: information.nsstat.active,
                     expectedLogtime: information.nsstat.nslog_norm,
                     promo: `tek${information.studentyear}`,
+                    studentyear: information.studentyear,
                     year: information.scolaryear,
                     location: information.location,
                     thumbnail: information.picture,
