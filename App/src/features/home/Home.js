@@ -15,7 +15,9 @@ import {
     Platform,
     StyleSheet,
     TouchableOpacity,
+    Dimensions,
 } from 'react-native';
+import { AnimatedGaugeProgress } from 'react-native-simple-gauge';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
 import IconFA from 'react-native-vector-icons/FontAwesome';
@@ -251,6 +253,8 @@ export default class Home extends Component {
             extrapolate: 'clamp',
         });
 
+        const { width } = Dimensions.get('window');
+
         return (
             <View style={scrollStyle.fill}>
                 <ScrollView
@@ -276,29 +280,105 @@ export default class Home extends Component {
                         ]}
                     >
                         <View style={{
-                            flex: 10,
-                            alignSelf: 'center',
-                            justifyContent: 'space-around',
-                            alignItems: 'center',
+                            position: 'absolute',
+                            top: HEADER_MAX_HEIGHT / 3 - (100 / 2) - 6,
+                            left: width / 2 - 100 + 20,
+                            zIndex: 10,
                         }}>
-                            <Animated.Image
-                                style={[
-                                    {
-                                        width: AVATAR_SIZE,
-                                        height: AVATAR_SIZE,
-                                        resizeMode: 'cover',
-                                        borderRadius: 40,
-                                    },
-                                ]}
-                                source={{ uri: 'https://cdn.local.epitech.eu/userprofil/profilview/flavian.desverne.jpg' }}
-                            />
-                            <Text style={{
-                                color: 'white',
-                                fontSize: 17,
-                                fontFamily: 'Nunito-ExtraLight',
-                                marginBottom: 10,
-                            }}
-                            >Flavian DESVERNE</Text>
+                            <AnimatedGaugeProgress
+                                size={100}
+                                width={5}
+                                fill={50}
+                                rotation={0}
+                                cropDegree={220}
+                                tintColor="#4682b4"
+                                backgroundColor="#b0c4de"
+                                strokeCap="circle" />
+                        </View>
+                        <View style={{
+                            position: 'absolute',
+                            top: HEADER_MAX_HEIGHT / 3 - (100 / 2) - 6,
+                            left: (width / 2 - 100) * 2,
+                            zIndex: 10,
+                        }}>
+                            <AnimatedGaugeProgress
+                                size={100}
+                                width={5}
+                                fill={50}
+                                rotation={180}
+                                cropDegree={220}
+                                tintColor="#4682b4"
+                                backgroundColor="#b0c4de"
+                                strokeCap="circle" />
+                        </View>
+                        <View style={{
+                            flex: 10,
+                            flexDirection: 'column',
+                        }}>
+                           <View
+                               style={{
+                                   flex: 1,
+                                   flexDirection: 'row',
+                                   alignItems: 'center',
+                                   justifyContent: 'space-around',
+                               }}
+                           >
+                               <View style={{ flexDirection: 'column'}}>
+                                   <Text style={{
+                                       color: '#FFFFFF',
+                                       fontSize: 17,
+                                       fontFamily: 'Nunito-Light',
+                                       alignSelf: 'center',
+                                   }}>
+                                       4.00
+                                   </Text>
+                                   <Text style={{
+                                       color: '#c4c4c4',
+                                       fontSize: 10,
+                                       alignSelf: 'center',
+                                   }}>
+                                       GPA
+                                   </Text>
+                               </View>
+                               <Animated.Image
+                                   style={[
+                                       {
+                                           width: AVATAR_SIZE,
+                                           height: AVATAR_SIZE,
+                                           resizeMode: 'cover',
+                                           borderRadius: 40,
+                                       },
+                                   ]}
+                                   source={{ uri: 'https://cdn.local.epitech.eu/userprofil/profilview/flavian.desverne.jpg' }}
+                               />
+                               <View style={{ flexDirection: 'column'}}>
+                                   <Text style={{
+                                       color: '#FFFFFF',
+                                       fontSize: 17,
+                                       fontFamily: 'Nunito-Light',
+                                       alignSelf: 'center',
+                                   }}>
+                                       69
+                                   </Text>
+                                   <Text style={{
+                                       color: '#c4c4c4',
+                                       fontSize: 10,
+                                       alignSelf: 'center',
+                                   }}>
+                                       Credits
+                                   </Text>
+                               </View>
+                           </View>
+                            <View>
+                                <Text style={{
+                                    color: 'white',
+                                    fontSize: 17,
+                                    fontFamily: 'Nunito-ExtraLight',
+                                    marginBottom: 10,
+                                    alignSelf: 'center',
+                                }}
+                                >Flavian DESVERNE</Text>
+                            </View>
                         </View>
                         <View style={{
                             flex: 3,
@@ -308,16 +388,12 @@ export default class Home extends Component {
                             justifyContent: 'space-around',
                         }}>
                             <BlockInfo
-                                number="84"
-                                numberType="Credits"
-                            />
-                            <BlockInfo
-                                number="4.00"
-                                numberType="GPA"
-                            />
-                            <BlockInfo
                                 number="39.4h"
                                 numberType="Log"
+                            />
+                            <BlockInfo
+                                number="18"
+                                numberType="Epices"
                             />
                         </View>
                     </Animated.View>
