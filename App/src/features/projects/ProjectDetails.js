@@ -35,21 +35,21 @@ Deadline.propTypes = {
 
 const Team = ({ team }) => {
     return (
-        <View style={{ flex: 1, borderWidth: 1, borderColor: 'red' }}>
+        <View style={{ flex: 1 }}>
             {
                  _.map(team, (currentTeam) => (
-                     <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(255, 255, 255, 0.3)' }}>
+                     <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(255, 255, 255, 0.1)' }}>
                         <Text style={{
                             margin: 5,
                             fontSize: 12,
-                            fontFamily: 'Nunito-ExtraLight',
+                            fontFamily: 'Nunito-Light',
                             color: '#FFF',
                         }}>{ currentTeam.title }</Text>
-                         <View style={{ flexDirection: 'row' }}>
+                         <View style={{ flexDirection: 'row', borderLeftWidth: 3, borderLeftColor: '#62c462' }}>
                             <Image style={{ borderRadius: 40, margin: 8 }} source={{ uri: currentTeam.master.picture, width: 40, height: 40 }} />
                              {
                                  _.map(currentTeam.members, (members) => (
-                                     <Image style={{borderRadius: 40, margin: 8}}
+                                     <Image style={{borderRadius: 40, margin: 8, alignSelf: 'center', }}
                                             source={{uri: members.picture, width: 30, height: 30}}/>
                                  ))
                              }
