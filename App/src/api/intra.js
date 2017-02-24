@@ -2,6 +2,8 @@
  * Created by desver_f on 23/01/17.
  */
 
+import moment from 'moment';
+
 const BASE_URL = 'https://intra.epitech.eu';
 
 export function login(login, password) {
@@ -91,6 +93,42 @@ export async function fetchPromotion(location, year, promo) {
     } catch (e) {
         console.error(e.message)
     }
+}
+
+export function fetchProjects() {
+    const start = moment().startOf('year').format('YYYY-MM-DD');
+    const end = moment().add(1, 'year').format('YYYY-MM-DD');
+
+    return fetch(`${BASE_URL}/module/board?format=json&start=${start}&end=${end}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
+}
+
+export function fetchProjectDetails({ year, module, instance, activity }) {
+    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/project/?format=json`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
+}
+
+export function fetchProjectFiles({ year, module, instance, activity }) {
+    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/project/file/?format=json`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
 }
 
 export function fetchMarks(user) {

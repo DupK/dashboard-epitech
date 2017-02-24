@@ -92,7 +92,6 @@ export default class Marks extends Component {
         return n + (s[(v - 20) % 10] || s[v] || s[0]);
     }
 
-
     nextSemester() {
         const { store: { marks } } = this.props;
         const { nbSemester, currentSemester } = marks;

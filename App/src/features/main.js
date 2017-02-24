@@ -11,6 +11,7 @@ import Calendar from './calendar/Calendar';
 import Loading from './loading/Loading';
 import News from './news/News';
 import Projects from './projects/Projects';
+import ProjectDetails from './projects/ProjectDetails';
 import Marks from './marks/Marks';
 import MarkDetails from './marks/MarkDetails';
 import Stats from './stats/Stats';
@@ -113,6 +114,13 @@ class Main extends Component {
                         title="Projects"
                         hideNavBar={false}
                         component={Projects}
+                    />
+
+                    <Scene
+                        key="projectDetails"
+                        title="projects-details"
+                        hideNavBar={false}
+                        component={ProjectDetails}
                     />
 
                     <Scene

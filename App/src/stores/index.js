@@ -3,6 +3,7 @@ import SessionStore from './session'
 import CalendarStore from './calendar';
 import RankingStore from './ranking';
 import MarksStore from './marks';
+import ProjectsStore from './projects';
 
 export default {
     ui: UiStateStore,
@@ -10,4 +11,5 @@ export default {
     calendar: CalendarStore,
     ranking: RankingStore,
     marks: MarksStore,
+    projects: ProjectsStore,
 };
