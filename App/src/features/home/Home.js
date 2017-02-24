@@ -282,33 +282,21 @@ export default class Home extends Component {
             extrapolate: 'clamp',
         });
 
-        const titleTranslate = this.state.scrollY.interpolate({
+        const translateMinus50 = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, -50, 0],
+            extrapolate: 'clamp',
+        });
+
+        const translate50 = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+            outputRange: [0, 50, 0],
             extrapolate: 'clamp',
         });
 
         const titleOpacity = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, 0, 1],
-            extrapolate: 'clamp',
-        });
-
-        const gpaTranslate = this.state.scrollY.interpolate({
-            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [0, -50, 0],
-            extrapolate: 'clamp',
-        });
-
-        const creditsTranslate = this.state.scrollY.interpolate({
-            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [0, 50, 0],
-            extrapolate: 'clamp',
-        });
-
-        const nameTranslate = this.state.scrollY.interpolate({
-            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [0, 50, 0],
             extrapolate: 'clamp',
         });
 
@@ -327,6 +315,12 @@ export default class Home extends Component {
         const shadow = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, 0, 10],
+            extrapolate: 'clamp',
+        });
+
+        const iOSshadow = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+            outputRange: [0, 0, 0.6],
             extrapolate: 'clamp',
         });
 
@@ -356,62 +350,77 @@ export default class Home extends Component {
                 </ScrollView>
                 <Animated.View style={[
                     scrollStyle.header,
-                    { height: headerHeight, elevation: shadow }
-                ]}>
-                    <Animated.View
-                        style={[
-                            scrollStyle.headerContainer,
-                            {
-                                opacity: imageOpacity,
-                                transform: [{ translateY: imageTranslate }],
-                            },
-                        ]}
-                    >
-                        <View style={scrollStyle.pictureAndGaugesContainer}>
-                            <View style={scrollStyle.pictureAndGauges}>
-                                <View style={{ flexDirection: 'column'}}>
+                    {
+                    elevation: shadow,
+                    shadowColor: "#000000",
+                    shadowOpacity: iOSshadow,
+                    shadowRadius: 5,
+                    shadowOffset: {
+                        height: 3,
+                        width: 0
+                    },
+                }]}>
+                    <Animated.View style={[
+                        {
+                            overflow: 'hidden',
+                            height: headerHeight,
+                        }
+                    ]}>
+                        <Animated.View
+                            style={[
+                                scrollStyle.headerContainer,
+                                {
+                                    opacity: imageOpacity,
+                                    transform: [{ translateY: imageTranslate }],
+                                },
+                            ]}
+                        >
+                            <View style={scrollStyle.pictureAndGaugesContainer}>
+                                <View style={scrollStyle.pictureAndGauges}>
+                                    <View style={{ flexDirection: 'column'}}>
+                                        <Animated.View style={{
+                                            transform: [{ translateX: translateMinus50 }],
+                                        }}>
+                                            <Text style={scrollStyle.gaugeValue}>{ user.gpa }</Text>
+                                            <Text style={scrollStyle.gaugeDescription}>GPA</Text>
+                                        </Animated.View>
+                                    </View>
+                                    <Animated.Image
+                                        style={[
+                                            scrollStyle.picture,
+                                            { transform: [ { rotate: rotateIcon }  ] }
+                                        ]}
+                                        source={require('../../assets/epitech.png')}
+                                    />
+                                    { this.renderGauges(gaugeLeftTranslate, gaugeRightTranslate) }
                                     <Animated.View style={{
-                                        transform: [{ translateX: gpaTranslate }],
+                                        transform: [{ translateX: translate50 }],
                                     }}>
-                                        <Text style={scrollStyle.gaugeValue}>{ user.gpa }</Text>
-                                        <Text style={scrollStyle.gaugeDescription}>GPA</Text>
+                                        <View style={{ flexDirection: 'column'}}>
+                                            <Text style={scrollStyle.gaugeValue}>{ user.credits }</Text>
+                                            <Text style={scrollStyle.gaugeDescription}>Credits</Text>
+                                        </View>
                                     </Animated.View>
                                 </View>
-                                <Animated.Image
-                                    style={[
-                                        scrollStyle.picture,
-                                        { transform: [ { rotate: rotateIcon }  ] }
-                                    ]}
-                                    source={require('../../assets/epitech.png')}
-                                />
-                                { this.renderGauges(gaugeLeftTranslate, gaugeRightTranslate) }
                                 <Animated.View style={{
-                                    transform: [{ translateX: creditsTranslate }],
+                                    flex: 0.3,
+                                    transform: [{ translateY: translate50 }],
                                 }}>
-                                    <View style={{ flexDirection: 'column'}}>
-                                        <Text style={scrollStyle.gaugeValue}>{ user.credits }</Text>
-                                        <Text style={scrollStyle.gaugeDescription}>Credits</Text>
-                                    </View>
+                                    <Text style={scrollStyle.username}>{ user.name }</Text>
                                 </Animated.View>
                             </View>
-                            <Animated.View style={{
-                                flex: 0.3,
-                                transform: [{ translateY: nameTranslate }],
-                            }}>
-                                <Text style={scrollStyle.username}>{ user.name }</Text>
-                            </Animated.View>
-                        </View>
-                    </Animated.View>
-                    <Animated.View
-                        style={[
-                            scrollStyle.bar,
-                            {
-                                transform: [ {translateY: titleTranslate} ],
-                                opacity: titleOpacity,
-                            },
-                        ]}
-                    >
-                        <Text style={scrollStyle.title}>Home</Text>
+                        </Animated.View>
+                        <Animated.View
+                            style={[
+                                scrollStyle.bar,
+                                {
+                                    transform: [ {translateY: translateMinus50} ],
+                                    opacity: titleOpacity,
+                                },
+                            ]}
+                        >
+                            <Text style={scrollStyle.title}>Home</Text>
+                        </Animated.View>
                     </Animated.View>
                 </Animated.View>
             </View>
@@ -433,7 +442,7 @@ const scrollStyle = StyleSheet.create({
         left: 0,
         right: 0,
         backgroundColor: '#233445',
-        overflow: 'hidden',
+        overflow: 'visible',
     },
     headerContainer: {
         position: 'absolute',
@@ -445,6 +454,7 @@ const scrollStyle = StyleSheet.create({
         right: 0,
         width: null,
         height: HEADER_MAX_HEIGHT,
+        marginTop: 10,
     },
     bar: {
         height: HEADER_MIN_HEIGHT,
@@ -457,7 +467,7 @@ const scrollStyle = StyleSheet.create({
         fontSize: 16,
     },
     scrollViewContent: {
-        marginTop: HEADER_MAX_HEIGHT,
+        marginTop: HEADER_MAX_HEIGHT + 12,
     },
     row: {
         height: 40,
@@ -506,7 +516,8 @@ const scrollStyle = StyleSheet.create({
     username: {
         color: 'white',
         fontSize: 17,
-        fontFamily: 'Nunito-ExtraLight',
+        fontFamily: 'Nunito-Light',
+        fontWeight: 'bold',
         marginBottom: 20,
         alignSelf: 'center',
     },

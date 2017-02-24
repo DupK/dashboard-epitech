@@ -29,8 +29,6 @@ const styles = StyleSheet.create({
     },
 
     itemTitle: {
-        fontWeight: 'bold',
-        fontFamily: 'Nunito-ExtraLight',
         color: 'white',
     },
 
