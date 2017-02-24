@@ -7,18 +7,20 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     iconStyle: {
         flex: 0.15,
-        fontSize: 50,
-        color: "#2c3e50",
+        fontSize: 40,
+        color: "rgba(255, 255, 255, 1)",
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
+        marginLeft: 15,
     },
 
     iconStyleFA: {
         flex: 0.15,
         fontSize: 40,
-        color: "#2c3e50",
+        color: "rgba(255, 255, 255, 1)",
         justifyContent: 'center',
+        marginLeft: 10,
     },
 
     ThumbStyle: {
@@ -27,9 +29,7 @@ const styles = StyleSheet.create({
     },
 
     itemTitle: {
-        flex: 0.75,
-        fontWeight: 'bold',
-        fontFamily: 'Nunito-ExtraLight',
+        color: 'white',
     },
 
     itemTitleLogout: {
@@ -42,19 +42,23 @@ const styles = StyleSheet.create({
     profileTitle: {
         flex: 0.75,
         fontWeight: 'bold',
-        fontFamily: 'Nunito-ExtraLight',
+        fontFamily: 'Nunito-Light',
     },
 
     itemDescr: {
+        fontFamily: 'Nunito-Light',
         fontWeight: 'normal',
         fontSize: 12,
+        color: 'white',
+        lineHeight: 22,
     },
 
     arrowStyle: {
-        flex: 0.03,
-        fontSize: 20,
+        flex: 0.05,
+        fontSize: 10,
         alignSelf: 'center',
-        color: '#2c3e50',
+        color: 'white',
+        marginRight: 3,
     },
 
     trafficLightStyle: {
@@ -66,8 +70,11 @@ const styles = StyleSheet.create({
 
     logoutStyle: {
         flex: 0.15,
-        fontSize: 50,
-        marginRight: 5,
+        fontSize: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginLeft: 15,
         color: "#b24c42",
     },
 });

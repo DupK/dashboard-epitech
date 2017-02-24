@@ -76,23 +76,13 @@ class Main extends Component {
 
                     <Scene
                         key="home"
-                        title="Home"
-                        hideNavBar={false}
                         component={Home}
                         panHandlers={null}
                         hideBackImage={true}
+                        hideNavBar
                         onBack={_.noop}
                         onRight={_.noop}
-                        rightButtonImage={ require('../assets/reload.png')}
-                        rightButtonIconStyle={getImageStyle()}
                         type="reset"
-                    />
-
-                    <Scene
-                        key="calendar"
-                        title="Calendar"
-                        component={Calendar}
-                        panHandlers={null}
                     />
 
                     <Scene
@@ -100,6 +90,14 @@ class Main extends Component {
                         title="Loading"
                         hideNavBar={true}
                         component={Loading}
+                    />
+
+                    <Scene
+                        key="calendar"
+                        title="Calendar"
+                        hideNavBar={false}
+                        component={Calendar}
+                        panHandlers={null}
                     />
 
                     <Scene
