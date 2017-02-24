@@ -26,7 +26,15 @@ class Projects {
 
     async fetchProjectDetails(year, module, instance, activity) {
         ui.fetchingState();
-        this.projectDetails = await Intra.fetchProjectDetails({year, module, instance, activity});
+
+        const projectDescription = await Intra.fetchProjectDetails({year, module, instance, activity});
+        const projectFiles = await Intra.fetchProjectFiles({year, module, instance, activity});
+        const pdfFiles = _.filter(projectFiles, (projectFile) => _.endsWith(projectFile.slug, '.pdf'))
+
+        this.projectDetails = {
+            details: projectDescription,
+            files: pdfFiles
+        };
         ui.defaultState();
     }
 }

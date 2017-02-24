@@ -38,7 +38,7 @@ export default class ProjectsList extends Component {
 
         return (
             <ListItem>
-                <TouchableOpacity onPress={() => Actions.projectDetails({ project: project, title: project.acti_title }) }>
+                <TouchableOpacity onPress={() => Actions.projectDetails({ progress: progress, project: project, title: project.acti_title }) }>
                     <View style={{
                         flex: 1,
                         flexDirection: 'row',
@@ -72,10 +72,12 @@ export default class ProjectsList extends Component {
                                         <Text style={{
                                             fontFamily: 'Nunito-Light',
                                             fontSize: 10,
+                                            marginTop: 5,
                                         }}>{ parsedStart.fromNow() }</Text>
                                         <Text style={{
                                             fontFamily: 'Nunito-Light',
                                             fontSize: 10,
+                                            margin: 5,
                                         }}>{ parsedEnd.fromNow() }</Text>
                                     </View>
                                     <ProgressBar completePercentage={progress}/>
