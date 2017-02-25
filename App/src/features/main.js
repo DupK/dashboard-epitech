@@ -36,7 +36,7 @@ const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) 
 };
 
 const getHeaderStyle = () => {
-    return { backgroundColor: '#2c3e50', }
+    return { backgroundColor: '#233445', }
 };
 
 const getTitleStyle = () => {
@@ -102,7 +102,7 @@ class Main extends Component {
 
                     <Scene
                         key="news"
-                        title="News"
+                        title="Notifications"
                         hideNavBar={false}
                         component={News}
                     />

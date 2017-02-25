@@ -24,7 +24,7 @@ export default class Stats extends Component {
 
         return (
             <Container>
-                <Content>
+                <Content contentContainerStyle={{ flex: 1, backgroundColor: "#233445" }}>
                     <Text>Stats here</Text>
                 </Content>
             </Container>

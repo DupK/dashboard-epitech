@@ -65,10 +65,9 @@ export default class Loading extends Component {
                         <LoadingIndicator
                             isVisible={!session.finishedLoading}
                             color="#FFFFFF"
-                            type="9CubeGrid"
+                            type="Pulse"
                             size={100}
                         />
-                        <Text style={styles.loadingText}>Loading your data... Please wait.</Text>
                     </View>
                 </Content>
             </Container>

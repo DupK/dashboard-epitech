@@ -70,7 +70,7 @@ class MarkDetails extends Component {
             return '#2c3e50';
         }
 
-        return (mark.login === marks.selectedMark.login) ? '#39516a' : '#2c3e50';
+        return (mark.login === marks.selectedMark.login) ? '#39516a' : '#233445';
     }
 
     renderRow(mark) {
@@ -130,10 +130,9 @@ class MarkDetails extends Component {
                 <LoadingIndicator
                     isVisible={ui.currentState === ui.state.fetching}
                     color="#FFFFFF"
-                    type="9CubeGrid"
+                    type="Pulse"
                     size={100}
                 />
-                <Text style={styles.loadingText}>Loading marks...</Text>
             </View>
         );
     }
@@ -162,7 +161,7 @@ class MarkDetails extends Component {
         const selfMark = marks.selfMark;
 
         return (
-            <View style={{flex: 1, backgroundColor: '#2c3e50'}}>
+            <View style={{flex: 1, backgroundColor: '#233445'}}>
                 <View style={styles.selfRow}>{ this.renderSelf(selfMark) }</View>
                 <View style={styles.listContainerStyle}>
                     <List

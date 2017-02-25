@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         fontWeight: 'normal',
         fontSize: 12,
         color: 'white',
-        lineHeight: 22,
+        lineHeight: 18,
     },
 
     arrowStyle: {
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
         marginLeft: 15,
-        color: "#b24c42",
+        color: "#cd5447",
     },
 });
 

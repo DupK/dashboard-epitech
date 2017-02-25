@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#2c3e50',
+        backgroundColor: '#233445',
     },
 
     loadingText: {
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     dataContainer: {
         margin: 1,
         padding: 10,
-        backgroundColor: '#2c3e50',
+        backgroundColor: '#233445',
         flexDirection: 'row',
         alignItems: 'center',
     },
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     },
 
     rank: {
-        fontWeight: 'bold',
+        fontWeight: '100',
         fontSize: 15,
         marginRight: 10,
         color: "#FFFFFF",

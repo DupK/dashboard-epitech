@@ -6,6 +6,7 @@ import {
     Image,
     Alert,
     ScrollView,
+    TextInput,
 } from 'react-native';
 import {
     Container,
@@ -79,26 +80,11 @@ export default class Login extends Component {
                 <Content contentContainerStyle={{
                     flex: 1
                 }}>
-                    <Image source={backgroundSource} style={styles.backgroundImage}>
-
-                        <View style={styles.emptyBox}>
-
-                            <Image source={logoSource} style={styles.logoImage} />
-
-                            <View style={styles.forgroundTitleBox}>
-
-                                <Text style={styles.boxTitle}>
-                                    <Text style={styles.title}>Dashboard</Text>
-                                    <Text style={styles.subTitle}> Epitech</Text>
-                                </Text>
-
-                            </View>
-
-                        </View>
 
                         <View style={{flex: 0.15}}/>
 
                         <View  style={{ flex: 0.45, justifyContent: 'center'}}>
+
                             <InputGroup>
 
                                 <Icon name="ios-mail-outline" style={styles.iconInputMail} />
@@ -133,6 +119,7 @@ export default class Login extends Component {
 
                             </InputGroup>
 
+
                             { this.renderUserNotLogged() }
 
                             <Button
@@ -145,8 +132,8 @@ export default class Login extends Component {
                             >
                                 <Icon name="md-finger-print" style={styles.iconButton} />
                             </Button>
+
                         </View>
-                    </Image>
                 </Content>
             </Container>
         );

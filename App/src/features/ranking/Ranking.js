@@ -63,17 +63,16 @@ export default class Ranking extends Component {
                     <LoadingIndicator
                         isVisible={!ranking.promotion.length}
                         color="#FFFFFF"
-                        type="9CubeGrid"
+                        type="Pulse"
                         size={100}
                     />
-                    <Text style={styles.loadingText}>Loading ranking... This may take some time.</Text>
                 </View>
             );
         }
 
         return (
             <Container>
-                <Content contentContainerStyle={{backgroundColor: '#39516a'}}>
+                <Content contentContainerStyle={{backgroundColor: '#2c3e50'}}>
                     { this.renderSelf(selfRank) }
                     <ListView
                         style={styles.list}

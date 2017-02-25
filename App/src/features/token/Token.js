@@ -23,7 +23,7 @@ export default class Token extends Component {
 
         return (
             <Container>
-                <Content>
+                <Content contentContainerStyle={{ flex: 1, backgroundColor: "#233445" }}>
                     <Text>Token here</Text>
                 </Content>
             </Container>

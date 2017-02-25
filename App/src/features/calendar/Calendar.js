@@ -135,12 +135,12 @@ export default class Calendar extends Component {
         return (
             <View style={{ flex: 1, flexDirection: 'column' }}>
                 <View style={{ flex: 100, flexDirection: 'row' }}>
-                    <View style={{ flex: 0.2, backgroundColor: '#2c3e50' }}>
+                    <View style={{ flex: 0.2, backgroundColor: '#233445' }}>
                         <DaySelector
                             calendarStore={calendar}
                             calendarAnimation={{ duration: 30 }}
                             selectionAnimation={{ duration: 100 }}
-                            calendarColor={'#2c3e50'}
+                            calendarColor={'#233445'}
                             highlightColor={'#62c462'}
                             dateNumberStyle={{color: '#FFFFFF'}}
                             dateNameStyle={{color: '#FFFFFF'}}
@@ -148,7 +148,7 @@ export default class Calendar extends Component {
                     </View>
                     { this.renderCalendar() }
                 </View>
-                <View style={{ flex: 10, backgroundColor: '#2c3e50', elevation: 20 }}>
+                <View style={{ flex: 10, backgroundColor: '#233445', elevation: 20 }}>
                     <MonthSelector
                         calendarHeaderFormat="MMMM YYYY"
                         calendarStore={calendar}
