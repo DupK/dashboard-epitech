@@ -50,7 +50,7 @@ export default class Projects extends Component {
                 backgroundColor: 'white',
             }}
             style={{
-                backgroundColor: '#2c3e50',
+                backgroundColor: '#233445',
                 height: 50,
             }}
             labelStyle={{

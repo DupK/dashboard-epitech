@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     headerContainer: {
-        backgroundColor: '#2c3e50',
+        backgroundColor: '#233445',
         flex: 0.1,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        backgroundColor: '#2c3e50',
-        height: 35,
+        backgroundColor: '#233445',
+        height: 50,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -60,21 +60,20 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        margin: 5,
-        borderLeftWidth: 1,
-        borderLeftColor: 'rgba(255, 255, 255, 0.3)',
+        margin: 6,
     },
 
     textContent: {
         color: '#FFFFFF',
         fontFamily: 'Nunito-ExtraLight',
-        marginLeft: 10,
+        marginLeft: 5,
         fontSize: 13,
     },
 
     markContent: {
         color: '#FFFFFF',
         fontFamily: 'Nunito-ExtraLight',
+        fontWeight: '100',
         marginRight: 10,
     },
 
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#2c3e50',
+        backgroundColor: '#233445',
     },
 
     loadingText: {

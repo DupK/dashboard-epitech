@@ -118,7 +118,7 @@ export default class Marks extends Component {
             : 'Others';
 
         return (
-            <View style={{ flex: 1, backgroundColor: '#39516a' }}>
+            <View style={{ flex: 1, backgroundColor: '#29394b' }}>
                 <View style={styles.headerContainer}>
                     <Button
                         style={styles.headerArrow}

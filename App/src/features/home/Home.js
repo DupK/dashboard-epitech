@@ -159,7 +159,7 @@ export default class Home extends Component {
         return (
             <View style={scrollStyle.scrollViewContent}>
                 <Cell
-                    title="News"
+                    title="Notifications"
                     description={lastNews.title}
                     icon={<IconIO name="ios-pulse-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.news}
@@ -213,7 +213,7 @@ export default class Home extends Component {
                 />
                 <Cell
                     title="Logout"
-                    description="Flav"
+                    description="Thanks to report any bug"
                     icon={<IconIO name="ios-power-outline" style={ styles.logoutStyle }/>}
                     onPress={this.menu.logout}
                     color="#111A22"
@@ -517,7 +517,6 @@ const scrollStyle = StyleSheet.create({
         color: 'white',
         fontSize: 17,
         fontFamily: 'Nunito-Light',
-        fontWeight: 'bold',
         marginBottom: 20,
         alignSelf: 'center',
     },

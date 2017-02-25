@@ -26,13 +26,13 @@ export default class News extends Component {
 
         return (
             <Container style={styles.container}>
-                <Content contentContainerStyle={{backgroundColor: '#FFFFFF'}}>
+                <Content contentContainerStyle={{backgroundColor: '#233445'}}>
                     <List
                         dataArray={session.news.slice()}
                         renderRow={(news) => {
                             return (
                                 <ListItem>
-                                    <Text style={styles.title}>{news.title}{'\n'}
+                                    <Text style={styles.title}>{news.title}{'\n\n'}
                                         <Text style={styles.detail}>
                                             { news.details }
                                         </Text>

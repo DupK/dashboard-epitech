@@ -178,7 +178,7 @@ class ProjectDetails extends Component {
         return (
             <View style={{
                 height: 70,
-                backgroundColor: "#2c3e50",
+                backgroundColor: "#233445",
                 flexDirection: 'row',
                 marginBottom: 2,
                 borderBottomWidth: 0.5,
@@ -276,7 +276,7 @@ class ProjectDetails extends Component {
                 {this._renderBanner(project.registered)}
                 <View style={{
                     flex: 0.25,
-                    backgroundColor: "#2c3e50",
+                    backgroundColor: "#233445",
                     elevation: 10,
                 }}>
                     <ScrollView>
@@ -298,7 +298,7 @@ class ProjectDetails extends Component {
                 </View>
         <View style={{
                     flex: 0.75,
-                    backgroundColor: "#42586E"
+                    backgroundColor: "#2c3e50"
                 }}>
                     <ScrollView style={{ flex: 1,}}>
                         <Accordion
