@@ -11,16 +11,14 @@ import {
 import {
     Container,
     Content,
-    InputGroup,
     Input,
-    Icon,
     Button,
 } from 'native-base';
 import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
-import backgroundSource from '../../assets/background.png';
-import logoSource from '../../assets/logo.png';
+import backgroundSource from '../../assets/wallpaper.jpg';
+import logoSource from '../../assets/epitech.png';
 import styles from './styles.js';
 
 @observer
@@ -76,66 +74,96 @@ export default class Login extends Component {
         const { store: { ui } } = this.props;
 
         return (
+
             <Container style={styles.container}>
-                <Content contentContainerStyle={{
-                    flex: 1
-                }}>
-
-                        <View style={{flex: 0.15}}/>
-
-                        <View  style={{ flex: 0.45, justifyContent: 'center'}}>
-
-                            <InputGroup>
-
-                                <Icon name="ios-mail-outline" style={styles.iconInputMail} />
-                                <Input
-                                    maxLength={40}
-                                    keyboardType="email-address"
-                                    spellCheck={false}
-                                    multiline={false}
-                                    placeholder="Email Address"
-                                    placeholderTextColor="#FFFFFF"
-                                    style={styles.mailInput}
-                                    onChangeText={(text) => this.setState({ username: text })}
-                                    onSubmitEditing={() => { this.passwordInput._root.focus()} }
-                                />
-
-                            </InputGroup>
-
-                            <InputGroup>
-
-                                <Icon name="ios-lock-outline" style={styles.iconInputPwd} />
-                                <Input
-                                    ref={(input) => this.passwordInput = input}
-                                    multiline={false}
-                                    maxLength={8}
-                                    placeholder="Unix Password"
-                                    placeholderTextColor="#FFFFFF"
-                                    secureTextEntry
-                                    style={styles.pwdInput}
-                                    onChangeText={(text) => this.setState({ password: text })}
-                                    onSubmitEditing={this.login}
-                                />
-
-                            </InputGroup>
-
-
-                            { this.renderUserNotLogged() }
-
-                            <Button
-                                title="Login"
-                                transparent
-                                large
-                                style={{ alignSelf: 'center', marginTop: 25 }}
-                                onPress={this.login}
-                                disabled={ui.currentState == ui.state.fetching}
-                            >
-                                <Icon name="md-finger-print" style={styles.iconButton} />
-                            </Button>
-
+                <Content contentContainerStyle={{ flex: 1 }}>
+                    <Image source={backgroundSource} style={{ width: 360, height: 615, }} >
+                        <View style={{ flex: 100, backgroundColor: 'rgba(45, 45, 45, 0.65)', }}>
+                            <View style={{ flex: 20 }}/>
+                            <View style={{ flex: 20 }}>
+                                <Image source={ logoSource }
+                                       style={{
+                                           alignSelf: 'center',
+                                           justifyContent: 'center',
+                                           width: 60,
+                                           height: 60,
+                                       }}/>
+                            </View>
+                            <View style={{ flex: 60 }}>
+                                <Text style={{
+                                    color: '#FFFFFF',
+                                    alignSelf: 'center',
+                                    marginTop: 10
+                                }}>
+                                    <Text>Dashboard </Text>
+                                    <Text style={{ fontWeight: 'bold' }}>Epitech</Text>
+                                </Text>
+                            </View>
+                            <View style={{ flex: 70, }}>
+                                <View style={{ flex: 0.22, }}>
+                                    <Input
+                                        maxLength={40}
+                                        keyboardType="email-address"
+                                        spellCheck={false}
+                                        multiline={false}
+                                        placeholder="Email address"
+                                        placeholderTextColor="rgba(255, 255, 255, 1)"
+                                        onChangeText={(text) => this.setState({ username: text })}
+                                        onSubmitEditing={() => { this.passwordInput._root.focus()} }
+                                        style={{
+                                            color: '#FFF',
+                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                            borderRadius: 5,
+                                            marginLeft: 30,
+                                            marginRight: 30,
+                                            fontSize: 12,
+                                            textAlign: 'center',
+                                    }} />
+                                </View>
+                                <View style={{ flex: 0.5, }}>
+                                    <Input
+                                        ref={(input) => this.passwordInput = input}
+                                        onChangeText={(text) => this.setState({ password: text })}
+                                        onSubmitEditing={this.login}
+                                        multiline={false}
+                                        maxLength={8}
+                                        secureTextEntry
+                                        placeholder="Unix Password"
+                                        placeholderTextColor="rgba(255, 255, 255, 1)"
+                                        style={{
+                                            color: '#FFF',
+                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                            borderRadius: 5,
+                                            marginLeft: 30,
+                                            marginRight: 30,
+                                            fontSize: 12,
+                                            textAlign: 'center',
+                                        }} />
+                                    <Button
+                                        style={{
+                                            backgroundColor: 'rgba(35, 52, 69, 0.7)',
+                                            borderWidth: 1,
+                                            borderColor: 'rgba(35, 52, 69, 0.7)',
+                                            alignSelf: 'center',
+                                            width: 300,
+                                            borderRadius: 5,
+                                            elevation: 0,
+                                        }}
+                                        title="Login"
+                                        onPress={this.login}
+                                        disabled={ui.currentState == ui.state.fetching}
+                                    >
+                                        <Text style={{ color: '#FFF',  fontSize: 12 }}>Login</Text>
+                                    </Button>
+                                </View>
+                                <View style={{ flex: 0.5 }}>
+                                </View>
+                            </View>
                         </View>
+                    </Image>
                 </Content>
             </Container>
+
         );
     }
 }
