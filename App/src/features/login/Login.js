@@ -78,7 +78,9 @@ export default class Login extends Component {
 
             <Container style={styles.container}>
                 <Content contentContainerStyle={{ flex: 1 }}>
-                    <Image source={backgroundSource} style={{ width: 360, height: 615, }} >
+                    <Image source={backgroundSource}
+                           style={{ width: 360, height: 615 }}
+                           resizeMode='cover'>
                         <View style={{ flex: 100, backgroundColor: 'rgba(45, 45, 45, 0.65)', }}>
                             <View style={{ flex: 20 }}/>
                             <View style={{ flex: 20 }}>
