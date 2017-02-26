@@ -7,6 +7,7 @@ import {
     Alert,
     ScrollView,
     TextInput,
+    KeyboardAvoidingView
 } from 'react-native';
 import {
     Container,
@@ -100,7 +101,7 @@ export default class Login extends Component {
                                 </Text>
                             </View>
                             <View style={{ flex: 70, }}>
-                                <View style={{ flex: 0.22, }}>
+                                <KeyboardAvoidingView behavior="padding" style={{ flex: 0.22, }}>
                                     <Input
                                         maxLength={40}
                                         keyboardType="email-address"
@@ -119,7 +120,7 @@ export default class Login extends Component {
                                             fontSize: 12,
                                             textAlign: 'center',
                                     }} />
-                                </View>
+                                </KeyboardAvoidingView>
                                 <View style={{ flex: 0.5, }}>
                                     <Input
                                         ref={(input) => this.passwordInput = input}
