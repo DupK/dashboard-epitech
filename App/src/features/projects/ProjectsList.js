@@ -42,7 +42,7 @@ export default class ProjectsList extends Component {
                     <View style={{
                         flex: 1,
                         flexDirection: 'row',
-                        backgroundColor: '#233445',
+                        backgroundColor: '#fafafa',
                     }}>
                         <View style={{
                             flex: 100,
@@ -57,12 +57,12 @@ export default class ProjectsList extends Component {
                                     <Text style={{
                                         fontWeight: 'bold',
                                         fontFamily: 'Nunito-Light',
-                                        color: '#FFF',
+                                        color: '#233445',
                                     }}>{ project.acti_title }</Text>
                                     <Text style={{
                                         fontFamily: 'Nunito-Light',
                                         fontSize: 12,
-                                        color: '#FFF',
+                                        color: '#233445',
                                     }}> / { project.title_module }</Text>
 
                                 </View>
@@ -73,13 +73,13 @@ export default class ProjectsList extends Component {
                                         justifyContent: 'space-between',
                                     }}>
                                         <Text style={{
-                                            color: '#FFF',
+                                            color: '#233445',
                                             fontFamily: 'Nunito-Light',
                                             fontSize: 10,
                                             marginTop: 5,
                                         }}>{ parsedStart.fromNow() }</Text>
                                         <Text style={{
-                                            color: '#FFF',
+                                            color: '#233445',
                                             fontFamily: 'Nunito-Light',
                                             fontSize: 10,
                                             margin: 5,
@@ -96,7 +96,7 @@ export default class ProjectsList extends Component {
                         }}>
                             <Icon name="ios-arrow-forward-outline" style={{
                                 fontSize: 14,
-                                color: '#FFF',
+                                color: '#233445',
                             }}/>
                         </View>
                     </View>
@@ -111,7 +111,7 @@ export default class ProjectsList extends Component {
 
         return (
             <Container>
-                <Content contentContainerStyle={{ backgroundColor: '#233445', }}>
+                <Content contentContainerStyle={{ backgroundColor: '#fafafa', }}>
                     <List
                         dataArray={projects}
                         renderRow={this.renderProject}

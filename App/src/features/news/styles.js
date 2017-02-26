@@ -8,16 +8,16 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: 'bold',
         fontSize: 12,
-        color: "#FFF",
+        color: "#233445",
     },
     detail: {
         fontWeight: 'normal',
         fontSize: 11,
-        color: "#FFF",
+        color: "#233445",
     },
 
     container: {
-        backgroundColor: "#233445",
+        backgroundColor: "#fafafa",
     },
 });
 

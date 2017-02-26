@@ -18,6 +18,7 @@ import LoadingIndicator from 'react-native-spinkit';
 import { Actions } from 'react-native-router-flux';
 import { observer } from 'mobx-react/native';
 import styles from './styles.js';
+import backgroundSource from '../../assets/wallpaper.jpg';
 
 @observer
 export default class Loading extends Component {
@@ -50,6 +51,16 @@ export default class Loading extends Component {
         return (
             <Container style={ styles.mainContainer }>
                 <Content contentContainerStyle={{ flex: 1 }}>
+
+                    <Image source={backgroundSource}
+                           style={{
+                               width: 360,
+                               height: 615,
+                           }}
+                    >
+
+                        <View style={{ flex: 1, backgroundColor: 'rgba(45, 45, 45, 0.65)'}}>
+
                     <View style={ styles.titleContainer }>
                         <Text style={ styles.mainTitle }>
                             <Text style={ styles.title }>Dashboard</Text>&nbsp;
@@ -69,6 +80,11 @@ export default class Loading extends Component {
                             size={100}
                         />
                     </View>
+
+                        </View>
+
+                    </Image>
+
                 </Content>
             </Container>
         );
