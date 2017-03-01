@@ -7,7 +7,11 @@ import {
     Alert,
     ScrollView,
     TextInput,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Animated,
+    Easing,
+    ActivityIndicator,
+    Dimensions,
 } from 'react-native';
 import {
     Container,
@@ -22,6 +26,8 @@ import backgroundSource from '../../assets/wallpaper.jpg';
 import logoSource from '../../assets/epitech.png';
 import styles from './styles.js';
 
+const AnimatedButton = Animated.createAnimatedComponent(Button);
+
 @observer
 export default class Login extends Component {
     constructor(props) {
@@ -30,18 +36,25 @@ export default class Login extends Component {
         this.state = {
             username: '',
             password: '',
+            animating: false,
+            currentMessage: '',
         };
+
+        this.buttonWidth = new Animated.Value(0);
+        this.buttonScale = new Animated.Value(0);
 
         this.login = this.login.bind(this);
     }
 
     async componentWillMount() {
         const { store: { session } } = this.props;
+        this.buttonWidth.setValue(0);
+        this.buttonScale.setValue(0);
 
-        await session.login();
+        //  await session.login();
 
         if (session.isLogged) {
-            Actions.loading();
+            //Actions.loading();
         }
     }
 
@@ -50,15 +63,45 @@ export default class Login extends Component {
             return Promise.resolve(false);
         }
 
-        const { store: { ui, session } } = this.props;
+        const { store: { ui, session, calendar, ranking, marks, projects } } = this.props;
 
-        await session.login(this.state.username, this.state.password);
+        Animated.timing(
+            this.buttonWidth,
+            {
+                toValue: 1,
+                duration: 400,
+                easing: Easing.linear
+            }
+        ).start(async () => {
+            this.setState({ animating: true, currentMessage: 'Login in ...' });
+            await session.login(this.state.username, this.state.password);
 
-        if (session.isLogged) {
-            Actions.loading();
-        } else {
-            ui.errorState();
-        }
+            if (session.isLogged) {
+                this.setState({ currentMessage: 'Fetching data ...' });
+                await Promise.all([
+                    calendar.fetchCalendar(),
+                    session.userInformation(),
+                    projects.fetchProjects(),
+                ]);
+                await Promise.all([
+                    marks.fetchMarks(session.username),
+                    ranking.selfRankPosition({ fromCache: true }),
+                ]);
+
+                this.setState({ animating: false, currentMessage: '' }, () => {
+                    Animated.timing(
+                        this.buttonScale,
+                        {
+                            toValue: 1,
+                            duration: 600,
+                            easing: Easing.in(Easing.quad)
+                        }
+                    ).start(() => Actions.home());
+                });
+            } else {
+                ui.errorState();
+            }
+        });
     }
 
     renderUserNotLogged() {
@@ -73,38 +116,65 @@ export default class Login extends Component {
 
     render() {
         const { store: { ui } } = this.props;
+        const { width } = Dimensions.get('window');
+
+        const buttonWidth = this.buttonWidth.interpolate({
+            inputRange: [0, 1],
+            outputRange: [width - 60, 40],
+        });
+
+        const textOpacity = this.buttonWidth.interpolate({
+            inputRange: [0, 0.3],
+            outputRange: [1, 0],
+        });
+
+        const buttonRadius = this.buttonWidth.interpolate({
+            inputRange: [0, 1],
+            outputRange: [5, 50],
+        });
+
+        const buttonScale = this.buttonScale.interpolate({
+            inputRange: [0, 1],
+            outputRange: [1, 300],
+        });
 
         return (
-
-            <Container style={styles.container}>
+            <Container>
                 <Content contentContainerStyle={{ flex: 1 }}>
                     <Image source={backgroundSource}
                            style={{ width: null, height: null, flex: 1 }}
                            resizeMode='cover'>
-                        <View style={{ flex: 100, backgroundColor: 'rgba(45, 45, 45, 0.65)', }}>
+                        <View style={{ flex: 1, backgroundColor: 'rgba(45, 45, 45, 0.65)', }}>
                             <View style={{ flex: 20 }}/>
-                            <View style={{ flex: 20 }}>
+                            <View style={{
+                                flex: 50,
+                                alignItems: 'center',
+                            }}>
                                 <Image source={ logoSource }
                                        style={{
-                                           alignSelf: 'center',
-                                           justifyContent: 'center',
                                            width: 60,
                                            height: 60,
-                                       }}/>
-                            </View>
-                            <View style={{ flex: 60 }}>
+                                       }}
+                                />
                                 <Text style={{
                                     color: '#FFFFFF',
-                                    alignSelf: 'center',
-                                    marginTop: 10
+                                    marginTop: 10,
                                 }}>
                                     <Text>Dashboard </Text>
                                     <Text style={{ fontWeight: 'bold' }}>Epitech</Text>
                                 </Text>
                             </View>
-                            <View style={{ flex: 70, }}>
-                                <KeyboardAvoidingView behavior="padding" style={{ flex: 0.22, }}>
-                                    <Input
+                            <View style={{
+                                flex: 70,
+                            }}>
+                                <KeyboardAvoidingView
+                                    behavior="padding"
+                                    style={{
+                                        flex: 1,
+                                        justifyContent: 'flex-end',
+                                    }}
+                                >
+                                    <TextInput
                                         maxLength={40}
                                         keyboardType="email-address"
                                         spellCheck={false}
@@ -112,7 +182,7 @@ export default class Login extends Component {
                                         placeholder="Email address"
                                         placeholderTextColor="rgba(255, 255, 255, 1)"
                                         onChangeText={(text) => this.setState({ username: text })}
-                                        onSubmitEditing={() => { this.passwordInput._root.focus()} }
+                                        onSubmitEditing={() => this.passwordInput.focus() }
                                         style={{
                                             color: '#FFF',
                                             backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -121,10 +191,9 @@ export default class Login extends Component {
                                             marginRight: 30,
                                             fontSize: 12,
                                             textAlign: 'center',
-                                    }} />
-                                </KeyboardAvoidingView>
-                                <View style={{ flex: 0.5, }}>
-                                    <Input
+                                            height: 35,
+                                        }} />
+                                    <TextInput
                                         ref={(input) => this.passwordInput = input}
                                         onChangeText={(text) => this.setState({ password: text })}
                                         onSubmitEditing={this.login}
@@ -141,32 +210,68 @@ export default class Login extends Component {
                                             marginRight: 30,
                                             fontSize: 12,
                                             textAlign: 'center',
+                                            height: 35,
+                                            marginTop: 5,
                                         }} />
-                                    <Button
+                                    <AnimatedButton
                                         style={{
-                                            backgroundColor: 'rgba(35, 52, 69, 0.7)',
+                                            backgroundColor: 'rgba(35, 52, 69, 1)',
                                             borderWidth: 1,
                                             borderColor: 'rgba(35, 52, 69, 0.7)',
                                             alignSelf: 'center',
-                                            width: 300,
-                                            borderRadius: 5,
+                                            width: buttonWidth,
+                                            borderRadius: buttonRadius,
                                             elevation: 0,
+                                            transform: [{ scale: buttonScale }],
+                                            marginTop: 20,
+
                                         }}
                                         title="Login"
                                         onPress={this.login}
                                         disabled={ui.currentState == ui.state.fetching}
                                     >
-                                        <Text style={{ color: '#FFF',  fontSize: 12 }}>Login</Text>
-                                    </Button>
-                                </View>
-                                <View style={{ flex: 0.5 }}>
+                                        <View>
+                                            {
+                                                !this.state.animating
+                                                    ? (
+                                                        <Animated.Text
+                                                            style={{
+                                                                color: '#FFF',
+                                                                fontSize: 12,
+                                                                opacity: textOpacity
+                                                            }}>
+                                                            Login
+                                                        </Animated.Text>
+                                                    )
+                                                    : (
+                                                        <ActivityIndicator
+                                                            animating={this.state.animating}
+                                                            color="#FFFFFF"
+                                                        />
+                                                    )
+                                            }
+                                        </View>
+                                    </AnimatedButton>
+                                </KeyboardAvoidingView>
+                                <View style={{ flex: 0.6  }}>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontFamily: 'Nunito-Light',
+                                            fontSize: 15,
+                                            alignSelf: 'center',
+                                            marginTop: 15,
+
+                                        }}
+                                    >
+                                        {this.state.currentMessage}
+                                    </Text>
                                 </View>
                             </View>
                         </View>
                     </Image>
                 </Content>
             </Container>
-
         );
     }
 }
