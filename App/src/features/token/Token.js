@@ -21,36 +21,52 @@ import {
     Input
 } from 'native-base';
 import IconIO from 'react-native-vector-icons/Ionicons';
-
-const tokens =
-    [
-        {
-            'title': 'B3 - Conférence UX',
-            'date' : '22.02.2017'
-        },
-        {
-            'title': 'B3 - Expression Ecrite',
-            'date': '22.02.2017'
-        },
-        {
-            'title': 'B3 - Systeme Unix',
-            'date': '22.02.2017'
-        },
-    ];
+import _ from 'lodash';
 
 export default class Token extends Component {
 
     constructor(props) {
         super(props)
 
+        this.state = {
+            token: '',
+            tokens:
+                [
+                    {
+                        'title': 'B3 - Conférence UX',
+                        'date' : '22.02.2017'
+                    },
+                    {      'title': 'B3 - Expression Ecrite',
+                        'date': '22.02.2017'
+                    },
+                    {
+                        'title': 'B3 - Systeme Unix',
+                        'date': '22.02.2017'
+                    },
+                ]
+        }
+
         this._submitToken = this._submitToken.bind(this);
+        this._renderTokens = this._renderTokens.bind(this);
     }
 
-    _submitToken() {
+    _submitToken(id) {
 
+        /*
+
+         Send token..
+
+         */
+
+        const removedTokens = _.filter([ ...this.state.tokens ], (_, n) => `${n}` !== id);
+        this.setState({
+            tokens: removedTokens,
+            token: '',
+        });
     }
 
-    _renderToken(token) {
+    _renderTokens(token, _, id) {
+
         return (
             <View style={{ flex: 1, backgroundColor: '#233445', margin: 10, borderColor: 'rgba(255, 255, 255, 0.2)', elevation: 8 }}>
                 <View style={{ flexDirection: 'row' }}>
@@ -84,7 +100,8 @@ export default class Token extends Component {
                             multiline={false}
                             placeholder="Type your token"
                             placeholderTextColor="rgba(255, 255, 255, 0.6)"
-                            onSubmitEditing={this._submitToken}
+                            onSubmitEditing={() => this._submitToken(id)}
+                            onChangeText={(text) => this.setState({ token: text })}
                         />
                     </KeyboardAvoidingView>
                 </View>
@@ -98,8 +115,8 @@ export default class Token extends Component {
                 <Content contentContainerStyle={{ flex: 1, backgroundColor: '#2c3e50'}}>
                     <List
                         style={{ marginTop: 8 }}
-                        dataArray={tokens}
-                        renderRow={this._renderToken}
+                        dataArray={this.state.tokens}
+                        renderRow={this._renderTokens}
                     />
                 </Content>
             </Container>
