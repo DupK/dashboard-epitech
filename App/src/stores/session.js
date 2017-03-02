@@ -26,7 +26,6 @@ class Session {
                 };
                 this.news = newsParser(session.history);
                 this.isLogged = true;
-                stores.ui.defaultState();
             }
         } catch (e) {
             console.error(e);

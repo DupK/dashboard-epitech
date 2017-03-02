@@ -16,7 +16,6 @@ import {
 import {
     Container,
     Content,
-    Input,
     Button,
 } from 'native-base';
 import { observable } from 'react-native-mobx';
@@ -30,6 +29,7 @@ const AnimatedButton = Animated.createAnimatedComponent(Button);
 
 @observer
 export default class Login extends Component {
+
     constructor(props) {
         super(props);
 
@@ -37,7 +37,7 @@ export default class Login extends Component {
             username: '',
             password: '',
             animating: false,
-            currentMessage: '',
+            loginMessage: '',
         };
 
         this.buttonWidth = new Animated.Value(0);
@@ -58,12 +58,17 @@ export default class Login extends Component {
         }
     }
 
-    async login() {
+    login() {
+
         if (!this.state.username.length || !this.state.password.length) {
             return Promise.resolve(false);
         }
 
-        const { store: { ui, session, calendar, ranking, marks, projects } } = this.props;
+        const {
+            store: { ui, session, calendar, ranking, marks, projects }
+        } = this.props;
+
+        ui.fetchingState();
 
         Animated.timing(
             this.buttonWidth,
@@ -72,46 +77,38 @@ export default class Login extends Component {
                 duration: 400,
                 easing: Easing.linear
             }
-        ).start(async () => {
-            this.setState({ animating: true, currentMessage: 'Login in ...' });
-            await session.login(this.state.username, this.state.password);
+        ).start(() => {
+            this.setState({ animating: true, loginMessage: 'Login in ...' }, async () => {
+                await session.login(this.state.username, this.state.password);
 
-            if (session.isLogged) {
-                this.setState({ currentMessage: 'Fetching data ...' });
-                await Promise.all([
-                    calendar.fetchCalendar(),
-                    session.userInformation(),
-                    projects.fetchProjects(),
-                ]);
-                await Promise.all([
-                    marks.fetchMarks(session.username),
-                    ranking.selfRankPosition({ fromCache: true }),
-                ]);
+                if (session.isLogged) {
+                    this.setState({ loginMessage: 'Fetching data ...' });
 
-                this.setState({ animating: false, currentMessage: '' }, () => {
-                    Animated.timing(
-                        this.buttonScale,
-                        {
-                            toValue: 1,
-                            duration: 600,
-                            easing: Easing.in(Easing.quad)
-                        }
-                    ).start(() => Actions.home());
-                });
-            } else {
-                ui.errorState();
-            }
+                    await Promise.all([
+                        calendar.fetchCalendar(),
+                        session.userInformation(),
+                        projects.fetchProjects(),
+                    ]);
+                    await Promise.all([
+                        marks.fetchMarks(session.username),
+                        ranking.selfRankPosition({ fromCache: true }),
+                    ]);
+
+                    this.setState({ animating: false, loginMessage: '' }, () => {
+                        Animated.timing(
+                            this.buttonScale,
+                            {
+                                toValue: 1,
+                                duration: 600,
+                                easing: Easing.in(Easing.quad)
+                            }
+                        ).start(() => ui.defaultState() || Actions.home());
+                    });
+                } else {
+                    ui.errorState();
+                }
+            });
         });
-    }
-
-    renderUserNotLogged() {
-        const { store: { ui } } = this.props;
-
-        if (ui.currentState !== ui.state.error) {
-            return null;
-        }
-
-        return <Text style={styles.notLoggedMessage}>Could not connect to intranet</Text>;
     }
 
     render() {
@@ -149,6 +146,7 @@ export default class Login extends Component {
                             <View style={{
                                 flex: 50,
                                 alignItems: 'center',
+                                zIndex: 0,
                             }}>
                                 <Image source={ logoSource }
                                        style={{
@@ -160,14 +158,14 @@ export default class Login extends Component {
                                     color: '#FFFFFF',
                                     marginTop: 10,
                                 }}>
-                                    <Text>Dashboard </Text>
+                                    <Text>Dashboard&nbsp;</Text>
                                     <Text style={{ fontWeight: 'bold' }}>Epitech</Text>
                                 </Text>
                             </View>
                             <View style={{
                                 flex: 70,
                             }}>
-                                <KeyboardAvoidingView
+                                <View
                                     behavior="padding"
                                     style={{
                                         flex: 1,
@@ -181,6 +179,7 @@ export default class Login extends Component {
                                         multiline={false}
                                         placeholder="Email address"
                                         placeholderTextColor="rgba(255, 255, 255, 1)"
+                                        underlineColorAndroid="transparent"
                                         onChangeText={(text) => this.setState({ username: text })}
                                         onSubmitEditing={() => this.passwordInput.focus() }
                                         style={{
@@ -202,6 +201,7 @@ export default class Login extends Component {
                                         secureTextEntry
                                         placeholder="Unix Password"
                                         placeholderTextColor="rgba(255, 255, 255, 1)"
+                                        underlineColorAndroid="transparent"
                                         style={{
                                             color: '#FFF',
                                             backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -221,39 +221,35 @@ export default class Login extends Component {
                                             alignSelf: 'center',
                                             width: buttonWidth,
                                             borderRadius: buttonRadius,
-                                            elevation: 0,
                                             transform: [{ scale: buttonScale }],
                                             marginTop: 20,
-
                                         }}
                                         title="Login"
                                         onPress={this.login}
                                         disabled={ui.currentState == ui.state.fetching}
                                     >
-                                        <View>
-                                            {
-                                                !this.state.animating
-                                                    ? (
-                                                        <Animated.Text
-                                                            style={{
-                                                                color: '#FFF',
-                                                                fontSize: 12,
-                                                                opacity: textOpacity
-                                                            }}>
-                                                            Login
-                                                        </Animated.Text>
-                                                    )
-                                                    : (
-                                                        <ActivityIndicator
-                                                            animating={this.state.animating}
-                                                            color="#FFFFFF"
-                                                        />
-                                                    )
-                                            }
-                                        </View>
+                                        {
+                                            !this.state.animating
+                                                ? (
+                                                    <Animated.Text
+                                                        style={{
+                                                            color: '#FFF',
+                                                            fontSize: 12,
+                                                            opacity: textOpacity
+                                                        }}>
+                                                        Login
+                                                    </Animated.Text>
+                                                )
+                                                : (
+                                                    <ActivityIndicator
+                                                        animating={this.state.animating}
+                                                        color="#FFFFFF"
+                                                    />
+                                                )
+                                        }
                                     </AnimatedButton>
-                                </KeyboardAvoidingView>
-                                <View style={{ flex: 0.6  }}>
+                                </View>
+                                <View style={{ flex: 0.6 }}>
                                     <Text
                                         style={{
                                             color: 'white',
@@ -261,10 +257,9 @@ export default class Login extends Component {
                                             fontSize: 15,
                                             alignSelf: 'center',
                                             marginTop: 15,
-
                                         }}
                                     >
-                                        {this.state.currentMessage}
+                                        { this.state.loginMessage }
                                     </Text>
                                 </View>
                             </View>
