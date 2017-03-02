@@ -29,7 +29,7 @@ export default class Token extends Component {
         super(props)
 
         this.state = {
-            token: '',
+            tokenValues: {},
             tokens:
                 [
                     {
@@ -61,7 +61,7 @@ export default class Token extends Component {
         const removedTokens = _.filter([ ...this.state.tokens ], (_, n) => `${n}` !== id);
         this.setState({
             tokens: removedTokens,
-            token: '',
+            tokenValues: {},
         });
     }
 
@@ -97,11 +97,18 @@ export default class Token extends Component {
                             maxLength={8}
                             keyboardType="numeric"
                             spellCheck={false}
+                            autoCorrect={false}
                             multiline={false}
                             placeholder="Type your token"
                             placeholderTextColor="rgba(255, 255, 255, 0.6)"
                             onSubmitEditing={() => this._submitToken(id)}
-                            onChangeText={(text) => this.setState({ token: text })}
+                            onChangeText={(text) => this.setState({
+                                tokenValues: {
+                                    ...this.state.tokenValues,
+                                    [id]: text
+                                }
+                            })}
+                            value={this.state.tokenValues[id] || ''}
                         />
                     </KeyboardAvoidingView>
                 </View>
