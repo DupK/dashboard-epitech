@@ -32,7 +32,7 @@ export default class Token extends Component {
             tokenValues: {},
             tokens:
                 [
-                    {
+                   {
                         'title': 'B3 - Conférence UX',
                         'date' : '22.02.2017'
                     },
@@ -117,16 +117,31 @@ export default class Token extends Component {
     }
 
     render() {
-        return (
-            <Container>
-                <Content contentContainerStyle={{ flex: 1, backgroundColor: '#2c3e50'}}>
-                    <List
-                        style={{ marginTop: 8 }}
-                        dataArray={this.state.tokens}
-                        renderRow={this._renderTokens}
-                    />
-                </Content>
-            </Container>
+
+            return (
+
+                <Container>
+                    <Content contentContainerStyle={{flex: 1, backgroundColor: '#2c3e50'}}>
+                        { this.state.tokens.length > 0 ?
+                            <List
+                                style={{marginTop: 8}}
+                                dataArray={this.state.tokens}
+                                renderRow={this._renderTokens}
+                            />
+                            :
+                            <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', }}>
+                                <IconIO
+                                    name="ios-checkmark-outline"
+                                    size={80}
+                                    style={{ color: '#62c462', alignSelf: 'center', }}
+                                />
+                                <Text style={{ color:'#FFF', alignSelf: 'center', fontSize: 12, }}>
+                                    No token waiting..
+                                </Text>
+                            </View>
+                        }
+                    </Content>
+                </Container>
         )
     }
 };
