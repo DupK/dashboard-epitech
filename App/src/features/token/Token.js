@@ -12,63 +12,99 @@ import {
     KeyboardAvoidingView,
     Animated,
     Alert,
+    Easing,
+    InteractionManager,
+    LayoutAnimation,
+    UIManager,
+    Dimensions,
 } from 'react-native';
 import {
     Container,
     Content,
-    List,
     Text,
     Input
 } from 'native-base';
 import IconIO from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
 
-export default class Token extends Component {
+UIManager.setLayoutAnimationEnabledExperimental &&
+UIManager.setLayoutAnimationEnabledExperimental(true);
+
+var CustomLayoutSpring = {
+    duration: 1000,
+    create: {
+        type: LayoutAnimation.Types.spring,
+        property: LayoutAnimation.Properties.scaleXY,
+        springDamping: 0.7,
+    },
+    update: {
+        type: LayoutAnimation.Types.spring,
+        property: LayoutAnimation.Properties.scaleXY,
+        springDamping: 0.7,
+    }
+};
+
+class Token extends Component {
 
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
-            tokenValues: {},
-            tokens:
-                [
-                   {
-                        'title': 'B3 - Conférence UX',
-                        'date' : '22.02.2017'
-                    },
-                    {      'title': 'B3 - Expression Ecrite',
-                        'date': '22.02.2017'
-                    },
-                    {
-                        'title': 'B3 - Systeme Unix',
-                        'date': '22.02.2017'
-                    },
-                ]
+            removeAnimation: new Animated.Value(0),
+        };
+    }
+
+    componentWillMount() {
+        this.state.removeAnimation.setValue(0);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.remove) {
+            this.animateDeletion();
+        } else {
+            this.state.removeAnimation.setValue(0);
         }
-
-        this._submitToken = this._submitToken.bind(this);
-        this._renderTokens = this._renderTokens.bind(this);
     }
 
-    _submitToken(id) {
+    animateDeletion() {
+        Animated.timing(
+            this.state.removeAnimation,
+            {
+                toValue: 1,
+                easing: Easing.back(2),
+                duration: 600,
+            }
+        ).start(() => this.props.onAnimationEnd());
+    }
 
-        /*
+    render() {
+        const {
+            token,
+            id,
+            onChangeText,
+            value,
+            submitToken,
+        } = this.props;
+        const { width } = Dimensions.get('window');
 
-         Send token..
-
-         */
-
-        const removedTokens = _.filter([ ...this.state.tokens ], (_, n) => `${n}` !== id);
-        this.setState({
-            tokens: removedTokens,
-            tokenValues: {},
+        const slideRight = this.state.removeAnimation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, width]
         });
-    }
-
-    _renderTokens(token, _, id) {
 
         return (
-            <View style={{ flex: 1, backgroundColor: '#233445', margin: 10, borderColor: 'rgba(255, 255, 255, 0.2)', elevation: 8 }}>
+            <Animated.View
+                key={id}
+                style={{
+                    backgroundColor: '#233445',
+                    margin: 10,
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    borderWidth: 1,
+                    elevation: 8,
+                    height: 80,
+                    transform: [{ translateX: slideRight }]
+                }}
+            >
                 <View style={{ flexDirection: 'row' }}>
                     <IconIO
                         name="ios-pricetag-outline"
@@ -82,66 +118,145 @@ export default class Token extends Component {
                     </Text>
                 </View>
                 <View>
-                    <KeyboardAvoidingView>
-                        <Input
-                            style={{
-                                height: 35,
-                                color: '#FFF',
-                                fontSize: 11,
-                                marginLeft: 10,
-                                marginBottom: 10,
-                                marginRight: 10,
-                                textAlign: 'center',
-                                backgroundColor: 'rgba(255, 255, 255, 0.03)'
-                            }}
-                            maxLength={8}
-                            keyboardType="numeric"
-                            spellCheck={false}
-                            autoCorrect={false}
-                            multiline={false}
-                            placeholder="Type your token"
-                            placeholderTextColor="rgba(255, 255, 255, 0.6)"
-                            onSubmitEditing={() => this._submitToken(id)}
-                            onChangeText={(text) => this.setState({
-                                tokenValues: {
-                                    ...this.state.tokenValues,
-                                    [id]: text
-                                }
-                            })}
-                            value={this.state.tokenValues[id] || ''}
-                        />
-                    </KeyboardAvoidingView>
+                    <Input
+                        style={{
+                            height: 35,
+                            color: '#FFF',
+                            fontSize: 11,
+                            marginLeft: 10,
+                            marginBottom: 10,
+                            marginRight: 10,
+                            textAlign: 'center',
+                            backgroundColor: 'rgba(255, 255, 255, 0.03)'
+                        }}
+                        maxLength={8}
+                        keyboardType="numeric"
+                        spellCheck={false}
+                        autoCorrect={false}
+                        multiline={false}
+                        placeholder="Type your token"
+                        placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                        onSubmitEditing={() => submitToken(id)}
+                        onChangeText={(text) => onChangeText(text, id)}
+                        value={value || ''}
+                    />
                 </View>
-            </View>
-        )
+            </Animated.View>
+        );
+    }
+}
+
+Token.propTypes = {
+    token: React.PropTypes.object,
+    id: React.PropTypes.number,
+    onRemove: React.PropTypes.func,
+    onChangeText: React.PropTypes.func,
+    value: React.PropTypes.string,
+    submitToken: React.PropTypes.func,
+    remove: React.PropTypes.bool,
+    onAnimationEnd: React.PropTypes.func,
+};
+
+export default class Tokens extends Component {
+
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            tokenValues: {},
+            tokens:
+                [
+                    {
+                        'title': 'B3 - Conférence UX',
+                        'date' : '22.02.2017'
+                    },
+                    {      'title': 'B3 - Expression Ecrite',
+                        'date': '22.02.2017'
+                    },
+                    {
+                        'title': 'B3 - Systeme Unix',
+                        'date': '22.02.2017'
+                    },
+                ],
+            selectedToken: -1,
+        }
+
+        this._submitToken = this._submitToken.bind(this);
+        this.onChangeText = this.onChangeText.bind(this);
+        this.refresh = this.refresh.bind(this);
+    }
+
+    componentDidMount() {
+        /* InteractionManager.runAfterInteractions(() => {
+         Animated.timing(
+         this.state.fadeAnimation,
+         {
+         toValue: 0,
+         duration: 900,
+         easing: Easing.bounce
+         }
+         ).start();
+         });*/
+
+    }
+
+    _submitToken(id) {
+        this.setState({
+            selectedToken: id,
+        });
+    }
+
+    refresh() {
+        const removedTokens = _.filter([ ...this.state.tokens ], (_, i) => i !== this.state.selectedToken);
+
+        LayoutAnimation.configureNext(CustomLayoutSpring);
+        this.setState({
+            tokens: removedTokens,
+            tokenValues: {},
+            selectedToken: -1,
+        });
+    }
+
+    onChangeText(text, id) {
+        this.setState({
+            tokenValues: {
+                ...this.state.tokenValues,
+                [id]: text
+            }
+        })
     }
 
     render() {
-
-            return (
-
-                <Container>
-                    <Content contentContainerStyle={{flex: 1, backgroundColor: '#2c3e50'}}>
-                        { this.state.tokens.length > 0 ?
-                            <List
-                                style={{marginTop: 8}}
-                                dataArray={this.state.tokens}
-                                renderRow={this._renderTokens}
+        return (
+            <Container>
+                <Content contentContainerStyle={{ flex: 1, backgroundColor: '#2c3e50'}}>
+                    { this.state.tokens.length > 0 ?
+                        this.state.tokens.map((token, i) => (
+                            <Token
+                                key={i}
+                                token={token}
+                                id={i}
+                                onChangeText={this.onChangeText}
+                                value={this.state.tokenValues[i]}
+                                submitToken={this._submitToken}
+                                remove={this.state.selectedToken == i}
+                                onAnimationEnd={this.refresh}
                             />
-                            :
-                            <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', }}>
-                                <IconIO
-                                    name="ios-checkmark-outline"
-                                    size={80}
-                                    style={{ color: '#62c462', alignSelf: 'center', }}
-                                />
-                                <Text style={{ color:'#FFF', alignSelf: 'center', fontSize: 12, }}>
-                                    No token waiting..
-                                </Text>
-                            </View>
-                        }
-                    </Content>
-                </Container>
+                        ))
+                        :
+                        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', }}>
+                            <IconIO
+                                name="ios-checkmark-outline"
+                                size={80}
+                                style={{ color: '#62c462', alignSelf: 'center', }}
+                            />
+                            <Text style={{ color:'#FFF', alignSelf: 'center', fontSize: 12, }}>
+                                No token waiting..
+                            </Text>
+                        </View>
+                    }
+                </Content>
+            </Container>
         )
     }
 };
