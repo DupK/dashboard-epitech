@@ -72,7 +72,7 @@ class Token extends Component {
             {
                 toValue: 1,
                 easing: Easing.back(2),
-                duration: 600,
+                duration: 400,
             }
         ).start(() => this.props.onAnimationEnd());
     }
@@ -98,16 +98,18 @@ class Token extends Component {
                 style={{
                     backgroundColor: '#233445',
                     margin: 10,
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
-                    borderWidth: 1,
-                    elevation: 8,
-                    height: 80,
+                    elevation: 4,
+                    height: 68.5,
                     transform: [{ translateX: slideRight }]
                 }}
             >
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{
+                    flexDirection: 'row',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    borderWidth: 0.5,
+                }}>
                     <IconIO
-                        name="ios-pricetag-outline"
+                        name="ios-notifications-outline"
                         size={18}
                         style={{ flex: 0.10, alignSelf: 'center', color: '#FFF', marginLeft: 10 }}/>
                     <Text style={{ flex: 1, color: '#FFF', fontSize: 12, fontWeight: 'bold' }}>
@@ -123,9 +125,6 @@ class Token extends Component {
                             height: 35,
                             color: '#FFF',
                             fontSize: 11,
-                            marginLeft: 10,
-                            marginBottom: 10,
-                            marginRight: 10,
                             textAlign: 'center',
                             backgroundColor: 'rgba(255, 255, 255, 0.03)'
                         }}
@@ -170,12 +169,11 @@ export default class Tokens extends Component {
                         'title': 'B3 - Conférence UX',
                         'date' : '22.02.2017'
                     },
-                    {      'title': 'B3 - Expression Ecrite',
-                        'date': '22.02.2017'
+                    {   'title': 'B3 - Expression Ecrite',
+                        'date': '21.02.2017'
                     },
-                    {
-                        'title': 'B3 - Systeme Unix',
-                        'date': '22.02.2017'
+                    {   'title': 'B3 - Systeme Unix',
+                        'date': '21.02.2017'
                     },
                 ],
             selectedToken: -1,
@@ -187,16 +185,6 @@ export default class Tokens extends Component {
     }
 
     componentDidMount() {
-        /* InteractionManager.runAfterInteractions(() => {
-         Animated.timing(
-         this.state.fadeAnimation,
-         {
-         toValue: 0,
-         duration: 900,
-         easing: Easing.bounce
-         }
-         ).start();
-         });*/
 
     }
 
@@ -244,14 +232,14 @@ export default class Tokens extends Component {
                             />
                         ))
                         :
-                        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', }}>
+                        <View style={{ flex: 1, flexDirection: 'column', marginBottom: 90, justifyContent: 'center' }}>
                             <IconIO
-                                name="ios-checkmark-outline"
-                                size={80}
-                                style={{ color: '#62c462', alignSelf: 'center', }}
+                                name="ios-notifications-off-outline"
+                                size={140}
+                                style={{ color: '#FFF', alignSelf: 'center' }}
                             />
-                            <Text style={{ color:'#FFF', alignSelf: 'center', fontSize: 12, }}>
-                                No token waiting..
+                            <Text style={{ marginTop: 10, color:'#FFF', alignSelf: 'center', fontSize: 12, }}>
+                                No token expected in waiting
                             </Text>
                         </View>
                     }
