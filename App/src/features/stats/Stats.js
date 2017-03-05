@@ -270,7 +270,6 @@ export default class Stats extends Component {
                                 showXAxisLabels={true}
                                 showYAxisLabels={true}
                                 color={['#62c462']}
-
                             />
                         </View>
 
@@ -424,7 +423,6 @@ export default class Stats extends Component {
                                 showXAxisLabels={true}
                                 showYAxisLabels={true}
                                 color={['#62c462']}
-
                             />
                         </View>
                     </Animated.View>
