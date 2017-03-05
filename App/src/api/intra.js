@@ -40,6 +40,17 @@ export function fetchStudent(student) {
         .then((response) => response.json());
 }
 
+export function fetchNetsoul(student) {
+    return fetch(`${BASE_URL}/user/` + student + '/netsoul?format=json', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
+}
+
 export function fetchCalendar(start, end) {
     const calendarUrl = start && end
         ? `${BASE_URL}/planning/load?format=json&start=${start}&end=${end}`
