@@ -83,14 +83,13 @@ export default class Stats extends Component {
     componentDidMount() {
 
         InteractionManager.runAfterInteractions(() =>
-        Animated.parallel([
             Animated.timing(
                 this.state.animate,
                 {
                     toValue: 0,
                     duration: 1500,
-                }),
-        ]).start())
+                }).start()
+        )
 
     }
 
