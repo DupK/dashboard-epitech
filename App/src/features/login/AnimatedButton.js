@@ -64,7 +64,6 @@ export default class AnimatedButton extends Component {
         ).start(async () => await this.props.onAnimationEnd())
     }
 
-
     animateError() {
         this.buttonColor.setValue(0);
 
@@ -95,11 +94,11 @@ export default class AnimatedButton extends Component {
     }
 
     onPressPromise() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             try {
                 this.props.onPress().then((res) => resolve(res));
             } catch (e) {
-                reject(false);
+                resolve(false);
             }
         });
     }
@@ -151,9 +150,9 @@ export default class AnimatedButton extends Component {
                         opacity: textOpacity
                     }}>
                     {
-                        !this.state.error
-                            ? title
-                            : errorTitle
+                        this.state.error
+                            ? errorTitle
+                            : title
                     }
                 </Animated.Text>
             );
@@ -186,7 +185,7 @@ export default class AnimatedButton extends Component {
         });
 
         const buttonColor = this.buttonColor.interpolate({
-            inputRange: [0, 0.5, 1],
+            inputRange: [0, 0.2, 1],
             outputRange: ['rgb(35, 52, 69)', 'rgb(244, 67, 54)', 'rgb(35, 52, 69)']
         });
 

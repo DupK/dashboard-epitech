@@ -55,7 +55,7 @@ export default class Login extends Component {
 
     async fetchRequiredData() {
         const {
-            store: {session, calendar, ranking, marks, projects}
+            store: {ui, session, calendar, ranking, marks, projects}
         } = this.props;
 
         try {
@@ -69,8 +69,10 @@ export default class Login extends Component {
                 ranking.selfRankPosition({ fromCache: true }),
             ]);
 
+            ui.defaultState();
             return true;
         } catch(e) {
+            ui.defaultState();
             console.log(e);
             return false;
         }
@@ -78,9 +80,10 @@ export default class Login extends Component {
 
     async login() {
         const {
-            store: { session }
+            store: { ui, session }
         } = this.props;
 
+        ui.fetchingState();
         this.setState({loginMessage: 'Login in ...'});
 
         try {
@@ -110,6 +113,7 @@ export default class Login extends Component {
     }
 
     render() {
+        const { store: { ui } } = this.props;
         const { width } = Dimensions.get('window');
 
         return (
@@ -127,6 +131,7 @@ export default class Login extends Component {
                                     maxLength={40}
                                     placeholder="Email address"
                                     keyboardType="email-address"
+                                    editable={ui.currentState !== ui.state.fetchingState}
                                     onChangeText={(text) => this.setState({ username: text })}
                                     onSubmitEditing={() => this.passwordInput.nativeInput.focus() }
                                 />
@@ -135,6 +140,7 @@ export default class Login extends Component {
                                     maxLength={8}
                                     placeholder="Unix Password"
                                     secureTextEntry
+                                    editable={ui.currentState !== ui.state.fetchingState}
                                     onChangeText={(text) => this.setState({ password: text })}
                                     onSubmitEditing={() => this.animatedButton.animate()}
                                 />
