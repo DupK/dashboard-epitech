@@ -2,9 +2,7 @@
  * Created by jules on 12/02/17.
  */
 
-//noinspection JSUnresolvedVariable
 import React, { Component } from 'react';
-//noinspection JSUnresolvedVariable
 import {
     AppRegistry,
     StyleSheet,
@@ -24,30 +22,27 @@ import {
     Text,
     Input
 } from 'native-base';
+import LoadingIndicator from 'react-native-spinkit';
+import { observer } from 'mobx-react/native';
 import IconIO from 'react-native-vector-icons/Ionicons';
-import _ from 'lodash';
 
-UIManager.setLayoutAnimationEnabledExperimental &&
-UIManager.setLayoutAnimationEnabledExperimental(true);
-
-var CustomLayoutSpring = {
+const CustomLayoutSpring = {
     duration: 1000,
     create: {
         type: LayoutAnimation.Types.spring,
         property: LayoutAnimation.Properties.scaleXY,
         springDamping: 0.7,
     },
-    update: {
-        type: LayoutAnimation.Types.spring,
-        property: LayoutAnimation.Properties.scaleXY,
-        springDamping: 0.7,
-    }
 };
 
+@observer
 class Token extends Component {
 
     constructor(props) {
         super(props);
+
+        UIManager.setLayoutAnimationEnabledExperimental &&
+        UIManager.setLayoutAnimationEnabledExperimental(true);
 
         this.state = {
             removeAnimation: new Animated.Value(0),
@@ -58,39 +53,86 @@ class Token extends Component {
         this.state.removeAnimation.setValue(0);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.remove) {
+    async stall(stallTime = 3000) {
+        await new Promise(resolve => setTimeout(resolve, stallTime));
+    }
+
+    async validateToken() {
+        const { id, tokensStore: tokens } = this.props;
+
+        tokens.setState({ state: 'validating', id });
+
+        await tokens.validateToken(id);
+        const response = false;
+
+        if (response) {
             this.animateDeletion();
+        } else {
+            this.animateWrongToken();
+        }
+    }
+
+    async componentWillReceiveProps(nextProps) {
+        if (nextProps.remove) {
+            await this.validateToken();
         } else {
             this.state.removeAnimation.setValue(0);
         }
     }
 
+    animateWrongToken() {
+        const { id, tokensStore: tokens } = this.props;
+        this.state.removeAnimation.setValue(0);
+
+        tokens.setState({ state: 'error', id });
+        Animated.timing(
+            this.state.removeAnimation,
+            {
+                toValue: 6,
+                easing: Easing.bounce,
+                duration: 600,
+            }
+        ).start(() => {
+            tokens.setState({ state: 'default', id });
+            tokens.refreshAfterAnimation(false);
+        });
+    }
+
     animateDeletion() {
+        const { id, tokensStore: tokens } = this.props;
+        this.state.removeAnimation.setValue(0);
+
         Animated.timing(
             this.state.removeAnimation,
             {
                 toValue: 1,
                 easing: Easing.back(2),
-                duration: 400,
+                duration: 500,
             }
-        ).start(() => this.props.onAnimationEnd());
+        ).start(() => {
+            tokens.setState({ state: 'default', id });
+            tokens.refreshAfterAnimation(true);
+        });
     }
 
     render() {
         const {
             token,
             id,
-            onChangeText,
             value,
-            submitToken,
+            tokensStore: tokens,
         } = this.props;
         const { width } = Dimensions.get('window');
 
-        const slideRight = this.state.removeAnimation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, width]
-        });
+        let tokenTranslate = tokens.error[id] || false
+            ? this.state.removeAnimation.interpolate({
+                inputRange: [0, .5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6],
+                outputRange: [0, -15, 0, 15, 0, -15, 0, 15, 0, -15, 0, 15, 0]
+            })
+            : this.state.removeAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, width]
+            });
 
         return (
             <Animated.View
@@ -100,7 +142,7 @@ class Token extends Component {
                     margin: 10,
                     elevation: 4,
                     height: 68.5,
-                    transform: [{ translateX: slideRight }]
+                    transform: [{ translateX: tokenTranslate }]
                 }}
             >
                 <View style={{
@@ -108,10 +150,27 @@ class Token extends Component {
                     borderColor: 'rgba(255, 255, 255, 0.2)',
                     borderWidth: 0.5,
                 }}>
-                    <IconIO
-                        name="ios-notifications-outline"
-                        size={18}
-                        style={{ flex: 0.10, alignSelf: 'center', color: '#FFF', marginLeft: 10 }}/>
+                    {
+                        tokens.values[id]
+                            ? (
+                                <View
+                                    style={{ flex: 0.10, alignSelf: 'center', marginLeft: 10 }}
+                                >
+                                    <LoadingIndicator
+                                        size={16}
+                                        color="#FFFFFF"
+                                        type="Circle"
+                                    />
+                                </View>
+                            )
+                            : (
+                                <IconIO
+                                    name="ios-notifications-outline"
+                                    size={18}
+                                    style={{ flex: 0.10, alignSelf: 'center', color: '#FFF', marginLeft: 10 }}
+                                />
+                            )
+                    }
                     <Text style={{ flex: 1, color: '#FFF', fontSize: 12, fontWeight: 'bold' }}>
                         {token.title}
                     </Text>
@@ -135,9 +194,11 @@ class Token extends Component {
                         multiline={false}
                         placeholder="Type your token"
                         placeholderTextColor="rgba(255, 255, 255, 0.6)"
-                        onSubmitEditing={() => submitToken(id)}
-                        onChangeText={(text) => onChangeText(text, id)}
+                        onSubmitEditing={() => tokens.selectToken(id)}
+                        blurOnSubmit
+                        onChangeText={(text) => tokens.updateValues(text, id)}
                         value={value || ''}
+                        editable={!tokens.values[id] || false}
                     />
                 </View>
             </Animated.View>
@@ -149,86 +210,38 @@ Token.propTypes = {
     token: React.PropTypes.object,
     id: React.PropTypes.number,
     onRemove: React.PropTypes.func,
-    onChangeText: React.PropTypes.func,
     value: React.PropTypes.string,
-    submitToken: React.PropTypes.func,
     remove: React.PropTypes.bool,
     onAnimationEnd: React.PropTypes.func,
+    tokensStore: React.PropTypes.object,
 };
 
+@observer
 export default class Tokens extends Component {
 
     constructor(props) {
-        super(props)
-
-        this.state = {
-            tokenValues: {},
-            tokens:
-                [
-                    {
-                        'title': 'B3 - Conférence UX',
-                        'date' : '22.02.2017'
-                    },
-                    {   'title': 'B3 - Expression Ecrite',
-                        'date': '21.02.2017'
-                    },
-                    {   'title': 'B3 - Systeme Unix',
-                        'date': '21.02.2017'
-                    },
-                ],
-            selectedToken: -1,
-        }
-
-        this._submitToken = this._submitToken.bind(this);
-        this.onChangeText = this.onChangeText.bind(this);
-        this.refresh = this.refresh.bind(this);
+        super(props);
     }
 
-    componentDidMount() {
-
-    }
-
-    _submitToken(id) {
-        this.setState({
-            selectedToken: id,
-        });
-    }
-
-    refresh() {
-        const removedTokens = _.filter([ ...this.state.tokens ], (_, i) => i !== this.state.selectedToken);
-
+    componentWillUpdate() {
         LayoutAnimation.configureNext(CustomLayoutSpring);
-        this.setState({
-            tokens: removedTokens,
-            tokenValues: {},
-            selectedToken: -1,
-        });
-    }
-
-    onChangeText(text, id) {
-        this.setState({
-            tokenValues: {
-                ...this.state.tokenValues,
-                [id]: text
-            }
-        })
     }
 
     render() {
+        const { store: { tokens } } = this.props;
+
         return (
             <Container>
                 <Content contentContainerStyle={{ flex: 1, backgroundColor: '#2c3e50'}}>
-                    { this.state.tokens.length > 0 ?
-                        this.state.tokens.map((token, i) => (
+                    { tokens.tokens.length > 0 ?
+                        tokens.tokens.slice().map((token, i) => (
                             <Token
                                 key={i}
                                 token={token}
                                 id={i}
-                                onChangeText={this.onChangeText}
-                                value={this.state.tokenValues[i]}
-                                submitToken={this._submitToken}
-                                remove={this.state.selectedToken == i}
-                                onAnimationEnd={this.refresh}
+                                value={tokens.tokenValues[i]}
+                                remove={tokens.selectedToken == i}
+                                tokensStore={tokens}
                             />
                         ))
                         :
@@ -239,7 +252,7 @@ export default class Tokens extends Component {
                                 style={{ color: '#FFF', alignSelf: 'center' }}
                             />
                             <Text style={{ marginTop: 10, color:'#FFF', alignSelf: 'center', fontSize: 12, }}>
-                                No token expected in waiting
+                                No token to validate
                             </Text>
                         </View>
                     }

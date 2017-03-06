@@ -2,9 +2,9 @@
  * Created by desver_f on 24/01/17.
  */
 
-import { observable } from 'mobx';
-import storage from 'react-native-simple-store';
+import { observable, computed } from 'mobx';
 import autobind from 'autobind-decorator';
+import moment from 'moment';
 import stores from './index';
 import * as Intra from '../api/intra';
 import newsParser from '../features/news/newsParser';
@@ -115,6 +115,18 @@ class Session {
             console.error(e);
             stores.ui.errorState();
         }
+    }
+
+    @computed get tokens() {
+        const activities = this.session.board.activites.slice();
+
+        return activities
+            .filter((activity) => activity.token)
+            .map((activity) => ({
+                title: `${activity.module.split(' - ')[0]} - ${activity.title}`,
+                date: moment(activity.timeline_start, 'DD/MM/YYYY, HH[h]mm').format('DD.MM.YYYY'),
+                tokenLink: activity.token_link,
+            }));
     }
 }
 

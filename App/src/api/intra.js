@@ -174,3 +174,20 @@ export function fetchProjectMarks(year, module, instance, activity) {
     })
         .then((response) => response.json());
 }
+
+export function validateToken(tokenLink, tokenValue) {
+    const formData = new FormData();
+    formData.append('token', tokenValue);
+    formData.append('rate', '0');
+    formData.append('comment', '');
+
+    return fetch(`${BASE_URL}${tokenLink}?format=json`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: formData,
+    })
+        .then((response) => response.json());
+}
