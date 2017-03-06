@@ -22,13 +22,21 @@ import { observer } from 'mobx-react/native';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import { AnimatedGaugeProgress } from 'react-native-simple-gauge';
-import Chart  from 'react-native-chart';
+import Chart from 'react-native-chart';
+import Pie from 'react-native-pie';
 import _ from 'lodash';
 
 /* UIManager.setLayoutAnimationEnabledExperimental &&
  UIManager.setLayoutAnimationEnabledExperimental(true); */
 
-const datas = [[
+const dataGrade = [[
+    [0, 1],
+    [1, 3],
+    [3, 7],
+    [4, 9],
+]];
+
+const dataLog = [[
     [
         3600,
         29345.1739
@@ -59,7 +67,7 @@ const datas = [[
     ]
 ]];
 
-const extractedData = datas[0].map((data) => {
+const extractedData = dataLog[0].map((data) => {
     return data.map((n) => {
         return n / 3600;
     })
@@ -234,12 +242,140 @@ export default class Stats extends Component {
                     <Animated.View style={{
                         left: this.state.animate,
                         backgroundColor: '#233445',
+                        height: 250,
+                        marginLeft: 10,
+                        marginRight: 10,
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 255, 255, 0)',
+                        borderRadius: 5,
+                    }}>
+                        <View style={{ height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center', elevation: 0 }}>
+                            <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8 }}/>
+                            <Text style={{ color: "#fafafa", fontSize: 11, marginLeft: 5 }}>
+                                Your grade distribution over the year
+                            </Text>
+                        </View>
+                        <View style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            backgroundColor: 'rgba(255, 255, 255, 0)',
+                            marginTop: 1,
+                        }}>
+                            <View style={{
+                                flex: 0.5,
+                                alignSelf: 'center',
+                            }}>
+                                <View style={{
+                                    alignSelf:'center',
+                                    margin: 5,
+                                }}>
+                                <View style={{
+                                    borderLeftWidth: 5,
+                                    borderLeftColor: '#62c462',
+                                    margin: 5,
+                                }}>
+                                    <Text style={{
+                                        color: '#FAFAFA',
+                                        fontSize: 12,
+                                        marginLeft: 5,
+                                    }}>A</Text>
+                                </View>
+                                <View style={{
+                                    borderLeftWidth: 5,
+                                    borderLeftColor: '#ffc754',
+                                    margin: 5,
+                                }}>
+                                    <Text style={{
+                                        color: '#FAFAFA',
+                                        fontSize: 12,
+                                        marginLeft: 5,
+                                    }}>B</Text>
+                                </View>
+
+
+                                <View style={{
+                                    borderLeftWidth: 5,
+                                    borderLeftColor: '#f44336',
+                                    margin: 5,
+                                }}>
+                                    <Text style={{
+                                        color: '#FAFAFA',
+                                        fontSize: 12,
+                                        marginLeft: 5,
+                                    }}>C</Text>
+                                </View>
+
+                                </View>
+
+
+                            </View>
+                            <View style={{
+                                flex: 0.5,
+                                alignSelf: 'center',
+                            }}>
+                                <Pie
+                                    radius={70}
+                                    innerRadius={67}
+                                    series={[40, 20, 40]}
+                                    colors={['#62c462', '#ffc754', '#f44336']}
+                                    backgroundColor={'rgba(255, 255, 255, 0)'}
+                                />
+                            </View>
+
+                        </View>
+                    </Animated.View>
+                    <Animated.View style={{
+                        left: this.state.animate,
+                        backgroundColor: '#233445',
                         height: 150,
                         marginLeft: 10,
                         marginRight: 10,
                         borderWidth: 1,
                         borderColor: 'rgba(255, 255, 255, 0)',
                         borderRadius: 5,
+                        marginTop: 10,
+                    }}>
+                        <View style={{ height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center', elevation: 0 }}>
+                            <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8 }}/>
+                            <Text style={{ color: "#fafafa", fontSize: 11, marginLeft: 5 }}>
+                                Your GPA over the last 7 month
+                            </Text>
+                        </View>
+                        <View style={{
+                            flex: 1,
+                            backgroundColor: 'rgba(255, 255, 255, 0)',
+                            marginTop: 1,
+                        }}>
+                            <Chart
+                                style={{
+                                    width: 360,
+                                    height: 126,
+                                }}
+                                data={data}
+                                verticalGridStep={1}
+                                axisLabelColor="rgba(255, 255, 255, 0.5)"
+                                gridColor="rgba(255, 255, 255, 0.1)"
+                                type="line"
+                                fillColor="rgba(98, 196, 98, 0.5)"
+                                showDataPoint={true}
+                                dataPointRadius={1.5}
+                                axisLineWidth={0}
+                                showXAxisLabels={true}
+                                showYAxisLabels={true}
+                                color={['#62c462']}
+                            />
+                        </View>
+                    </Animated.View>
+                    <Animated.View style={{
+                        right: this.state.animate,
+                        backgroundColor: '#233445',
+                        height: 150,
+                        marginLeft: 10,
+                        marginRight: 10,
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 255, 255, 0)',
+                        borderRadius: 5,
+                        marginTop: 10,
                     }}>
                         <View style={{ height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center', elevation: 0 }}>
                             <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8 }}/>
@@ -384,6 +520,48 @@ export default class Stats extends Component {
                             </View>
                         </Animated.View>
                     </View>
+                    <Animated.View style={{
+                        top: this.state.animate,
+                        backgroundColor: '#233445',
+                        height: 150,
+                        marginLeft: 10,
+                        marginRight: 10,
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 255, 255, 0)',
+                        borderRadius: 5,
+                        marginBottom: 10,
+                    }}>
+                        <View style={{height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center'}}>
+                            <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8,}}/>
+                            <Text style={{color: "#fafafa", fontSize: 11, marginLeft: 5,}}>
+                                The average GPA of your promotion in the last 7 month
+                            </Text>
+                        </View>
+                        <View style={{
+                            flex: 1,
+                            backgroundColor: 'rgba(255, 255, 255, 0)',
+                            marginTop: 1,
+                        }}>
+                            <Chart
+                                style={{
+                                    width: 360,
+                                    height: 126,
+                                }}
+                                data={data}
+                                verticalGridStep={1}
+                                axisLabelColor="rgba(255, 255, 255, 0.5)"
+                                gridColor="rgba(255, 255, 255, 0.1)"
+                                type="line"
+                                fillColor="rgba(98, 196, 98, 0.5)"
+                                showDataPoint={true}
+                                dataPointRadius={1.5}
+                                axisLineWidth={0}
+                                showXAxisLabels={true}
+                                showYAxisLabels={true}
+                                color={['#62c462']}
+                            />
+                        </View>
+                    </Animated.View>
                     <Animated.View style={{
                         top: this.state.animate,
                         backgroundColor: '#233445',

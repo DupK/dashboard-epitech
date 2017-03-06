@@ -23,6 +23,7 @@
     "react-native-collapsible": "^0.8.0",
     "react-native-mobx": "^0.3.1",
     "react-native-modal-datetime-picker": "^3.0.1",
+    "react-native-pie": "git+https://github.com/nihgwu/react-native-pie.git",
     "react-native-router-flux": "^3.37.0",
     "react-native-simple-gauge": "^0.1.2",
     "react-native-simple-store": "^1.1.0",
