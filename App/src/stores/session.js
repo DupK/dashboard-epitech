@@ -3,6 +3,7 @@
  */
 
 import { observable } from 'mobx';
+import storage from 'react-native-simple-store';
 import autobind from 'autobind-decorator';
 import stores from './index';
 import * as Intra from '../api/intra';
@@ -17,20 +18,60 @@ class Session {
 
     async login(username = '', password = '') {
         try {
-            const session = await Intra.login(username, password);
 
-            if (session && session.message !== "Veuillez vous connecter") {
-                this.username = username;
-                this.session = {
-                    board: session.board
-                };
-                this.news = newsParser(session.history);
-                this.isLogged = true;
+            if (username && password) {
+                await this.tryLoginRegular(username, password);
+            } else {
+                await this.tryLoginFromAutoLogin();
             }
         } catch (e) {
             console.error(e);
             stores.ui.errorState();
             this.isLogged = false;
+        }
+    }
+
+    async tryLoginFromAutoLogin() {
+        const autoLogin = await this.getAutologinFromCache();
+
+        if (autoLogin.link && autoLogin.username) {
+            const session = await Intra.autoLog(autoLogin.link);
+            this.setSessionFields(session, autoLogin.username);
+        }
+    }
+
+    async tryLoginRegular(username, password) {
+        const session = await Intra.login(username, password);
+
+        this.setSessionFields(session, username);
+        await this.saveAutoLoginIfNeeded(username);
+    }
+
+    async saveAutoLoginIfNeeded(username) {
+        const hasAutoLogin = !!(await this.getAutologinFromCache());
+
+        if (this.isLogged && !hasAutoLogin) {
+            const { autologin } = await Intra.fetchAutoLogin();
+
+            await storage.save('autologin', {
+                link: autologin,
+                username,
+            });
+        }
+    }
+
+    getAutologinFromCache() {
+        return storage.get('autologin');
+    }
+
+    setSessionFields(session, username) {
+        if (session && session.message !== "Veuillez vous connecter") {
+            this.isLogged = true;
+            this.username = username;
+            this.session = {
+                board: session.board
+            };
+            this.news = newsParser(session.history);
         }
     }
 
@@ -67,10 +108,12 @@ class Session {
         try {
             await Intra.logout();
             this.isLogged = false;
+            await storage.delete('autologin');
+
         } catch (e) {
+            this.isLogged = false;
             console.error(e);
             stores.ui.errorState();
-            this.isLogged = true;
         }
     }
 }
