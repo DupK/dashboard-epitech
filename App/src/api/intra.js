@@ -29,6 +29,28 @@ export function login(login, password) {
         });
 }
 
+export function fetchAutoLogin() {
+    return fetch(`${BASE_URL}/admin/autolog?format=json`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
+}
+
+export function autoLog(autoLoginLink) {
+    return fetch(autoLoginLink, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => response.json());
+}
+
 export function fetchStudent(student) {
     return fetch(`${BASE_URL}/user/` + student + '/?format=json', {
         method: 'GET',

@@ -1,172 +1,182 @@
 import React, { Component } from 'react';
 import {
-    AppRegistry,
-    Text,
+    StyleSheet,
     View,
-    Image,
-    Alert,
-    ScrollView,
-    TextInput,
-    KeyboardAvoidingView
+    Dimensions,
 } from 'react-native';
 import {
     Container,
     Content,
-    Input,
-    Button,
 } from 'native-base';
 import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
 import backgroundSource from '../../assets/wallpaper.jpg';
 import logoSource from '../../assets/epitech.png';
-import styles from './styles.js';
+
+import BackgroundImageWithOverlay from './BackgroundImage';
+import LogoBox from './LogoBox';
+import LoginMessage from './LoginMessage';
+import LoginInput from './LoginInput';
+import AnimatedButton from './AnimatedButton';
 
 @observer
 export default class Login extends Component {
+
     constructor(props) {
         super(props);
 
         this.state = {
             username: '',
             password: '',
+            loginMessage: '',
         };
 
         this.login = this.login.bind(this);
+        this.onAnimationEnd = this.onAnimationEnd.bind(this);
+        this.onAnimationEndError = this.onAnimationEndError.bind(this);
+        this.worthStartingAnimation = this.worthStartingAnimation.bind(this);
     }
 
-    async componentWillMount() {
+    async componentDidMount() {
+        try {
+            this.animatedButton.animate();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async worthStartingAnimation() {
         const { store: { session } } = this.props;
+        const hasAutoLogin = !!(await session.getAutologinFromCache());
 
-        await session.login();
+        return hasAutoLogin || (this.state.username.length && this.state.password.length);
+    }
 
-        if (session.isLogged) {
-            Actions.loading();
+    async fetchRequiredData() {
+        const {
+            store: {ui, session, calendar, ranking, marks, projects}
+        } = this.props;
+
+        try {
+            await Promise.all([
+                calendar.fetchCalendar(),
+                session.userInformation(),
+                projects.fetchProjects(),
+            ]);
+            await Promise.all([
+                marks.fetchMarks(session.username),
+                ranking.selfRankPosition({ fromCache: true }),
+            ]);
+
+            ui.defaultState();
+            return true;
+        } catch(e) {
+            ui.defaultState();
+            console.log(e);
+            return false;
         }
     }
 
     async login() {
-        if (!this.state.username.length || !this.state.password.length) {
+        const {
+            store: { ui, session }
+        } = this.props;
+
+        ui.fetchingState();
+        this.setState({loginMessage: 'Login in ...'});
+
+        try {
+            await session.login(this.state.username, this.state.password);
+            if (session.isLogged) {
+                this.setState({ loginMessage: 'Fetching data ...' });
+
+                const response = await this.fetchRequiredData();
+
+                return Promise.resolve(response);
+            } else {
+                return Promise.resolve(false);
+            }
+        } catch (_) {
             return Promise.resolve(false);
-        }
-
-        const { store: { ui, session } } = this.props;
-
-        await session.login(this.state.username, this.state.password);
-
-        if (session.isLogged) {
-            Actions.loading();
-        } else {
-            ui.errorState();
         }
     }
 
-    renderUserNotLogged() {
-        const { store: { ui } } = this.props;
+    onAnimationEndError() {
+        this.setState({ loginMessage: ''});
+    }
 
-        if (ui.currentState !== ui.state.error) {
-            return null;
-        }
-
-        return <Text style={styles.notLoggedMessage}>Could not connect to intranet</Text>;
+    onAnimationEnd() {
+        this.setState({ loginMessage: '' }, () => {
+            Actions.home();
+        });
     }
 
     render() {
         const { store: { ui } } = this.props;
+        const { width } = Dimensions.get('window');
 
         return (
-
-            <Container style={styles.container}>
+            <Container>
                 <Content contentContainerStyle={{ flex: 1 }}>
-                    <Image source={backgroundSource}
-                           style={{ width: null, height: null, flex: 1 }}
-                           resizeMode='cover'>
-                        <View style={{ flex: 100, backgroundColor: 'rgba(45, 45, 45, 0.65)', }}>
-                            <View style={{ flex: 20 }}/>
-                            <View style={{ flex: 20 }}>
-                                <Image source={ logoSource }
-                                       style={{
-                                           alignSelf: 'center',
-                                           justifyContent: 'center',
-                                           width: 60,
-                                           height: 60,
-                                       }}/>
+                    <BackgroundImageWithOverlay
+                        source={backgroundSource}
+                        colorOverlay="rgba(45, 45, 45, 0.65)"
+                    >
+                        <View style={styles.topEmptyBox} />
+                        <LogoBox source={logoSource} />
+                        <View style={styles.loginBoxContainer}>
+                            <View style={styles.inputsContainer}>
+                                <LoginInput
+                                    maxLength={40}
+                                    placeholder="Email address"
+                                    keyboardType="email-address"
+                                    editable={ui.currentState !== ui.state.fetchingState}
+                                    onChangeText={(text) => this.setState({ username: text })}
+                                    onSubmitEditing={() => this.passwordInput.nativeInput.focus() }
+                                />
+                                <LoginInput
+                                    ref={(input) => this.passwordInput = input}
+                                    maxLength={8}
+                                    placeholder="Unix Password"
+                                    secureTextEntry
+                                    editable={ui.currentState !== ui.state.fetchingState}
+                                    onChangeText={(text) => this.setState({ password: text })}
+                                    onSubmitEditing={() => this.animatedButton.animate()}
+                                />
+                                <AnimatedButton
+                                    ref={(button) => this.animatedButton = button}
+                                    title="Login"
+                                    errorTitle="Could not log in"
+                                    width={width - 60}
+                                    onPress={this.login}
+                                    onAnimationEnd={this.onAnimationEnd}
+                                    onAnimationEndError={this.onAnimationEndError}
+                                    worthStartingAnimation={this.worthStartingAnimation}
+                                />
                             </View>
-                            <View style={{ flex: 60 }}>
-                                <Text style={{
-                                    color: '#FFFFFF',
-                                    alignSelf: 'center',
-                                    marginTop: 10
-                                }}>
-                                    <Text>Dashboard </Text>
-                                    <Text style={{ fontWeight: 'bold' }}>Epitech</Text>
-                                </Text>
-                            </View>
-                            <View style={{ flex: 70, }}>
-                                <KeyboardAvoidingView behavior="padding" style={{ flex: 0.22, }}>
-                                    <Input
-                                        maxLength={40}
-                                        keyboardType="email-address"
-                                        spellCheck={false}
-                                        multiline={false}
-                                        placeholder="Email address"
-                                        placeholderTextColor="rgba(255, 255, 255, 1)"
-                                        onChangeText={(text) => this.setState({ username: text })}
-                                        onSubmitEditing={() => { this.passwordInput._root.focus()} }
-                                        style={{
-                                            color: '#FFF',
-                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                            borderRadius: 5,
-                                            marginLeft: 30,
-                                            marginRight: 30,
-                                            fontSize: 12,
-                                            textAlign: 'center',
-                                    }} />
-                                </KeyboardAvoidingView>
-                                <View style={{ flex: 0.5, }}>
-                                    <Input
-                                        ref={(input) => this.passwordInput = input}
-                                        onChangeText={(text) => this.setState({ password: text })}
-                                        onSubmitEditing={this.login}
-                                        multiline={false}
-                                        maxLength={8}
-                                        secureTextEntry
-                                        placeholder="Unix Password"
-                                        placeholderTextColor="rgba(255, 255, 255, 1)"
-                                        style={{
-                                            color: '#FFF',
-                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                            borderRadius: 5,
-                                            marginLeft: 30,
-                                            marginRight: 30,
-                                            fontSize: 12,
-                                            textAlign: 'center',
-                                        }} />
-                                    <Button
-                                        style={{
-                                            backgroundColor: 'rgba(35, 52, 69, 0.7)',
-                                            borderWidth: 1,
-                                            borderColor: 'rgba(35, 52, 69, 0.7)',
-                                            alignSelf: 'center',
-                                            width: 300,
-                                            borderRadius: 5,
-                                            elevation: 0,
-                                        }}
-                                        title="Login"
-                                        onPress={this.login}
-                                        disabled={ui.currentState == ui.state.fetching}
-                                    >
-                                        <Text style={{ color: '#FFF',  fontSize: 12 }}>Login</Text>
-                                    </Button>
-                                </View>
-                                <View style={{ flex: 0.5 }}>
-                                </View>
+                            <View style={{ flex: 0.6 }}>
+                                <LoginMessage message={this.state.loginMessage} />
                             </View>
                         </View>
-                    </Image>
+                    </BackgroundImageWithOverlay>
                 </Content>
             </Container>
-
         );
     }
 }
+
+const styles = StyleSheet.create({
+    topEmptyBox: {
+        flex: 20
+    },
+
+    loginBoxContainer: {
+        flex: 70,
+    },
+
+    inputsContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+    }
+});

@@ -8,7 +8,6 @@ import { Router, Scene } from 'react-native-mobx';
 import Login from './login/Login';
 import Home from './home/Home'
 import Calendar from './calendar/Calendar';
-import Loading from './loading/Loading';
 import News from './news/News';
 import Projects from './projects/Projects';
 import ProjectDetails from './projects/ProjectDetails';
@@ -83,13 +82,6 @@ class Main extends Component {
                         onBack={_.noop}
                         onRight={_.noop}
                         type="reset"
-                    />
-
-                    <Scene
-                        key="loading"
-                        title="Loading"
-                        hideNavBar={true}
-                        component={Loading}
                     />
 
                     <Scene
