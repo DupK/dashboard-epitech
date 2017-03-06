@@ -87,8 +87,8 @@ export default class Stats extends Component {
             {
                 toValue: 0,
                 duration: 1000,
-                delay: 600,
-                easing: Easing.in(Easing.quad),
+                delay: 500,
+                easing: Easing.inOut(Easing.ease),
             }).start()
     }
 
