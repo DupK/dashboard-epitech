@@ -58,8 +58,9 @@ const MonthBar = observer(() =>  {
             top: 0,
             height: MONTH_BAR_HEIGHT,
             width: MONTH_BAR_WIDTH + width,
-            backgroundColor: '#617487',
+            backgroundColor: '#rgba(98, 196, 98, 0.9)',
             zIndex: 10,
+            elevation: 5,
         }}>
             <View style={{
                 flex: 1,
@@ -92,7 +93,7 @@ const ProjectLine = observer(({ projectName, nthProject, start, end }) => {
                 left: MONTH_OFFSET + (timelineStart * DAY_IN_PIXEL) + width / 2,
             }}
         >
-            <Text style={{ color: 'white', position: 'relative', fontSize: 10 }}>
+            <Text style={{ color: 'rgba(35, 52, 69, 0.9)', position: 'relative', fontSize: 10, fontWeight: 'bold' }}>
                 { projectName }
             </Text>
             <View style={{
@@ -101,7 +102,7 @@ const ProjectLine = observer(({ projectName, nthProject, start, end }) => {
                 height: PROJECT_LINE_HEIGHT,
                 width: nbDays * DAY_IN_PIXEL,
                 borderRadius: 30,
-                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                backgroundColor: 'rgba(35, 52, 69, 0.9)',
             }}/>
         </View>
     );
@@ -126,7 +127,7 @@ const VerticalMonthDelimitors = observer(({ nthMonth, viewHeight }) => {
                 width: 1,
                 height: viewHeight,
                 left: MONTH_OFFSET + monthsInPixelBefore + width / 2,
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                backgroundColor: 'rgba(35, 52, 69, 0.1)',
                 zIndex: 1,
             }}
         />
@@ -158,10 +159,10 @@ const DayIndicator = observer(({ dayNumber, position, colorBar, colorBox, colorB
                     height: 20,
                     left: 0,
                     backgroundColor: colorBox,
-                    borderRadius: 5,
+                    borderRadius: 50,
                 }}
             >
-                <Text style={{ alignSelf: 'center', color: colorBoxText }}>
+                <Text style={{ alignSelf: 'center', color: colorBoxText, fontSize: 12, marginTop: 1 }}>
                     { dayNumber }
                 </Text>
             </View>
@@ -243,9 +244,9 @@ export default class ProjectsTimeline extends Component {
         return <DayIndicator
             dayNumber={dayNumber}
             position={position}
-            colorBar="rgba(255, 255, 255, 0.7)"
-            colorBox="rgba(255, 255, 255, 0.7)"
-            colorBoxText="#1B3147"
+            colorBar="rgba(44, 62, 80, 0.9)"
+            colorBox="rgba(44, 62, 80, 0.9)"
+            colorBoxText="#FAFAFA"
             viewHeight={viewHeight}
         />;
     }
@@ -259,8 +260,8 @@ export default class ProjectsTimeline extends Component {
         return <DayIndicator
             dayNumber={dayNumber}
             position={position}
-            colorBar="#1B3147"
-            colorBox="#1B3147"
+            colorBar="rgba(98, 196, 98, 0.9)"
+            colorBox="rgba(98, 196, 98, 0.9)"
         />;
     }
 
@@ -293,7 +294,7 @@ export default class ProjectsTimeline extends Component {
                     ref={(scrollView) => this.scrollView = scrollView}
                     style={{
                         flex: 1,
-                        backgroundColor: '#42586E'
+                        backgroundColor: '#FAFAFA'
                     }}
                     horizontal
                     onScroll={this.handleScroll}

@@ -9,7 +9,7 @@ import moment from 'moment';
 const DAY_IN_PIXEL = 5;
 
 const MONTH_OFFSET = 11;
-const PROJECT_LINE_HEIGHT = 12;
+const PROJECT_LINE_HEIGHT = 8;
 const MONTH_BAR_HEIGHT = 20;
 const MONTHS = _.map(
     [...moment.monthsShort(), 'Jan'],
