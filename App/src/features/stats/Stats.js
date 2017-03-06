@@ -15,6 +15,7 @@ import {
     UIManager,
     LayoutAnimation,
     Animated,
+    Easing,
     InteractionManager
 } from 'react-native';
 import { observer } from 'mobx-react/native';
@@ -25,7 +26,7 @@ import Chart  from 'react-native-chart';
 import _ from 'lodash';
 
 /* UIManager.setLayoutAnimationEnabledExperimental &&
-UIManager.setLayoutAnimationEnabledExperimental(true); */
+ UIManager.setLayoutAnimationEnabledExperimental(true); */
 
 const datas = [[
     [
@@ -81,16 +82,14 @@ export default class Stats extends Component {
     }
 
     componentDidMount() {
-
-        InteractionManager.runAfterInteractions(() =>
-            Animated.timing(
-                this.state.animate,
-                {
-                    toValue: 0,
-                    duration: 1500,
-                }).start()
-        )
-
+        Animated.timing(
+            this.state.animate,
+            {
+                toValue: 0,
+                duration: 1000,
+                delay: 600,
+                easing: Easing.in(Easing.quad),
+            }).start()
     }
 
     _renderGpaColor(value) {
@@ -264,7 +263,8 @@ export default class Stats extends Component {
                                 gridColor="rgba(255, 255, 255, 0.1)"
                                 type="line"
                                 fillColor="rgba(98, 196, 98, 0.5)"
-                                showDataPoint={false}
+                                showDataPoint={true}
+                                dataPointRadius={1.5}
                                 axisLineWidth={0}
                                 showXAxisLabels={true}
                                 showYAxisLabels={true}
@@ -417,7 +417,8 @@ export default class Stats extends Component {
                                 gridColor="rgba(255, 255, 255, 0.1)"
                                 type="line"
                                 fillColor="rgba(98, 196, 98, 0.5)"
-                                showDataPoint={false}
+                                showDataPoint={true}
+                                dataPointRadius={1.5}
                                 axisLineWidth={0}
                                 showXAxisLabels={true}
                                 showYAxisLabels={true}
