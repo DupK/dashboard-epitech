@@ -143,11 +143,11 @@ export default class Home extends Component {
     renderScrollView() {
         const {
             store: {
-                session,
                 session: { news },
                 calendar,
                 ranking,
-                marks
+                marks,
+                tokens,
             }
         } = this.props;
 
@@ -156,8 +156,8 @@ export default class Home extends Component {
             .orderBy((news) => moment(news.date, 'YYYY-MM-DD HH:mm:ss'))
             .last();
         const lastMark = marks.lastMark;
-        const tokenDescription = session.tokens.length
-            ? `You have ${session.tokens.length} tokens to validate.`
+        const tokenDescription = tokens.nbTokens
+            ? `You have ${tokens.nbTokens} tokens to validate.`
             : 'There is no token to validate.';
 
         return (

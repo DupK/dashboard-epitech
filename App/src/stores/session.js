@@ -107,6 +107,7 @@ class Session {
     async logout() {
         try {
             await Intra.logout();
+            this.username = '';
             this.isLogged = false;
             await storage.delete('autologin');
 

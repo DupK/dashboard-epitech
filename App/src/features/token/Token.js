@@ -53,19 +53,14 @@ class Token extends Component {
         this.state.removeAnimation.setValue(0);
     }
 
-    async stall(stallTime = 3000) {
-        await new Promise(resolve => setTimeout(resolve, stallTime));
-    }
-
     async validateToken() {
         const { id, tokensStore: tokens } = this.props;
 
         tokens.setState({ state: 'validating', id });
 
-        await tokens.validateToken(id);
-        const response = false;
+        const isValidated = await tokens.validateToken(id);
 
-        if (response) {
+        if (isValidated) {
             this.animateDeletion();
         } else {
             this.animateWrongToken();
@@ -151,7 +146,7 @@ class Token extends Component {
                     borderWidth: 0.5,
                 }}>
                     {
-                        tokens.values[id]
+                        tokens.value[id]
                             ? (
                                 <View
                                     style={{ flex: 0.10, alignSelf: 'center', marginLeft: 10 }}
@@ -198,7 +193,7 @@ class Token extends Component {
                         blurOnSubmit
                         onChangeText={(text) => tokens.updateValues(text, id)}
                         value={value || ''}
-                        editable={!tokens.values[id] || false}
+                        editable={!tokens.value[id] || false}
                     />
                 </View>
             </Animated.View>

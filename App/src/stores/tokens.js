@@ -20,17 +20,14 @@ class Tokens {
         validating: (id) => this.setTokensValue(id),
         error: (id) => this.setError(id),
         default: () => {
-            this.values = {};
+            this.value = {};
             this.error = {};
         },
     };
+    async validateToken(id) {
+        const response = await Intra.validateToken(this.tokens[id].tokenLink, this.tokenValues[id]);
 
-    @action async validateToken(id) {
-        const res = await Intra.validateToken(tokens[id].tokenLink, this.tokenValues[id]);
-
-        console.log(res);
-
-        return res;
+        return Object.keys(response).length === 0;
     }
 
     @action resetTokens() {
@@ -38,18 +35,18 @@ class Tokens {
         this.selectedToken = -1;
     }
 
-    @action filterAndResetTokens() {
+    @action removeValidatedToken() {
         this.tokens = _.filter([ ...this.tokens.slice() ], (_, i) => i !== this.selectedToken);
 
         this.resetTokens();
     }
 
     @action refreshAfterAnimation(isTokenValidated) {
-        if (!isTokenValidated) {
-            return this.resetTokens();
+        if (isTokenValidated) {
+            this.removeValidatedToken();
         }
 
-        this.filterAndResetTokens();
+        this.resetTokens();
     }
 
     @action updateValues(text, id) {
@@ -77,6 +74,10 @@ class Tokens {
 
     @action setState({ state, id }) {
         this.tokenStates[state](id);
+    }
+
+    @computed get nbTokens() {
+        return this.tokens.length;
     }
 }
 
