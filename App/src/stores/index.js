@@ -4,6 +4,7 @@ import CalendarStore from './calendar';
 import RankingStore from './ranking';
 import MarksStore from './marks';
 import ProjectsStore from './projects';
+import TokensStore from './tokens';
 
 export default {
     ui: UiStateStore,
@@ -12,4 +13,5 @@ export default {
     ranking: RankingStore,
     marks: MarksStore,
     projects: ProjectsStore,
+    tokens: TokensStore,
 };

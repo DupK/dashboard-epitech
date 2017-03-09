@@ -146,7 +146,8 @@ export default class Home extends Component {
                 session: { news },
                 calendar,
                 ranking,
-                marks
+                marks,
+                tokens,
             }
         } = this.props;
 
@@ -155,6 +156,9 @@ export default class Home extends Component {
             .orderBy((news) => moment(news.date, 'YYYY-MM-DD HH:mm:ss'))
             .last();
         const lastMark = marks.lastMark;
+        const tokenDescription = tokens.nbTokens
+            ? `You have ${tokens.nbTokens} tokens to validate.`
+            : 'There is no token to validate.';
 
         return (
             <View style={scrollStyle.scrollViewContent}>
@@ -206,7 +210,7 @@ export default class Home extends Component {
                 />
                 <Cell
                     title="Tokens"
-                    description="Insert token description.."
+                    description={tokenDescription}
                     icon={<IconIO name="ios-pricetags-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.tokens}
                     color="#141D27"
@@ -351,15 +355,15 @@ export default class Home extends Component {
                 <Animated.View style={[
                     scrollStyle.header,
                     {
-                    elevation: shadow,
-                    shadowColor: "#000000",
-                    shadowOpacity: iOSshadow,
-                    shadowRadius: 5,
-                    shadowOffset: {
-                        height: 3,
-                        width: 0
-                    },
-                }]}>
+                        elevation: shadow,
+                        shadowColor: "#000000",
+                        shadowOpacity: iOSshadow,
+                        shadowRadius: 5,
+                        shadowOffset: {
+                            height: 3,
+                            width: 0
+                        },
+                    }]}>
                     <Animated.View style={[
                         {
                             overflow: 'hidden',
