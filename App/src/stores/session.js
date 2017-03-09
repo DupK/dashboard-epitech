@@ -5,6 +5,8 @@
 import { observable, computed } from 'mobx';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
+import storage from 'react-native-simple-store';
+
 import stores from './index';
 import * as Intra from '../api/intra';
 import newsParser from '../features/news/newsParser';
