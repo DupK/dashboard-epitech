@@ -16,10 +16,11 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ENIcon from 'react-native-vector-icons/Entypo';
+import SLIcon from 'react-native-vector-icons/SimpleLineIcons';
 import { observer } from 'mobx-react/native';
 import LoadingIndicator from 'react-native-spinkit';
-
-import HeartBeat from './HeartBeat';
+import { Actions } from 'react-native-mobx';
+import RegisterButton from './RegisterButton';
 
 const TextDetail = observer(({ bold, children }) => {
     return (
@@ -142,18 +143,6 @@ const RegisterBox = observer(({ activityStore, event }) => {
             : 'You can\'t register'
     };
 
-    const buttonColor = {
-        registered: '#F44235',
-        unregistered: '#62C462',
-        forbidden: '#b9b9b9'
-    };
-
-    const registerIcon = {
-        registered: 'ios-remove',
-        unregistered: 'ios-add',
-        forbidden: 'ios-close',
-    };
-
     const registerCallbacks = {
         registered: async () => await activityStore.unregisterActivity(event),
         unregistered: async () => await activityStore.registerActivity(event),
@@ -170,34 +159,13 @@ const RegisterBox = observer(({ activityStore, event }) => {
     };
 
     return (
-        <View style={{
-            flex: 0.3,
-            margin: 10,
-            marginBottom: 15,
-            paddingLeft: 15,
-            elevation: 10,
-            backgroundColor: '#233445',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-        }}>
-            <HeartBeat
-                ref={(button) => this.animatedButton = button}
-                onPress={() => registerActivity()}
-                disabled={registered === 'forbidden'}
-                style={{
-                    backgroundColor: buttonColor[registered],
-                    width: 35,
-                    height: 35,
-                    borderRadius: 50,
-                    elevation: 10,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: 20,
-                }}
-            >
-                <Icon name={registerIcon[registered]} color="#FAFAFA" size={35}/>
-            </HeartBeat>
+        <View style={styles.registerSlotsBox}>
+            <RegisterButton
+                registered={registered}
+                buttonSize={35}
+                iconSize={35}
+                onPress={registerActivity}
+            />
             <Text style={{
                 fontSize: 14,
                 color: '#FAFAFA',
@@ -212,6 +180,33 @@ const RegisterBox = observer(({ activityStore, event }) => {
 RegisterBox.propTypes = {
     activityStore: React.PropTypes.object,
     event: React.PropTypes.object,
+};
+
+const ViewAvailableSlots = ({ activityTitle }) => {
+    return (
+        <TouchableOpacity
+            style={styles.registerSlotsBox}
+            onPress={() => Actions.availableSlots({ title: `Slots for ${activityTitle}`})}
+        >
+            <Text style={{
+                fontSize: 14,
+                color: '#FAFAFA',
+                fontFamily: 'Nunito-ExtraLight'
+            }}>
+                Check out available slots
+            </Text>
+            <SLIcon name="arrow-right" style={{
+                color: '#FAFAFA',
+                fontSize: 12,
+                marginTop: 5,
+                marginLeft: 15,
+            }}/>
+        </TouchableOpacity>
+    );
+};
+
+ViewAvailableSlots.propTypes = {
+    activityTitle: React.PropTypes.string.isRequired,
 };
 
 @observer
@@ -253,9 +248,6 @@ export default class Activity extends Component {
             );
         }
 
-        const location = activityStore.activity.events[0].location;
-        const room = location.substring(location.lastIndexOf('/') + 1, location.length - 1);
-
         const description = activityStore.activity.description
             ? activityStore.activity.description
             : 'There is no description for the following activity.';
@@ -278,7 +270,7 @@ export default class Activity extends Component {
                     icon={<Icon name="ios-school" color="#FAFAFA" size={25}/>}
                     description={
                         <AdministrativeDetails
-                            room={room}
+                            room={activityStore.roomName}
                             registeredStudents={activityStore.activity.nb_registered}
                             date={moment(event.start).format('DD.MM.YYYY')}
                             startTime={moment(event.start).format('HH:mm')}
@@ -286,7 +278,11 @@ export default class Activity extends Component {
                         />
                     }
                 />
-                <RegisterBox activityStore={activityStore} event={event}/>
+                {
+                    activityStore.activity.slots.length
+                        ? <ViewAvailableSlots activityTitle={activityStore.activity.title}/>
+                        : <RegisterBox activityStore={activityStore} event={event}/>
+                }
             </View>
         );
     }
@@ -298,7 +294,7 @@ Activity.propTypes = {
 
 const styles = StyleSheet.create({
     boxContainer: {
-        elevation: 10,
+        elevation: 5,
         backgroundColor: '#233445',
         paddingTop: 10,
         paddingLeft: 15,
@@ -309,6 +305,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#233445',
+    },
+    registerSlotsBox: {
+        flex: 0.3,
+        margin: 10,
+        marginBottom: 15,
+        paddingLeft: 15,
+        elevation: 10,
+        backgroundColor: '#233445',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 });
 

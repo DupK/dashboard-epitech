@@ -64,9 +64,9 @@ class Heartbeat extends Component {
     animate() {
         this.loading = true;
         this.startPulse();
-        this.onPressPromise().then(() => {
-            this.stall().then(() => this.loading = false)
-        })
+        this.stall().then(() => {
+            this.onPressPromise().then(() => this.loading = false)
+        });
     }
 
     render() {

@@ -6,6 +6,7 @@ import { observable, action, computed } from 'mobx';
 
 import calendarStore from './calendar';
 import ui from './uiState';
+import session from './session';
 import * as Intra from '../api/intra';
 
 @autobind
@@ -81,9 +82,53 @@ class activity {
         return isValidated;
     }
 
+    async stall(stallTime = 2000) {
+        await new Promise(resolve => setTimeout(resolve, stallTime));
+    }
+
+    @action
+    markSlotActivityAs(slotToMark, { registered }) {
+        this.activity.slots = this.activity.slots.slice().map((slotGroup) => {
+            const slots = slotGroup.slots.slice().map((slot) => {
+                if (slot.id === slotToMark.id) {
+                    return {
+                        ...slot,
+                        master: {
+                            title: session.session.user.name,
+                            login: session.username,
+                            picture: session.session.user.thumbnail
+                        }
+                    };
+                }
+
+                return slot;
+            });
+
+            return {
+                ...slotGroup,
+                slots: slots
+            };
+        });
+    }
+
+    async registerSlot(activity) {
+        await this.stall();
+        //TODO: Implement register slot
+    }
+
+    async unregisterSlot(activity) {
+        await this.stall();
+        //TODO: Implement unregister slot if not oneshot
+    }
+
     @action
     resetActivity() {
         this.activity = null;
+    }
+
+    @computed get roomName() {
+        const location = this.activity.events[0].location;
+        return location.substring(location.lastIndexOf('/') + 1, location.length);
     }
 }
 

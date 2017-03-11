@@ -9,6 +9,7 @@ import Login from './login/Login';
 import Home from './home/Home'
 import Calendar from './calendar/Calendar';
 import Activity from './calendar/Activity/Activity';
+import AvailableSlots from './calendar/Activity/AvailableSlots';
 import News from './news/News';
 import Projects from './projects/Projects';
 import ProjectDetails from './projects/ProjectDetails';
@@ -97,6 +98,12 @@ class Main extends Component {
                         key="activity"
                         hideNavBar={false}
                         component={Activity}
+                    />
+
+                    <Scene
+                        key="availableSlots"
+                        hideNavBar={false}
+                        component={AvailableSlots}
                     />
 
                     <Scene
