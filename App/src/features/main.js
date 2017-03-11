@@ -8,6 +8,7 @@ import { Router, Scene } from 'react-native-mobx';
 import Login from './login/Login';
 import Home from './home/Home'
 import Calendar from './calendar/Calendar';
+import Activity from './calendar/Activity/Activity';
 import News from './news/News';
 import Projects from './projects/Projects';
 import ProjectDetails from './projects/ProjectDetails';
@@ -90,6 +91,12 @@ class Main extends Component {
                         hideNavBar={false}
                         component={Calendar}
                         panHandlers={null}
+                    />
+
+                    <Scene
+                        key="activity"
+                        hideNavBar={false}
+                        component={Activity}
                     />
 
                     <Scene

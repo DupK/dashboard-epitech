@@ -1,10 +1,12 @@
 import React, { Component, PropTypes as t } from 'react';
 import {
     View,
+    TouchableOpacity,
     Text,
     Dimensions,
 } from 'react-native';
 import moment from 'moment';
+import { Actions } from 'react-native-mobx';
 import { QUARTER_SIZE, HOUR_SIZE } from './constants';
 
 
@@ -15,26 +17,29 @@ class Event extends Component {
         const startDate = moment(event.start);
         const start = startDate.hours() + (startDate.minutes() / 60);
         const eventWidth = (screenWidth * .7) / nbEvents;
-        const color = event.registered ? '#62c462' : '#B9B9B9';
+        const color = event.registered === 'registered' ? '#62c462' : '#B9B9B9';
 
         return (
-            <View style={{
-                backgroundColor: color,
-                position: 'absolute',
-                height: (event.duration / 15) * QUARTER_SIZE,
-                top: ((start * HOUR_SIZE) - (8 * HOUR_SIZE)),
-                width: eventWidth,
-                left: 30 + ((eventWidth + 1) * (nthEvent - 1)),
-                borderBottomWidth: 1,
-                borderBottomColor: 'white',
-            }}>
+            <TouchableOpacity
+                onPress={() => Actions.activity({ title: event.title, event })}
+                style={{
+                    backgroundColor: color,
+                    position: 'absolute',
+                    height: (event.duration / 15) * QUARTER_SIZE,
+                    top: ((start * HOUR_SIZE) - (8 * HOUR_SIZE)),
+                    width: eventWidth,
+                    left: 30 + ((eventWidth + 1) * (nthEvent - 1)),
+                    borderBottomWidth: 1,
+                    borderBottomColor: 'white',
+                }}
+            >
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                     <Text style={{ padding: 3, fontSize: 10, color: 'white' }}>
                         <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>&nbsp;&nbsp;
                         <Text style={{ fontSize: 8 }}>{moment(event.start).format('HH:mm')} - {moment(event.end).format('HH:mm')}</Text>
                     </Text>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     }
 }

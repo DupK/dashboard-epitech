@@ -12,6 +12,7 @@ import * as Intra from "../api/intra";
 @autobind
 class Calendar {
 
+    @observable rawCalendar = null;
     @observable calendar = null;
     @observable startingDate = moment();
     @observable selectedDate = moment();
@@ -49,28 +50,45 @@ class Calendar {
             this.lastFetchedStart = start.isBefore(this.lastFetchedStart) ? start : this.lastFetchedStart;
             this.lastFetchedEnd = end.isAfter(this.lastFetchedEnd) ? end : this.lastFetchedEnd;
 
-            const rawCalendar = await Intra.fetchCalendar(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+            this.rawCalendar = await Intra.fetchCalendar(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+            this.calendar = this.remapCalendar(this.rawCalendar);
 
-            this.calendar = this.remapCalendar(rawCalendar);
         } catch (e) {
             console.error(e);
         }
     }
 
+    isRegistered(canRegister, registered) {
+        if (!canRegister) {
+            return 'forbidden';
+        }
+
+        if (registered) {
+            return 'registered';
+        }
+
+        return 'unregistered';
+    }
+
     remapCalendar(rawCalendar) {
         const remappedCalendar = _(rawCalendar)
-            .filter((event) => event.start && event.module_registered === true)
+            .filter((event) => event.start && event.module_registered)
             .map((event) => ({
                 title: event.acti_title,
                 type: event.type_title,
                 module: event.titlemodule,
+                instance: event.codeinstance,
+                codeModule: event.codemodule,
+                codeEvent: event.codeevent,
+                activity: event.codeacti,
+                year: event.scolaryear,
                 start: event.start,
                 end: event.end,
+                date: moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY'),
                 room: event.room,
                 duration: moment(event.end).diff(moment(event.start), 'minutes'),
                 uid: event.codeevent,
-                registered: event.event_registered === 'registered',
-                canRegister: event.allow_register,
+                registered: this.isRegistered(event.allow_register, event.event_registered),
             }))
             .groupBy((event) => moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY'))
             .toPairs()
@@ -100,7 +118,7 @@ class Calendar {
                         _.flatMap(events, (event) => event.registered))
                     )
                     .value();
-                const isRegisteredToAnEvent = _.some(registeredEvents, (registered) => registered);
+                const isRegisteredToAnEvent = _.some(registeredEvents, (registered) => registered === 'registered');
 
                 return [
                     date,
@@ -250,6 +268,23 @@ class Calendar {
             await this.fetchCalendar(moment(date).subtract(1, 'M'), this.lastFetchedStart);
             ui.defaultState();
         }
+    }
+
+    @action
+    markEventAs(event, { registered }) {
+        const calendarWithEventMarked = _.map(this.rawCalendar, (calendarEvent) => {
+            if (calendarEvent.codeevent === event.codeEvent) {
+                return {
+                    ...calendarEvent,
+                    event_registered: registered,
+                }
+            }
+
+            return calendarEvent;
+        });
+
+        this.rawCalendar = calendarWithEventMarked;
+        this.calendar = this.remapCalendar(calendarWithEventMarked);
     }
 }
 
