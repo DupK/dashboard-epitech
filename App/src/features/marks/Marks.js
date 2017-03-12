@@ -19,8 +19,8 @@ import _ from "lodash";
 import Accordion from 'react-native-collapsible/Accordion';
 import { Actions } from 'react-native-router-flux';
 import styles from './styles.js';
-
 import { observer } from 'mobx-react/native';
+import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const gradeColors = {
     A: '#62c462',
@@ -70,6 +70,7 @@ export default class Marks extends Component {
                                     <View style={styles.content}>
                                         <Text style={styles.textContent}> {mark.title}</Text>
                                         <Text style={styles.markContent}> {mark.note}</Text>
+                                        <IconMC style={styles.iconContent} size={14} name="chevron-right"/>
                                     </View>
                                 </TouchableOpacity>
                             )))
