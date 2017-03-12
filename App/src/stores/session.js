@@ -10,6 +10,7 @@ import storage from 'react-native-simple-store';
 import stores from './index';
 import * as Intra from '../api/intra';
 import newsParser from '../features/news/newsParser';
+import _ from 'lodash';
 
 @autobind
 class Session {
@@ -80,6 +81,7 @@ class Session {
     async userInformation() {
         try {
             const information = await Intra.fetchStudent(this.username);
+            const netsoul = await Intra.fetchNetsoul(this.username);
 
             this.session = {
                 ...this.session,
@@ -96,6 +98,9 @@ class Session {
                     location: information.location,
                     thumbnail: information.picture,
                     uid: information.uid,
+                },
+                log: {
+                    data: netsoul,
                 }
             };
 

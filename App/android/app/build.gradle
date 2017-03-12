@@ -96,6 +96,7 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+
      signingConfigs {
         release {
              storeFile file(MYAPP_RELEASE_STORE_FILE)
@@ -135,6 +136,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-svg')
     compile project(':react-native-spinkit')
     compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])

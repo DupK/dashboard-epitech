@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		0076222A14D843CBBAE84264 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 41301E043456499AACF37EEA /* Octicons.ttf */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -51,6 +50,7 @@
 		F1D11AD5ADD34384B322BD3D /* Georgia.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B3F4630CA86745B5907C05F6 /* Georgia.ttf */; };
 		F3B5765EBF904EC8B7468008 /* Microsoft Sans Serif.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D8657C876E0646649715365D /* Microsoft Sans Serif.ttf */; };
 		F711564C67EF4CFE9D43B829 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE0EB00F43F44664826C39DC /* Entypo.ttf */; };
+		59F19CB1BA8F459CA0C8AD28 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8666647D70EE45349EEBC10F /* libRNSVG.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -311,6 +311,8 @@
 		D8657C876E0646649715365D /* Microsoft Sans Serif.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Microsoft Sans Serif.ttf"; path = "../node_modules/native-base/Fonts/Microsoft Sans Serif.ttf"; sourceTree = "<group>"; };
 		EA4BB52B9868467F900AA948 /* libRNSpinkit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSpinkit.a; sourceTree = "<group>"; };
 		F5DE9EAD5C21453289654640 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
+		D25626FAE8EE401081A952AE /* RNSVG.xcodeproj */ = {isa = PBXFileReference; name = "RNSVG.xcodeproj"; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		8666647D70EE45349EEBC10F /* libRNSVG.a */ = {isa = PBXFileReference; name = "libRNSVG.a"; path = "libRNSVG.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -340,6 +342,7 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				767597E981434D7195181416 /* libRNVectorIcons.a in Frameworks */,
 				4030439B6C4246F2AE25D4D3 /* libRNSpinkit.a in Frameworks */,
+				59F19CB1BA8F459CA0C8AD28 /* libRNSVG.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,6 +545,7 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				06A83CC335F841A18CCDD526 /* RNVectorIcons.xcodeproj */,
 				A62E3A35F9D5422E868A9F3B /* RNSpinkit.xcodeproj */,
+				D25626FAE8EE401081A952AE /* RNSVG.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1026,6 +1030,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.testomg.App;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1044,6 +1049,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.testomg.App;
 				PRODUCT_NAME = "$(TARGET_NAME)";
