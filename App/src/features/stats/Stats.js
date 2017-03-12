@@ -2,91 +2,36 @@
  * Created by jules on 15/02/17.
  */
 
-//noinspection JSUnresolvedVariable
 import React, { Component } from 'react';
-//noinspection JSUnresolvedVariable
 import {
     AppRegistry,
     StyleSheet,
     Text,
     View,
-    Image,
     ScrollView,
-    UIManager,
-    LayoutAnimation,
     Animated,
     Easing,
-    InteractionManager
 } from 'react-native';
 import { observer } from 'mobx-react/native';
-import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconFA from 'react-native-vector-icons/FontAwesome';
-import { AnimatedGaugeProgress } from 'react-native-simple-gauge';
 import Chart from 'react-native-chart';
-import Pie from 'react-native-pie';
-import _ from 'lodash';
-
-/* UIManager.setLayoutAnimationEnabledExperimental &&
- UIManager.setLayoutAnimationEnabledExperimental(true); */
-
-const dataGrade = [[
-    [0, 1],
-    [1, 3],
-    [3, 7],
-    [4, 9],
-]];
-
-const dataLog = [[
-    [
-        3600,
-        29345.1739
-    ],
-    [
-        7200,
-        26410.4423
-    ],
-    [
-        10800,
-        21993.7
-    ],
-    [
-        14400,
-        25763.8
-    ],
-    [
-        18000,
-        22067.3333
-    ],
-    [
-        21600,
-        22642.5417
-    ],
-    [
-        25200,
-        26659.5306
-    ]
-]];
-
-const extractedData = dataLog[0].map((data) => {
-    return data.map((n) => {
-        return n / 3600;
-    })
-})
-
-const data = [extractedData]
+import { Radar, Pie } from 'react-native-pathjs-charts';
+import Header from './Header';
+import HalfCell from './HalfCell';
+import LargeCell from './LargeCell';
+import Cell from './Cell';
+import { AnimatedGaugeProgress } from 'react-native-simple-gauge';
+import { pieData, radarData, data } from './data';
 
 @observer
 export default class Stats extends Component {
 
     constructor() {
         super();
-
         this.state = {
             animate: new Animated.Value(400),
         }
 
-        this._renderGpaColor = this._renderGpaColor.bind(this);
-        this._renderCreditsColor = this._renderCreditsColor.bind(this);
+        this._renderColor = this._renderColor.bind(this);
     }
 
     componentDidMount() {
@@ -100,257 +45,110 @@ export default class Stats extends Component {
             }).start()
     }
 
-    _renderGpaColor(value) {
-        if (value >= 70)
+    _renderColor(data) {
+        if (data >= 70)
             return '#62c462'
-        else if (value >= 50)
+        else if (data >= 50)
             return '#ffc754'
-        else if (value < 25)
-            return '#f44336'
-    }
-
-    _renderCreditsColor(value) {
-        if (value >= 80)
-            return '#62c462'
-        else if (value >= 50)
-            return '#ffc754'
-        else if (value < 25)
+        else if (data <= 50)
             return '#f44336'
     }
 
     render() {
 
         const { store: { session } } = this.props;
-
         const gpaPercentage = (session.session.user.gpa / 4) * 100;
         const creditsPercentage = (session.session.user.credits / (session.session.user.studentyear * 60)) * 100;
+        const radarSettings = {
+            width: 250,
+            height: 250,
+            r: 100,
+            max: 50,
+            fill: "#62c462",
+            stroke: "rgba(255, 255, 255, 0.1)",
+            label: {
+                fontFamily: 'Arial',
+                fontSize: 9,
+                fill: '#FAFAFA',
+                fontWeight: true,
+            }
+        }
+        const pieSettings = {
+            margin: {
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0
+            },
+            legendPosition: 'center',
+            width: 250,
+            height: 250,
+            color: ['#62c462', '#ffc754', '#F27935', '#f44336', '#2D2D2D'],
+            r: 67.5,
+            R: 70,
+            label: {
+                fontFamily: 'Arial',
+                fontWeight: true,
+                fontSize: 10,
+                color: '#FAFAFA',
+            }
+        }
 
         return (
             <View style={{ flex: 1, backgroundColor: "#2c3e50" }}>
                 <ScrollView>
-                    <Animated.View style={{
-                        backgroundColor: '#16212C',
-                        marginLeft: 10,
-                        marginRight: 10,
-                        marginTop: 10,
-                        elevation: 2,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        bottom: this.state.animate,
-                    }}>
-                        <IconFA name="street-view" style={{ color: '#62c462', fontSize: 12, marginLeft: 8 }} />
-                        <Text style={{ color: '#fafafa', fontSize: 11, margin: 5,}}>
-                            Personal Information
-                        </Text>
-                    </Animated.View>
+                    <Header icon="street-view" title="Personal Information" />
                     <View style={{ flexDirection: 'row', flex: 1, }}>
-                        <Animated.View style={{
-                            right: this.state.animate,
-                            marginTop: 10,
-                            marginLeft: 10,
-                            height: 150,
-                            flex: 0.5,
-                            backgroundColor: "#233445",
-                            borderWidth: 1,
-                            borderColor: 'rgba(255, 255, 255, 0)',
-                            borderRadius: 5,
-                        }}>
-                            <View style={{ height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center', elevation: 3}}>
-                                <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8,}} />
-                                <Text style={{ color: "#fafafa", fontSize: 11, marginLeft: 5 }}>
-                                    Your GPA
-                                </Text>
-                            </View>
-                            <View style={{
-                                marginTop: 20,
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }}>
+                        <HalfCell
+                            iconHeader="brightness-1"
+                            titleHeader="Your GPA"
+                            dataLegend={session.session.user.gpa}
+                            leftCell={true}
+                            children= {
                                 <AnimatedGaugeProgress
-                                    style={{
-                                        alignSelf: 'flex-start',
-                                    }}
+                                    style={{ alignSelf: 'flex-start' }}
                                     size={70}
                                     width={3}
                                     fill={gpaPercentage}
                                     rotation={90}
                                     cropDegree={80}
-                                    tintColor={this._renderGpaColor(gpaPercentage)}
+                                    tintColor={this._renderColor(gpaPercentage)}
                                     backgroundColor="#16212C"
-                                    strokeCap="circle" />
-                            </View>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }}>
-                                <Text style={{
-                                    color: '#fafafa',
-                                    fontSize: 12,
-                                }}>
-                                    {session.session.user.gpa}
-                                </Text>
-                            </View>
-                        </Animated.View>
-                        <Animated.View style={{
-                            left: this.state.animate,
-                            margin: 10,
-                            marginLeft: 10,
-                            height: 150,
-                            flex: 0.5,
-                            backgroundColor: "#233445",
-                            borderWidth: 1,
-                            borderColor: 'rgba(255, 255, 255, 0)',
-                            borderRadius: 5,
-                        }}>
-                            <View style={{ height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center', elevation: 3 }}>
-                                <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8 }} />
-                                <Text style={{ color: "#fafafa", fontSize: 11, marginLeft: 5 }}>
-                                    Your credits
-                                </Text>
-                            </View>
-                            <View style={{
-                                marginTop: 20,
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }}>
+                                    strokeCap="circle"
+                                />
+                            }
+                        />
+                        <HalfCell
+                            iconHeader="brightness-1"
+                            titleHeader="Your credits"
+                            dataLegend={session.session.user.credits}
+                            leftCell={false}
+                            children={
                                 <AnimatedGaugeProgress
-                                    style={{
-                                        alignSelf: 'flex-start',
-                                    }}
+                                    style={{ alignSelf: 'flex-start' }}
                                     size={70}
                                     width={3}
                                     fill={creditsPercentage}
                                     rotation={90}
                                     cropDegree={80}
-                                    tintColor={this._renderCreditsColor(creditsPercentage)}
+                                    tintColor={this._renderColor(creditsPercentage)}
                                     backgroundColor="#16212C"
-                                    strokeCap="circle" />
-                            </View>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }}>
-                                <Text style={{
-                                    color: '#fafafa',
-                                    fontSize: 12,
-                                }}>
-                                    {session.session.user.credits}
-                                </Text>
-                            </View>
-                        </Animated.View>
-                    </View>
-                    <Animated.View style={{
-                        left: this.state.animate,
-                        backgroundColor: '#233445',
-                        height: 250,
-                        marginLeft: 10,
-                        marginRight: 10,
-                        borderWidth: 1,
-                        borderColor: 'rgba(255, 255, 255, 0)',
-                        borderRadius: 5,
-                    }}>
-                        <View style={{ height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center', elevation: 0 }}>
-                            <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8 }}/>
-                            <Text style={{ color: "#fafafa", fontSize: 11, marginLeft: 5 }}>
-                                Your grade distribution over the year
-                            </Text>
-                        </View>
-                        <View style={{
-                            flex: 1,
-                            flexDirection: 'row',
-                            backgroundColor: 'rgba(255, 255, 255, 0)',
-                            marginTop: 1,
-                        }}>
-                            <View style={{
-                                flex: 0.5,
-                                alignSelf: 'center',
-                            }}>
-                                <View style={{
-                                    alignSelf:'center',
-                                    margin: 5,
-                                }}>
-                                <View style={{
-                                    borderLeftWidth: 5,
-                                    borderLeftColor: '#62c462',
-                                    margin: 5,
-                                }}>
-                                    <Text style={{
-                                        color: '#FAFAFA',
-                                        fontSize: 12,
-                                        marginLeft: 5,
-                                    }}>A</Text>
-                                </View>
-                                <View style={{
-                                    borderLeftWidth: 5,
-                                    borderLeftColor: '#ffc754',
-                                    margin: 5,
-                                }}>
-                                    <Text style={{
-                                        color: '#FAFAFA',
-                                        fontSize: 12,
-                                        marginLeft: 5,
-                                    }}>B</Text>
-                                </View>
-
-
-                                <View style={{
-                                    borderLeftWidth: 5,
-                                    borderLeftColor: '#f44336',
-                                    margin: 5,
-                                }}>
-                                    <Text style={{
-                                        color: '#FAFAFA',
-                                        fontSize: 12,
-                                        marginLeft: 5,
-                                    }}>C</Text>
-                                </View>
-
-                                </View>
-
-
-                            </View>
-                            <View style={{
-                                flex: 0.5,
-                                alignSelf: 'center',
-                            }}>
-                                <Pie
-                                    radius={70}
-                                    innerRadius={67}
-                                    series={[40, 20, 40]}
-                                    colors={['#62c462', '#ffc754', '#f44336']}
-                                    backgroundColor={'rgba(255, 255, 255, 0)'}
+                                    strokeCap="circle"
                                 />
-                            </View>
-
-                        </View>
-                    </Animated.View>
-                    <Animated.View style={{
-                        left: this.state.animate,
-                        backgroundColor: '#233445',
-                        height: 150,
-                        marginLeft: 10,
-                        marginRight: 10,
-                        borderWidth: 1,
-                        borderColor: 'rgba(255, 255, 255, 0)',
-                        borderRadius: 5,
-                        marginTop: 10,
-                    }}>
-                        <View style={{ height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center', elevation: 0 }}>
-                            <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8 }}/>
-                            <Text style={{ color: "#fafafa", fontSize: 11, marginLeft: 5 }}>
-                                Your GPA over the last 7 month
-                            </Text>
-                        </View>
-                        <View style={{
-                            flex: 1,
-                            backgroundColor: 'rgba(255, 255, 255, 0)',
-                            marginTop: 1,
-                        }}>
+                            }
+                        />
+                    </View>
+                    <LargeCell
+                        iconHeader="brightness-1"
+                        textHeader="Your grade distribution over the year"
+                        children={<Radar data={radarData} options={radarSettings} />}
+                    />
+                    <Cell
+                        iconHeader="brightness-1"
+                        textHeader="Your GPA over the last 7 month"
+                        children={
                             <Chart
-                                style={{
-                                    width: 360,
-                                    height: 126,
-                                }}
+                                style={{ width: 360, height: 126,}}
                                 data={data}
                                 verticalGridStep={1}
                                 axisLabelColor="rgba(255, 255, 255, 0.5)"
@@ -364,35 +162,14 @@ export default class Stats extends Component {
                                 showYAxisLabels={true}
                                 color={['#62c462']}
                             />
-                        </View>
-                    </Animated.View>
-                    <Animated.View style={{
-                        right: this.state.animate,
-                        backgroundColor: '#233445',
-                        height: 150,
-                        marginLeft: 10,
-                        marginRight: 10,
-                        borderWidth: 1,
-                        borderColor: 'rgba(255, 255, 255, 0)',
-                        borderRadius: 5,
-                        marginTop: 10,
-                    }}>
-                        <View style={{ height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center', elevation: 0 }}>
-                            <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8 }}/>
-                            <Text style={{ color: "#fafafa", fontSize: 11, marginLeft: 5 }}>
-                                Your login time over the last 7 days
-                            </Text>
-                        </View>
-                        <View style={{
-                            flex: 1,
-                            backgroundColor: 'rgba(255, 255, 255, 0)',
-                            marginTop: 1,
-                        }}>
+                        }
+                    />
+                    <Cell
+                        iconHeader="brightness-1"
+                        textHeader="Your login time over the last 7 days"
+                        children={
                             <Chart
-                                style={{
-                                    width: 360,
-                                    height: 126,
-                                }}
+                                style={{ width: 360, height: 126,}}
                                 data={data}
                                 verticalGridStep={1}
                                 axisLabelColor="rgba(255, 255, 255, 0.5)"
@@ -406,147 +183,60 @@ export default class Stats extends Component {
                                 showYAxisLabels={true}
                                 color={['#62c462']}
                             />
-                        </View>
-
-                    </Animated.View>
-                    <Animated.View style={{
-                        right: this.state.animate,
-                        backgroundColor: '#16212C',
-                        marginLeft: 10,
-                        marginRight: 10,
-                        marginTop: 10,
-                        elevation: 2,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}>
-                        <IconFA name="globe" style={{color: '#62c462', fontSize: 12, marginLeft: 8 }} />
-                        <Text style={{ color: '#fafafa', fontSize: 11, margin: 5 }}>
-                            Promotion
-                        </Text>
-                    </Animated.View>
+                        }
+                    />
+                    <Header icon="globe" title="Promotion" />
                     <View style={{ flexDirection: 'row', flex: 1, }}>
-                        <Animated.View style={{
-                            right: this.state.animate,
-                            marginTop: 10,
-                            marginLeft: 10,
-                            height: 150,
-                            flex: 0.5,
-                            backgroundColor: "#233445",
-                            borderWidth: 1,
-                            borderColor: 'rgba(255, 255, 255, 0)',
-                            borderRadius: 5,
-                        }}>
-                            <View style={{ height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center', elevation: 3 }}>
-                                <IconMC name="brightness-1" style={{ color: '#62c462', fontSize: 6, marginLeft: 8,}} />
-                                <Text style={{ color: "#fafafa", fontSize: 11, marginLeft: 5 }}>
-                                    Average GPA
-                                </Text>
-                            </View>
-                            <View style={{
-                                marginTop: 20,
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }}>
+                        <HalfCell
+                            iconHeader="brightness-1"
+                            titleHeader="Average GPA"
+                            dataLegend="2.20"
+                            leftCell={true}
+                            children= {
                                 <AnimatedGaugeProgress
-                                    style={{
-                                        alignSelf: 'flex-start',
-                                    }}
+                                    style={{ alignSelf: 'flex-start' }}
                                     size={70}
                                     width={3}
                                     fill={30}
                                     rotation={90}
                                     cropDegree={80}
-                                    tintColor={this._renderGpaColor(22)}
+                                    tintColor={this._renderColor(30)}
                                     backgroundColor="#16212C"
-                                    strokeCap="circle" />
-                            </View>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }}>
-                                <Text style={{
-                                    color: '#fafafa',
-                                    fontSize: 12,
-                                }}>
-                                    2.20
-                                </Text>
-                            </View>
-                        </Animated.View>
-                        <Animated.View style={{
-                            left: this.state.animate,
-                            margin: 10,
-                            marginLeft: 10,
-                            height: 150,
-                            flex: 0.5,
-                            backgroundColor: "#233445",
-                            borderWidth: 1,
-                            borderColor: 'rgba(255, 255, 255, 0)',
-                            borderRadius: 5,
-                        }}>
-                            <View style={{ height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center', elevation: 3}}>
-                                <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8,}}/>
-                                <Text style={{color: "#fafafa", fontSize: 11, marginLeft: 5,}}>
-                                    Average credits
-                                </Text>
-                            </View>
-                            <View style={{
-                                marginTop: 20,
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }}>
+                                    strokeCap="circle"
+                                />
+                            }
+                        />
+                        <HalfCell
+                            iconHeader="brightness-1"
+                            titleHeader="Average credits"
+                            dataLegend="80"
+                            leftCell={false}
+                            children={
                                 <AnimatedGaugeProgress
-                                    style={{
-                                        alignSelf: 'flex-start',
-                                    }}
+                                    style={{ alignSelf: 'flex-start' }}
                                     size={70}
                                     width={3}
                                     fill={60}
                                     rotation={90}
                                     cropDegree={80}
-                                    tintColor={this._renderCreditsColor(creditsPercentage)}
+                                    tintColor={this._renderColor(60)}
                                     backgroundColor="#16212C"
-                                    strokeCap="circle" />
-                            </View>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }}>
-                                <Text style={{
-                                    color: '#fafafa',
-                                    fontSize: 12,
-                                }}>
-                                    80
-                                </Text>
-                            </View>
-                        </Animated.View>
+                                    strokeCap="circle"
+                                />
+                            }
+                        />
                     </View>
-                    <Animated.View style={{
-                        top: this.state.animate,
-                        backgroundColor: '#233445',
-                        height: 150,
-                        marginLeft: 10,
-                        marginRight: 10,
-                        borderWidth: 1,
-                        borderColor: 'rgba(255, 255, 255, 0)',
-                        borderRadius: 5,
-                        marginBottom: 10,
-                    }}>
-                        <View style={{height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center'}}>
-                            <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8,}}/>
-                            <Text style={{color: "#fafafa", fontSize: 11, marginLeft: 5,}}>
-                                The average GPA of your promotion in the last 7 month
-                            </Text>
-                        </View>
-                        <View style={{
-                            flex: 1,
-                            backgroundColor: 'rgba(255, 255, 255, 0)',
-                            marginTop: 1,
-                        }}>
+                    <LargeCell
+                        iconHeader="brightness-1"
+                        textHeader="Your grade distribution over the year"
+                        children={<Pie data={pieData} options={pieSettings} accessorKey="population"/>}
+                    />
+                    <Cell
+                        iconHeader="brightness-1"
+                        textHeader="The average GPA of your promotion in the last 7 month"
+                        children={
                             <Chart
-                                style={{
-                                    width: 360,
-                                    height: 126,
-                                }}
+                                style={{width: 360, height: 126,}}
                                 data={data}
                                 verticalGridStep={1}
                                 axisLabelColor="rgba(255, 255, 255, 0.5)"
@@ -560,35 +250,14 @@ export default class Stats extends Component {
                                 showYAxisLabels={true}
                                 color={['#62c462']}
                             />
-                        </View>
-                    </Animated.View>
-                    <Animated.View style={{
-                        top: this.state.animate,
-                        backgroundColor: '#233445',
-                        height: 150,
-                        marginLeft: 10,
-                        marginRight: 10,
-                        borderWidth: 1,
-                        borderColor: 'rgba(255, 255, 255, 0)',
-                        borderRadius: 5,
-                        marginBottom: 10,
-                    }}>
-                        <View style={{height: 25, backgroundColor: "#16212C", flexDirection: 'row', alignItems: 'center'}}>
-                            <IconMC name="brightness-1" style={{color: '#62c462', fontSize: 6, marginLeft: 8,}}/>
-                            <Text style={{color: "#fafafa", fontSize: 11, marginLeft: 5,}}>
-                                The average login time of your promotion in the last 7 days
-                            </Text>
-                        </View>
-                        <View style={{
-                            flex: 1,
-                            backgroundColor: 'rgba(255, 255, 255, 0)',
-                            marginTop: 1,
-                        }}>
+                        }
+                    />
+                    <Cell
+                        iconHeader="brightness-1"
+                        textHeader="The average login time of your promotion in the last 7 days"
+                        children={
                             <Chart
-                                style={{
-                                    width: 360,
-                                    height: 126,
-                                }}
+                                style={{width: 360, height: 126,    }}
                                 data={data}
                                 verticalGridStep={1}
                                 axisLabelColor="rgba(255, 255, 255, 0.5)"
@@ -602,8 +271,9 @@ export default class Stats extends Component {
                                 showYAxisLabels={true}
                                 color={['#62c462']}
                             />
-                        </View>
-                    </Animated.View>
+                        }
+                    />
+                    <View style={{ marginTop: 10 }} />
                 </ScrollView>
             </View>
         );
