@@ -59,11 +59,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between',
         margin: 6,
     },
 
     textContent: {
+        flex: 0.2,
         color: '#FFFFFF',
         fontFamily: 'Nunito-ExtraLight',
         marginLeft: 5,
@@ -73,8 +73,12 @@ const styles = StyleSheet.create({
     markContent: {
         color: '#FFFFFF',
         fontFamily: 'Nunito-ExtraLight',
-        fontWeight: '100',
+        fontWeight: '200',
         marginRight: 10,
+    },
+
+    iconContent: {
+        color: '#FAFAFA',
     },
 
     /* MarkDetails */
@@ -84,7 +88,7 @@ const styles = StyleSheet.create({
     },
 
     selfRow: {
-        backgroundColor: '#39516a',
+        backgroundColor: '#233445',
         elevation: 10,
     },
 
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
     },
 
     scoringContainerStyle: {
-        backgroundColor: '#39516a',
+        backgroundColor: '#233445',
         flex: 0.3,
         padding: 10,
         borderTopWidth: 0.5,
@@ -121,7 +125,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         margin: 5,
         height: 30,
-        backgroundColor: '#39516a',
+        backgroundColor: '#233445',
         borderRadius: 5,
     },
 
@@ -145,6 +149,7 @@ const styles = StyleSheet.create({
     studentMarkText: {
         color: 'white',
         fontWeight: 'bold',
+        fontSize: 12,
     },
 
     name: {

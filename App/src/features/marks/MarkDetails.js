@@ -53,7 +53,7 @@ class MarkDetails extends Component {
         const { store: { marks } } = this.props;
 
         return (
-            <Text style={{ color: 'white', fontSize: 12, }}>
+            <Text style={{ color: 'white', fontSize: 11, }}>
                 {
                     marks.selectedMark
                         ? marks.selectedMark.comment
@@ -70,7 +70,7 @@ class MarkDetails extends Component {
             return '#2c3e50';
         }
 
-        return (mark.login === marks.selectedMark.login) ? '#39516a' : '#233445';
+        return (mark.login === marks.selectedMark.login) ? '#233445' : '#2c3e50';
     }
 
     renderRow(mark) {
@@ -161,7 +161,7 @@ class MarkDetails extends Component {
         const selfMark = marks.selfMark;
 
         return (
-            <View style={{flex: 1, backgroundColor: '#233445'}}>
+            <View style={{flex: 1, backgroundColor: '#2c3e50'}}>
                 <View style={styles.selfRow}>{ this.renderSelf(selfMark) }</View>
                 <View style={styles.listContainerStyle}>
                     <List
