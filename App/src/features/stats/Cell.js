@@ -71,7 +71,6 @@ class Cell extends Component {
 Cell.propTypes = {
     iconHeader: PropTypes.string,
     textHeader: PropTypes.string,
-    children: PropTypes.element.isRequired,
 };
 
 export default Cell;
