@@ -24,9 +24,9 @@ const styles = StyleSheet.create({
     loginMessage: {
         color: 'white',
         fontFamily: 'Nunito-Light',
-        fontSize: 15,
+        fontSize: 13,
         alignSelf: 'center',
-        marginTop: 15,
+        marginTop: 10,
     }
 });
 

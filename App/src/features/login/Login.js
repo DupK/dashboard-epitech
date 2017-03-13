@@ -11,7 +11,7 @@ import {
 import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
-import backgroundSource from '../../assets/wallpaper.jpg';
+import backgroundSource from '../../assets/fond.jpg';
 import logoSource from '../../assets/epitech.png';
 
 import BackgroundImageWithOverlay from './BackgroundImage';
@@ -121,10 +121,9 @@ export default class Login extends Component {
                 <Content contentContainerStyle={{ flex: 1 }}>
                     <BackgroundImageWithOverlay
                         source={backgroundSource}
-                        colorOverlay="rgba(45, 45, 45, 0.65)"
+                        colorOverlay="rgba(45, 45, 45, 0)"
                     >
                         <View style={styles.topEmptyBox} />
-                        <LogoBox source={logoSource} />
                         <View style={styles.loginBoxContainer}>
                             <View style={styles.inputsContainer}>
                                 <LoginInput
@@ -155,7 +154,7 @@ export default class Login extends Component {
                                     worthStartingAnimation={this.worthStartingAnimation}
                                 />
                             </View>
-                            <View style={{ flex: 0.6 }}>
+                            <View style={{ flex: 0.1     }}>
                                 <LoginMessage message={this.state.loginMessage} />
                             </View>
                         </View>
