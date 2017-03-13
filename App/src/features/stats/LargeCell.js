@@ -10,7 +10,6 @@ import {
     StyleSheet,
     Text,
     View,
-    Animated,
 } from 'react-native';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
 class LargeCell extends Component {
     render() {
         return (
-            <Animated.View style={styles.container}>
+            <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <IconMC name={this.props.iconHeader} style={styles.iconHeader}/>
                     <Text style={styles.textHeader}>{this.props.textHeader}</Text>
@@ -63,7 +62,7 @@ class LargeCell extends Component {
                 <View style={styles.childrenContainer}>
                     {this.props.children}
                 </View>
-            </Animated.View>
+            </View>
         );
     }
 }

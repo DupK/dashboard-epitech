@@ -9,13 +9,12 @@ import {
     StyleSheet,
     Text,
     View,
-    Animated,
 } from 'react-native';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const styles = StyleSheet.create({
 
-    animatedContainerLeft: {
+    containerLeft: {
         marginTop: 10,
         marginLeft: 10,
         height: 150,
@@ -26,7 +25,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
 
-    animatedContainerRight: {
+    containerRight: {
         margin: 10,
         marginLeft: 10,
         height: 150,
@@ -85,7 +84,7 @@ class HalfCell extends Component {
 
     render() {
         return (
-            <Animated.View style={this.props.leftCell ? styles.animatedContainerLeft : styles.animatedContainerRight}>
+            <View style={this.props.leftCell ? styles.containerLeft : styles.containerRight}>
                 <View style={styles.headerContainer}>
                     <IconMC name={this.props.iconHeader} style={styles.iconHeader}/>
                     <Text style={styles.textHeader}>{this.props.titleHeader}</Text>
@@ -96,7 +95,7 @@ class HalfCell extends Component {
                 <View style={styles.legendContainer}>
                     <Text style={styles.textLegend}>{this.props.dataLegend}</Text>
                 </View>
-            </Animated.View>
+            </View>
         )
     }
 }

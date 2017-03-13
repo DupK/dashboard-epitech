@@ -10,7 +10,6 @@ import {
     StyleSheet,
     Text,
     View,
-    Animated,
 } from 'react-native';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 
@@ -46,12 +45,12 @@ class Header extends Component {
 
     render() {
         return (
-            <Animated.View style={styles.container}>
+            <View style={styles.container}>
                 <IconFA name={this.props.icon} style={styles.icon} />
                 <Text style={styles.text}>
                     {this.props.title}
                 </Text>
-            </Animated.View>
+            </View>
         );
     }
 }
