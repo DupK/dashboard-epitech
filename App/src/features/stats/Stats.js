@@ -40,8 +40,7 @@ export default class Stats extends Component {
             this.state.animate,
             {
                 toValue: 0,
-                duration: 2000,
-                delay: 500,
+                duration: 800,
                 easing: Easing.elastic(1),
             }).start()
     }
