@@ -28,12 +28,14 @@ const styles = StyleSheet.create({
 
     header: {
         backgroundColor: '#233445',
+        elevation: 3,
+        margin: 6,
         height: 50,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderLeftWidth: 5,
+        borderLeftWidth: 2,
     },
 
     moduleText: {
@@ -51,15 +53,18 @@ const styles = StyleSheet.create({
     },
 
     subHeaderText: {
-        borderBottomWidth: 1,
+        borderBottomWidth: 0,
         borderBottomColor: 'rgba(255, 255, 255, 0.1)',
     },
 
     content: {
+        backgroundColor: '#203040',
+        elevation: 2,
         alignItems: 'center',
         flex: 1,
         flexDirection: 'row',
         margin: 6,
+        height: 35,
     },
 
     textContent: {

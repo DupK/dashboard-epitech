@@ -70,7 +70,7 @@ class MarkDetails extends Component {
             return '#2c3e50';
         }
 
-        return (mark.login === marks.selectedMark.login) ? '#233445' : '#2c3e50';
+        return (mark.login === marks.selectedMark.login) ? '#233445' : '#203040';
     }
 
     renderRow(mark) {
@@ -161,7 +161,7 @@ class MarkDetails extends Component {
         const selfMark = marks.selfMark;
 
         return (
-            <View style={{flex: 1, backgroundColor: '#2c3e50'}}>
+            <View style={{flex: 1, backgroundColor: '#203040'}}>
                 <View style={styles.selfRow}>{ this.renderSelf(selfMark) }</View>
                 <View style={styles.listContainerStyle}>
                     <List
