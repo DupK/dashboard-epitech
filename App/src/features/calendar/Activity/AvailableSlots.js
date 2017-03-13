@@ -1,7 +1,7 @@
 /**
  * Created by desver_f on 11/03/17.
  */
-import React, { Component, PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
 import {
     View,
     Text,
@@ -114,9 +114,13 @@ Slot.propTypes = {
     activityStore: React.PropTypes.object.isRequired,
 };
 
-const SlotGroup = observer(({ username, slots, activityStore }) => {
+const SlotGroup = observer(({ username, slots, activityStore, alreadyRegistered }) => {
 
     const slotState = (slot) => {
+
+        if (alreadyRegistered) {
+            return 'taken';
+        }
 
         if (!slot.master) {
             return 'available';
@@ -161,6 +165,7 @@ SlotGroup.propTypes = {
     ).isRequired,
     username: React.PropTypes.string.isRequired,
     activityStore: React.PropTypes.object.isRequired,
+    alreadyRegistered: React.PropTypes.bool.isRequired,
 };
 
 @observer
@@ -206,7 +211,7 @@ export default class AvailableSlots extends Component {
                 marginBottom: 5,
                 padding: 10,
                 borderLeftWidth: 3,
-                borderLeftColor: nbSlotsAvailable ? '#62C462': '#F44235',
+                borderLeftColor: nbSlotsAvailable ? '#62C462' : '#F44235',
             }}>
                 <Text style={{
                     fontFamily: 'Nunito-Bold',
@@ -232,6 +237,8 @@ export default class AvailableSlots extends Component {
             store: { session, activity }
         } = this.props;
 
+        const alreadyRegistered = activity.activity.student_registered;
+
         return (
             <ScrollView style={{
                 flex: 1,
@@ -246,6 +253,7 @@ export default class AvailableSlots extends Component {
                             username={session.username}
                             slots={slotGroup.slots.slice()}
                             activityStore={activity}
+                            alreadyRegistered={alreadyRegistered}
                         />
                     )}
                 />

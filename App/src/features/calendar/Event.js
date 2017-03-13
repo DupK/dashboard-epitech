@@ -7,8 +7,9 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import { Actions } from 'react-native-mobx';
-import { QUARTER_SIZE, HOUR_SIZE } from './constants';
 
+import { QUARTER_SIZE, HOUR_SIZE } from './constants';
+import { wasRegistered } from './utils';
 
 class Event extends Component {
     render() {
@@ -17,7 +18,7 @@ class Event extends Component {
         const startDate = moment(event.start);
         const start = startDate.hours() + (startDate.minutes() / 60);
         const eventWidth = (screenWidth * .7) / nbEvents;
-        const color = event.registered === 'registered' ? '#62c462' : '#B9B9B9';
+        const color = wasRegistered(event.registered) ? '#62c462' : '#B9B9B9';
 
         return (
             <TouchableOpacity

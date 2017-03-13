@@ -17,13 +17,15 @@ export default class RegisterButton extends Component {
         const buttonColor = {
             registered: '#F44235',
             unregistered: '#62C462',
-            forbidden: '#b9b9b9'
+            forbidden: '#b9b9b9',
+            present: '#62C462'
         };
 
         const registerIcon = {
             registered: 'ios-remove',
             unregistered: 'ios-add',
             forbidden: 'ios-close',
+            present: 'ios-checkmark'
         };
 
         return (

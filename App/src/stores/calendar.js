@@ -58,13 +58,13 @@ class Calendar {
         }
     }
 
-    isRegistered(canRegister, registered) {
-        if (!canRegister) {
-            return 'forbidden';
+    isRegistered(canRegister, registeredState) {
+        if (registeredState === 'registered' || registeredState === 'present') {
+            return registeredState;
         }
 
-        if (registered) {
-            return 'registered';
+        if (!canRegister) {
+            return 'forbidden';
         }
 
         return 'unregistered';

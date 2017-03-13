@@ -128,6 +128,7 @@ class activity {
 
     @computed get roomName() {
         const location = this.activity.events[0].location;
+
         return location.substring(location.lastIndexOf('/') + 1, location.length);
     }
 }

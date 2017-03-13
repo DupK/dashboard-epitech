@@ -22,6 +22,8 @@ import LoadingIndicator from 'react-native-spinkit';
 import { Actions } from 'react-native-mobx';
 import RegisterButton from './RegisterButton';
 
+import { wasPresent } from '../utils';
+
 const TextDetail = observer(({ bold, children }) => {
     return (
         <Text style={{
@@ -133,20 +135,22 @@ AdministrativeDetails.propTypes = {
 const RegisterBox = observer(({ activityStore, event }) => {
 
     const isEventPassed = moment(event.end).isBefore(moment());
-    const registered = isEventPassed ? 'forbidden' : event.registered;
+    const registered = isEventPassed && !wasPresent(event.registered) ? 'forbidden' : event.registered;
 
     const registerText = {
         registered: 'You are registered.',
         unregistered: 'You are not registered.',
         forbidden: isEventPassed
             ? 'You can\'t register anymore.'
-            : 'You can\'t register'
+            : 'You can\'t register.',
+        present: 'You were present to this activity.'
     };
 
     const registerCallbacks = {
         registered: async () => await activityStore.unregisterActivity(event),
         unregistered: async () => await activityStore.registerActivity(event),
-        forbidden: () => null
+        forbidden: () => null,
+        present: () => null
     };
 
     const registerActivity = async () => {
@@ -182,7 +186,24 @@ RegisterBox.propTypes = {
     event: React.PropTypes.object,
 };
 
-const ViewAvailableSlots = ({ activityTitle }) => {
+const ViewAvailableSlots = ({ event, activityTitle }) => {
+
+    const pastOneDay = moment(event.end).isBefore(moment().add(1, 'd'));
+
+    if (pastOneDay) {
+        return (
+            <View style={styles.registerSlotsBox}>
+                <Text style={{
+                    fontSize: 14,
+                    color: '#FAFAFA',
+                    fontFamily: 'Nunito-ExtraLight'
+                }}>
+                    You no longer can register to this event.
+                </Text>
+            </View>
+        );
+    }
+
     return (
         <TouchableOpacity
             style={styles.registerSlotsBox}
@@ -207,6 +228,7 @@ const ViewAvailableSlots = ({ activityTitle }) => {
 
 ViewAvailableSlots.propTypes = {
     activityTitle: React.PropTypes.string.isRequired,
+    event: React.PropTypes.object.isRequired,
 };
 
 @observer
@@ -280,7 +302,7 @@ export default class Activity extends Component {
                 />
                 {
                     activityStore.activity.slots.length
-                        ? <ViewAvailableSlots activityTitle={activityStore.activity.title}/>
+                        ? <ViewAvailableSlots activityTitle={activityStore.activity.title} event={event}/>
                         : <RegisterBox activityStore={activityStore} event={event}/>
                 }
             </View>
@@ -311,7 +333,7 @@ const styles = StyleSheet.create({
         margin: 10,
         marginBottom: 15,
         paddingLeft: 15,
-        elevation: 10,
+        elevation: 3,
         backgroundColor: '#233445',
         flexDirection: 'row',
         alignItems: 'center',
