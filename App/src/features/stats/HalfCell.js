@@ -106,7 +106,6 @@ HalfCell.PropTypes = {
     titleHeader: PropTypes.string,
     dataLegend: PropTypes.number,
     leftCell: PropTypes.bool,
-    children: PropTypes.element.isRequired,
 };
 
 export default HalfCell;

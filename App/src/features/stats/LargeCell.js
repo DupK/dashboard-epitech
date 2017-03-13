@@ -71,7 +71,6 @@ class LargeCell extends Component {
 LargeCell.PropTypes = {
     iconHeader: PropTypes.string,
     textHeader: PropTypes.string,
-    children: PropTypes.element.isRequired,
 };
 
 export default LargeCell;

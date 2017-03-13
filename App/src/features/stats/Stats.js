@@ -104,87 +104,85 @@ export default class Stats extends Component {
                             titleHeader="Your GPA"
                             dataLegend={session.session.user.gpa}
                             leftCell={true}
-                            children= {
-                                <AnimatedGaugeProgress
-                                    style={{ alignSelf: 'flex-start' }}
-                                    size={70}
-                                    width={3}
-                                    fill={gpaPercentage}
-                                    rotation={90}
-                                    cropDegree={80}
-                                    tintColor={this._renderColor(gpaPercentage)}
-                                    backgroundColor="#16212C"
-                                    strokeCap="circle"
-                                />
-                            }
-                        />
+                        >
+                            <AnimatedGaugeProgress
+                                style={{ alignSelf: 'flex-start' }}
+                                size={70}
+                                width={3}
+                                fill={gpaPercentage}
+                                rotation={90}
+                                cropDegree={80}
+                                tintColor={this._renderColor(gpaPercentage)}
+                                backgroundColor="#16212C"
+                                strokeCap="circle"
+                            />
+                        </HalfCell>
+
                         <HalfCell
                             iconHeader="brightness-1"
                             titleHeader="Your credits"
                             dataLegend={session.session.user.credits}
                             leftCell={false}
-                            children={
-                                <AnimatedGaugeProgress
-                                    style={{ alignSelf: 'flex-start' }}
-                                    size={70}
-                                    width={3}
-                                    fill={creditsPercentage}
-                                    rotation={90}
-                                    cropDegree={80}
-                                    tintColor={this._renderColor(creditsPercentage)}
-                                    backgroundColor="#16212C"
-                                    strokeCap="circle"
-                                />
-                            }
-                        />
+                        >
+                            <AnimatedGaugeProgress
+                                style={{ alignSelf: 'flex-start' }}
+                                size={70}
+                                width={3}
+                                fill={creditsPercentage}
+                                rotation={90}
+                                cropDegree={80}
+                                tintColor={this._renderColor(creditsPercentage)}
+                                backgroundColor="#16212C"
+                                strokeCap="circle"
+                            />
+                        </HalfCell>
                     </View>
                     <LargeCell
                         iconHeader="brightness-1"
                         textHeader="Your grade distribution over the year"
-                        children={<Radar data={radarData} options={radarSettings} />}
-                    />
+                    >
+                        <Radar data={radarData} options={radarSettings} />
+                    </LargeCell>
                     <Cell
                         iconHeader="brightness-1"
                         textHeader="Your GPA over the last 7 month"
-                        children={
-                            <Chart
-                                style={{ width: 360, height: 126,}}
-                                data={data}
-                                verticalGridStep={1}
-                                axisLabelColor="rgba(255, 255, 255, 0.5)"
-                                gridColor="rgba(255, 255, 255, 0.1)"
-                                type="line"
-                                fillColor="rgba(98, 196, 98, 0.5)"
-                                showDataPoint={true}
-                                dataPointRadius={1.5}
-                                axisLineWidth={0}
-                                showXAxisLabels={true}
-                                showYAxisLabels={true}
-                                color={['#62c462']}
-                            />
-                        }
-                    />
+                    >
+                        <Chart
+                            style={{ width: 360, height: 126,}}
+                            data={data}
+                            verticalGridStep={1}
+                            axisLabelColor="rgba(255, 255, 255, 0.5)"
+                            gridColor="rgba(255, 255, 255, 0.1)"
+                            type="line"
+                            fillColor="rgba(98, 196, 98, 0.5)"
+                            showDataPoint={true}
+                            dataPointRadius={1.5}
+                            axisLineWidth={0}
+                            showXAxisLabels={true}
+                            showYAxisLabels={true}
+                            color={['#62c462']}
+                        />
+                    </Cell>
                     <Cell
                         iconHeader="brightness-1"
                         textHeader="Your login time over the last 7 days"
-                        children={
-                            <Chart
-                                style={{ width: 360, height: 126,}}
-                                data={data}
-                                verticalGridStep={1}
-                                axisLabelColor="rgba(255, 255, 255, 0.5)"
-                                gridColor="rgba(255, 255, 255, 0.1)"
-                                type="line"
-                                fillColor="rgba(98, 196, 98, 0.5)"
-                                showDataPoint={true}
-                                dataPointRadius={1.5}
-                                axisLineWidth={0}
-                                showXAxisLabels={true}
-                                showYAxisLabels={true}
-                                color={['#62c462']}
-                            />
-                        }
-                    />
+                    >
+                        <Chart
+                            style={{ width: 360, height: 126,}}
+                            data={data}
+                            verticalGridStep={1}
+                            axisLabelColor="rgba(255, 255, 255, 0.5)"
+                            gridColor="rgba(255, 255, 255, 0.1)"
+                            type="line"
+                            fillColor="rgba(98, 196, 98, 0.5)"
+                            showDataPoint={true}
+                            dataPointRadius={1.5}
+                            axisLineWidth={0}
+                            showXAxisLabels={true}
+                            showYAxisLabels={true}
+                            color={['#62c462']}
+                        />
+                    </Cell>
                     <Header icon="globe" title="Promotion" />
                     <View style={{ flexDirection: 'row', flex: 1, }}>
                         <HalfCell
@@ -192,87 +190,85 @@ export default class Stats extends Component {
                             titleHeader="Average GPA"
                             dataLegend="2.20"
                             leftCell={true}
-                            children= {
-                                <AnimatedGaugeProgress
-                                    style={{ alignSelf: 'flex-start' }}
-                                    size={70}
-                                    width={3}
-                                    fill={30}
-                                    rotation={90}
-                                    cropDegree={80}
-                                    tintColor={this._renderColor(30)}
-                                    backgroundColor="#16212C"
-                                    strokeCap="circle"
-                                />
-                            }
-                        />
+                        >
+                            <AnimatedGaugeProgress
+                                style={{ alignSelf: 'flex-start' }}
+                                size={70}
+                                width={3}
+                                fill={30}
+                                rotation={90}
+                                cropDegree={80}
+                                tintColor={this._renderColor(30)}
+                                backgroundColor="#16212C"
+                                strokeCap="circle"
+                            />
+                        </HalfCell>
                         <HalfCell
                             iconHeader="brightness-1"
                             titleHeader="Average credits"
                             dataLegend="80"
                             leftCell={false}
-                            children={
-                                <AnimatedGaugeProgress
-                                    style={{ alignSelf: 'flex-start' }}
-                                    size={70}
-                                    width={3}
-                                    fill={60}
-                                    rotation={90}
-                                    cropDegree={80}
-                                    tintColor={this._renderColor(60)}
-                                    backgroundColor="#16212C"
-                                    strokeCap="circle"
-                                />
-                            }
-                        />
+                        >
+                            <AnimatedGaugeProgress
+                                style={{ alignSelf: 'flex-start' }}
+                                size={70}
+                                width={3}
+                                fill={60}
+                                rotation={90}
+                                cropDegree={80}
+                                tintColor={this._renderColor(60)}
+                                backgroundColor="#16212C"
+                                strokeCap="circle"
+                            />
+
+                        </HalfCell>
                     </View>
                     <LargeCell
                         iconHeader="brightness-1"
                         textHeader="Your grade distribution over the year"
-                        children={<Pie data={pieData} options={pieSettings} accessorKey="population"/>}
-                    />
+                    >
+                        <Pie data={pieData} options={pieSettings} accessorKey="population"/>
+                    </LargeCell>
                     <Cell
                         iconHeader="brightness-1"
                         textHeader="The average GPA of your promotion in the last 7 month"
-                        children={
-                            <Chart
-                                style={{width: 360, height: 126,}}
-                                data={data}
-                                verticalGridStep={1}
-                                axisLabelColor="rgba(255, 255, 255, 0.5)"
-                                gridColor="rgba(255, 255, 255, 0.1)"
-                                type="line"
-                                fillColor="rgba(98, 196, 98, 0.5)"
-                                showDataPoint={true}
-                                dataPointRadius={1.5}
-                                axisLineWidth={0}
-                                showXAxisLabels={true}
-                                showYAxisLabels={true}
-                                color={['#62c462']}
-                            />
-                        }
-                    />
+                    >
+                        <Chart
+                            style={{width: 360, height: 126,}}
+                            data={data}
+                            verticalGridStep={1}
+                            axisLabelColor="rgba(255, 255, 255, 0.5)"
+                            gridColor="rgba(255, 255, 255, 0.1)"
+                            type="line"
+                            fillColor="rgba(98, 196, 98, 0.5)"
+                            showDataPoint={true}
+                            dataPointRadius={1.5}
+                            axisLineWidth={0}
+                            showXAxisLabels={true}
+                            showYAxisLabels={true}
+                            color={['#62c462']}
+                        />
+                    </Cell>
                     <Cell
                         iconHeader="brightness-1"
                         textHeader="The average login time of your promotion in the last 7 days"
-                        children={
-                            <Chart
-                                style={{width: 360, height: 126,    }}
-                                data={data}
-                                verticalGridStep={1}
-                                axisLabelColor="rgba(255, 255, 255, 0.5)"
-                                gridColor="rgba(255, 255, 255, 0.1)"
-                                type="line"
-                                fillColor="rgba(98, 196, 98, 0.5)"
-                                showDataPoint={true}
-                                dataPointRadius={1.5}
-                                axisLineWidth={0}
-                                showXAxisLabels={true}
-                                showYAxisLabels={true}
-                                color={['#62c462']}
-                            />
-                        }
-                    />
+                    >
+                        <Chart
+                            style={{width: 360, height: 126,    }}
+                            data={data}
+                            verticalGridStep={1}
+                            axisLabelColor="rgba(255, 255, 255, 0.5)"
+                            gridColor="rgba(255, 255, 255, 0.1)"
+                            type="line"
+                            fillColor="rgba(98, 196, 98, 0.5)"
+                            showDataPoint={true}
+                            dataPointRadius={1.5}
+                            axisLineWidth={0}
+                            showXAxisLabels={true}
+                            showYAxisLabels={true}
+                            color={['#62c462']}
+                        />
+                    </Cell>
                     <View style={{ marginTop: 10 }} />
                 </ScrollView>
             </View>
