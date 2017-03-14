@@ -21,19 +21,26 @@ const styles = StyleSheet.create({
         margin: 15,
     },
 
+    list: {
+        marginTop: 5,
+        marginBottom: 5
+    },
+
     dataContainer: {
-        margin: 1,
-        padding: 10,
+        margin: 5,
+        padding: 8,
+        elevation: 2,
         backgroundColor: '#233445',
         flexDirection: 'row',
         alignItems: 'center',
     },
 
-    separator: {
-        height: 2,
-        borderBottomWidth: 1,
-        borderBottomColor: 'white',
-        backgroundColor: '#FFF'
+    selfDataContainer: {
+        elevation: 5,
+        padding: 10,
+        backgroundColor: '#233445',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 
     gpaText: {

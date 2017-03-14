@@ -41,14 +41,13 @@ export default class Ranking extends Component {
     renderSelf(student) {
         return (
             <View>
-                <View style={styles.dataContainer}>
+                <View style={styles.selfDataContainer}>
                     <Text style={styles.rank}>{student.rank}</Text>
                     <Image source={{uri: student.picture}} style={styles.picture} />
                     <Text style={styles.mainText}>{student.title}{'\n'}{student.credits} credits</Text>
                     <Image source={student.img} style={styles.flag} />
                     <Text style={styles.gpaText}>{student.gpa[0].gpa}</Text>
                 </View>
-                <View style={styles.separator} />
             </View>
         )
     }
@@ -72,8 +71,8 @@ export default class Ranking extends Component {
 
         return (
             <Container>
-                <Content contentContainerStyle={{backgroundColor: '#2c3e50'}}>
-                    { this.renderSelf(selfRank) }
+                { this.renderSelf(selfRank) }
+                <Content contentContainerStyle={{backgroundColor: '#203040'}}>
                     <ListView
                         style={styles.list}
                         dataSource={this.ds.cloneWithRows(ranking.promotion.slice())}
