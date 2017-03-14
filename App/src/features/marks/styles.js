@@ -11,6 +11,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        borderTopWidth: 1,
+        borderTopColor: 'rgba(255, 255, 255, 0.1)'
     },
 
     headerArrow: {
@@ -23,6 +25,8 @@ const styles = StyleSheet.create({
     },
 
     bodyContainer: {
+        marginTop: 5,
+        marginBottom: 5,
         flex: 0.9,
     },
 

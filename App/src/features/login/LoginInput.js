@@ -1,12 +1,6 @@
 /**
  * Created by desver_f on 06/03/17.
  */
-/**
- * Created by desver_f on 06/03/17.
- */
-/**
- * Created by desver_f on 06/03/17.
- */
 
 import React, { Component } from 'react';
 import {
@@ -33,12 +27,14 @@ class LoginInput extends Component {
 
 const styles = StyleSheet.create({
     input: {
+        backgroundColor: 'rgba(255, 255, 255, 0.06)',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0)',
         color: '#FFF',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
         borderRadius: 5,
         marginLeft: 30,
         marginRight: 30,
-        fontSize: 12,
+        fontSize: 11,
         textAlign: 'center',
         height: 35,
         marginBottom: 5,
