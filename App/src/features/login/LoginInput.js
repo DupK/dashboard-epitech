@@ -1,12 +1,6 @@
 /**
  * Created by desver_f on 06/03/17.
  */
-/**
- * Created by desver_f on 06/03/17.
- */
-/**
- * Created by desver_f on 06/03/17.
- */
 
 import React, { Component } from 'react';
 import {

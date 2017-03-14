@@ -120,6 +120,16 @@ export default class Marks extends Component {
 
         return (
             <View style={{ flex: 1, backgroundColor: '#233445' }}>
+                <View style={styles.bodyContainer}>
+                    <ScrollView>
+                        <Accordion
+                            underlayColor="#233445"
+                            sections={marksBySemesters[semesterId].slice()}
+                            renderHeader={this._renderHeader}
+                            renderContent={this._renderContent}
+                        />
+                    </ScrollView>
+                </View>
                 <View style={styles.headerContainer}>
                     <Button
                         style={styles.headerArrow}
@@ -140,15 +150,6 @@ export default class Marks extends Component {
                     >
                         <Icon style={styles.headerIcon} name="ios-arrow-forward"/>
                     </Button>
-                </View>
-                <View style={styles.bodyContainer}>
-                    <ScrollView>
-                        <Accordion
-                            sections={marksBySemesters[semesterId].slice()}
-                            renderHeader={this._renderHeader}
-                            renderContent={this._renderContent}
-                        />
-                    </ScrollView>
                 </View>
             </View>
         );

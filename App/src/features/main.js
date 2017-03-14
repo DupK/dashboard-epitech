@@ -35,7 +35,7 @@ const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) 
 };
 
 const getHeaderStyle = () => {
-    return { backgroundColor: '#233445', }
+    return { backgroundColor: '#233445', elevation: 5, borderBottomWidth: 0 }
 };
 
 const getTitleStyle = () => {
