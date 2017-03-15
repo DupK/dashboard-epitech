@@ -11,10 +11,14 @@ import * as Intra from '../api/intra';
 @autobind
 class Projects {
     @observable projects = [];
+    @observable rawProjects = [];
     @observable projectDetails = [];
 
     async fetchProjects() {
         const rawProjects = await Intra.fetchProjects();
+
+        this.rawProjects = rawProjects;
+
         this.projects = _.filter(rawProjects, (project) => {
             const isProject = project.type_acti_code === 'proj'
                 && (project.type_acti === 'Projet' || project.type_acti === 'Mini-Projets');
@@ -29,13 +33,23 @@ class Projects {
 
         const projectDescription = await Intra.fetchProjectDetails({year, module, instance, activity});
         const projectFiles = await Intra.fetchProjectFiles({year, module, instance, activity});
-        const pdfFiles = _.filter(projectFiles, (projectFile) => _.endsWith(projectFile.slug, '.pdf'))
+        const pdfFiles = _.filter(projectFiles, (projectFile) => _.endsWith(projectFile.slug, '.pdf'));
 
         this.projectDetails = {
             details: projectDescription,
             files: pdfFiles
         };
         ui.defaultState();
+    }
+
+    isRegisteredToRelatedProject(activity) {
+        if (!activity.project) {
+            return true;
+        }
+
+        return this.rawProjects.slice().filter((project) => (
+                project.codeacti === `acti-${activity.project.id}` && project.registered
+            )).length === 1;
     }
 }
 
