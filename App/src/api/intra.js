@@ -111,6 +111,36 @@ export function unregisterActivity({ year, module, instance, activity, event }) 
         .then((response) => response.json());
 }
 
+export function registerActivitySlot(slotId, { year, module, instance, activity }) {
+    const formData = new FormData();
+    formData.append('id_creneau', slotId);
+
+    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/rdv/register?format=json`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+        },
+        body: formData
+    })
+        .then((response) => response.json());
+}
+
+export function unregisterActivitySlot(slotId, { year, module, instance, activity }) {
+    const formData = new FormData();
+    formData.append('id_creneau', slotId);
+
+    return fetch(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/rdv/unregister?format=json`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+        },
+        body: formData
+    })
+        .then((response) => response.json());
+}
+
 export function logout() {
     return fetch(`${BASE_URL}/logout?format=json`, {
         method: 'POST',

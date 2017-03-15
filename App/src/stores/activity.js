@@ -44,7 +44,7 @@ class activity {
 
         const isValidated = Object.keys(response).length === 0;
 
-        if (response) {
+        if (isValidated) {
             calendarStore.markEventAs(event, { registered: false });
         }
 
@@ -82,8 +82,11 @@ class activity {
         return isValidated;
     }
 
-    async stall(stallTime = 2000) {
-        await new Promise(resolve => setTimeout(resolve, stallTime));
+    @action
+    markActivityAsRegistered() {
+        this.event.registered =  this.event.registered === 'registered'
+            ? 'unregistered'
+            : 'registered';
     }
 
     @action
@@ -111,14 +114,46 @@ class activity {
         });
     }
 
-    async registerSlot(activity) {
-        await this.stall();
-        //TODO: Implement register slot
+    async registerActivitySlot(slot) {
+        const {
+            scolaryear: year,
+            codemodule: codeModule,
+            codeinstance: instance,
+            codeacti: codeActivity,
+        } = this.activity;
+
+        const response = await Intra.registerActivitySlot(slot.id,
+            { year, module: codeModule, instance, activity: codeActivity }
+        );
+
+        const isValidated = Object.keys(response).length === 0;
+
+        if (isValidated) {
+            this.markSlotActivityAs(slot, { registered: true });
+        }
+
+        return isValidated;
     }
 
-    async unregisterSlot(activity) {
-        await this.stall();
-        //TODO: Implement unregister slot if not oneshot
+    async unregisterActivitySlot(slot) {
+        const {
+            scolaryear: year,
+            codemodule: codeModule,
+            codeinstance: instance,
+            codeacti: codeActivity,
+        } = this.activity;
+
+        const response = await Intra.unregisterActivitySlot(slot.id,
+            { year, module: codeModule, instance, activity: codeActivity }
+        );
+
+        const isValidated = Object.keys(response).length === 0;
+
+        if (isValidated) {
+            this.markSlotActivityAs(slot, { registered: false });
+        }
+
+        return isValidated;
     }
 
     @action
@@ -127,9 +162,28 @@ class activity {
     }
 
     @computed get roomName() {
-        const location = this.activity.events[0].location;
+        const location = this.activity.events[0].location || '';
 
         return location.substring(location.lastIndexOf('/') + 1, location.length);
+    }
+
+    @computed get selfSlot() {
+        return _(this.activity.slots.slice())
+            .map((slotsBlock) => {
+                const self = slotsBlock.slots.filter((slot) => {
+                    const isMember = slot.members.filter((member) => member.login === session.username).length > 0;
+                    const isMaster = slot.master && slot.master.login === session.username;
+
+                    return isMaster || isMember;
+                });
+
+                return {
+                    id: slotsBlock.id,
+                    slot: self[0],
+                };
+            })
+            .filter((slotsBlock) => slotsBlock.slot)
+            .first();
     }
 }
 
