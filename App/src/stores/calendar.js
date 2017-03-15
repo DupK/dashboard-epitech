@@ -139,7 +139,9 @@ class Calendar {
             .orderBy((event) => event.start)
             .value();
 
-        return _.find(flattenedEvents, (event) => moment(event.start, 'YYYY-MM-DD HH:mm:ss').isAfter()) || {};
+        return _.find(flattenedEvents, (event) => (
+                moment(event.start, 'YYYY-MM-DD HH:mm:ss').isAfter() && event.registered === 'registered'
+            )) || {};
     }
 
     //Set startingDate to the previous week
