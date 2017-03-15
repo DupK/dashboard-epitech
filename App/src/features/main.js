@@ -9,7 +9,7 @@ import Login from './login/Login';
 import Home from './home/Home'
 import Calendar from './calendar/Calendar';
 import Activity from './calendar/Activity/Activity';
-import AvailableSlots from './calendar/Activity/AvailableSlots';
+import AvailableSlots from './calendar/Activity/slots/AvailableSlots';
 import News from './news/News';
 import Projects from './projects/Projects';
 import ProjectDetails from './projects/ProjectDetails';

@@ -52,8 +52,8 @@ export default class Day extends Component {
             <Animated.View
                 style={{
                     backgroundColor: 'red',
-                    height: 3,
-                    width: 3,
+                    height: 4,
+                    width: 4,
                     top: 3,
                     borderRadius: 50,
                 }}
