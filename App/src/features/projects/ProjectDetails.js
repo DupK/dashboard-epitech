@@ -16,14 +16,11 @@ import {
 } from 'native-base';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons';
-import ProgressBar from './ProgressBar';
 import Accordion from 'react-native-collapsible/Accordion';
 import LoadingIndicator from 'react-native-spinkit';
 import styles from './styles';
 import _ from "lodash";
 import { observer } from 'mobx-react/native';
-
-const BASE_URL = 'https://intra.epitech.eu';
 
 const Team = ({ teams }) => {
     return (
@@ -31,23 +28,16 @@ const Team = ({ teams }) => {
             {
                  _.map(teams, (team, i) => (
                      <View key={i} style={{
-                         borderBottomWidth: 1,
-                         borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+                         margin: 10,
+                         marginBottom: 3,
+                         backgroundColor: '#233445',
+                         elevation: 1
                      }}>
                          <View style={{ flexDirection: 'column' }}>
-                             <Text style={{
-                                 fontSize: 12,
-                                 color: '#FFF',
-                                 fontFamily: 'Nunito-Light',
-                                 margin: 5,
-                                 fontWeight: '100',
-                             }}>
-                                 { team.title }
-                             </Text>
                              <View style={{ flexDirection: 'row' }}>
                             <Image style={{
                                 borderWidth: 1,
-                                borderRadius: 8,
+                                borderRadius: 3,
                                 margin: 5,
                             }} source={{ uri: team.master.picture, width: 30, height: 30 }} />
                              {
@@ -56,7 +46,7 @@ const Team = ({ teams }) => {
                                                 style={{
                                                     alignSelf: 'center',
                                                     borderWidth: 1,
-                                                    borderRadius: 8,
+                                                    borderRadius: 3,
                                                     margin: 5,
                                                     borderColor: member.status == 'confirmed' ? 'rgba(255, 255, 255, 0)' : '#f44336',
                                                 }}
@@ -89,10 +79,14 @@ const Document = ({ documents }) => {
                 _.map(documents, (document, i) => (
                     <TouchableOpacity key={i}>
                         <View style={{
+                            marginTop: 0,
                             margin: 10,
                             width: 100,
+                            elevation: 3,
+                            backgroundColor: '#233445'
                         }}>
                             <IconMCI style={{
+                                marginTop: 5,
                                 alignSelf: 'center',
                                 color: '#FFF',
                             }} name="file-pdf-box" size={22} />
@@ -125,7 +119,6 @@ class ProjectDetails extends Component {
         this._renderHeader = this._renderHeader.bind(this);
         this._renderContent = this._renderContent.bind(this);
         this._renderDescription = this._renderDescription.bind(this);
-        this._renderRepositoryName = this._renderRepositoryName.bind(this);
         this._renderLoadingScreen = this._renderLoadingScreen.bind(this);
         this._generateSections = this._generateSections.bind(this);
     }
@@ -177,10 +170,12 @@ class ProjectDetails extends Component {
         const { title, icon } = section;
         return (
             <View style={{
+                margin: 10,
+                marginBottom: 0,
+                elevation: 4,
                 height: 70,
                 backgroundColor: "#233445",
                 flexDirection: 'row',
-                marginBottom: 2,
                 borderBottomWidth: 0.5,
                 borderTopWidth: 0.5,
                 alignItems: 'center',
@@ -234,31 +229,19 @@ class ProjectDetails extends Component {
     }
 
     _renderDescription(description) {
-        return (
-                <View>
-                    <Text style={{
-                        color: "#FFF",
-                        fontSize: 12,
-                        marginLeft: 10,
-                        marginTop: 5,
-                        fontFamily: "Nunito-ExtraLight",
-                        paddingBottom: 10,
-                    }}>{description}</Text>
-                </View>
-        )
-    }
-
-    _renderRepositoryName() {
+        const projectDescription = description.length ? description : "No description available for this project"
         return (
             <View>
                 <Text style={{
                     color: "#FFF",
                     fontSize: 12,
+                    marginLeft: 10,
                     marginTop: 5,
                     fontFamily: "Nunito-ExtraLight",
-                }}>cpp_nanotekspice</Text>
+                    paddingBottom: 10,
+                }}>{projectDescription}</Text>
             </View>
-        )
+        );
     }
 
     render() {
@@ -275,7 +258,7 @@ class ProjectDetails extends Component {
             }}>
                 {this._renderBanner(project.registered)}
                 <View style={{
-                    flex: 0.25,
+                    flex: 0.55,
                     backgroundColor: "#233445",
                     elevation: 10,
                 }}>
@@ -294,14 +277,22 @@ class ProjectDetails extends Component {
                         </View>
                         {this._renderDescription(projects.projectDetails.details.description)}
                     </ScrollView>
+                        <TouchableOpacity style={{
+                            height: 40,
+                            backgroundColor: '#203040',
+                            margin: 10,
+                            elevation: 2,
+                        }}>
 
+                        </TouchableOpacity>
                 </View>
-        <View style={{
-                    flex: 0.75,
-                    backgroundColor: "#2c3e50"
+            <View style={{
+                    flex: 0.45,
+                    backgroundColor: "#203040"
                 }}>
                     <ScrollView style={{ flex: 1,}}>
                         <Accordion
+                            underlayColor="#203040"
                             sections={this._generateSections(projects.projectDetails)}
                             renderHeader={this._renderHeader}
                             renderContent={this._renderContent}
