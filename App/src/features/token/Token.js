@@ -240,13 +240,13 @@ export default class Tokens extends Component {
                             />
                         ))
                         :
-                        <View style={{ flex: 1, flexDirection: 'column', marginBottom: 90, justifyContent: 'center' }}>
+                        <View style={{ flex: 1, flexDirection: 'column', marginBottom: 60, justifyContent: 'center' }}>
                             <IconIO
                                 name="ios-notifications-off-outline"
-                                size={140}
-                                style={{ color: '#FFF', alignSelf: 'center' }}
+                                size={100}
+                                style={{ color: '#203040', alignSelf: 'center' }}
                             />
-                            <Text style={{ marginTop: 10, color:'#FFF', alignSelf: 'center', fontSize: 12, }}>
+                            <Text style={{ marginTop: 10, color:'#203040', alignSelf: 'center', fontSize: 12 }}>
                                 No token to validate
                             </Text>
                         </View>
