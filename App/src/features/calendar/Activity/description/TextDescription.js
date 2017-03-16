@@ -29,7 +29,6 @@ TextDescription.propTypes = {
 const styles = StyleSheet.create({
     container: {
         color: '#FAFAFA',
-        fontFamily: 'Nunito-Light',
         fontSize: 12,
         lineHeight: 20,
     },

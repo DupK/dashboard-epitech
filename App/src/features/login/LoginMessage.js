@@ -23,7 +23,6 @@ LoginMessage.propTypes = {
 const styles = StyleSheet.create({
     loginMessage: {
         color: 'white',
-        fontFamily: 'Nunito-Light',
         fontSize: 13,
         alignSelf: 'center',
         marginTop: 10,

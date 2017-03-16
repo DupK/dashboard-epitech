@@ -45,14 +45,12 @@ const styles = StyleSheet.create({
     moduleText: {
         flex: 10,
         color: '#FFFFFF',
-        fontFamily: 'Nunito-Light',
         marginLeft: 10,
     },
 
     gradeText: {
         flex: 0.8,
         color: '#FFFFFF',
-        fontFamily: 'Nunito-Light',
         fontWeight: 'bold',
     },
 
@@ -74,14 +72,12 @@ const styles = StyleSheet.create({
     textContent: {
         flex: 0.2,
         color: '#FFFFFF',
-        fontFamily: 'Nunito-ExtraLight',
         marginLeft: 5,
         fontSize: 13,
     },
 
     markContent: {
         color: '#FFFFFF',
-        fontFamily: 'Nunito-ExtraLight',
         fontWeight: '200',
         marginRight: 10,
     },
@@ -116,7 +112,6 @@ const styles = StyleSheet.create({
     itemStyle: {
         flex: 0.95,
         color: '#FFFFFF',
-        fontFamily: 'Nunito-ExtraLight',
         fontSize: 13,
     },
 
@@ -163,14 +158,12 @@ const styles = StyleSheet.create({
 
     name: {
         color: '#FFFFFF',
-        fontFamily: 'Nunito-ExtraLight',
         alignSelf: 'center',
         marginLeft: 5,
     },
 
     mark: {
         color: '#FFFFFF',
-        fontFamily: 'Nunito-ExtraLight',
         alignSelf: 'center',
         marginRight: 5,
     },
@@ -183,7 +176,6 @@ const styles = StyleSheet.create({
     },
 
     loadingText: {
-        fontFamily: 'Nunito-ExtraLight',
         fontSize: 14,
         color: "#FFFFFF",
         margin: 15,

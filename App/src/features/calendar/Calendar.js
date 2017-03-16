@@ -111,7 +111,6 @@ export default class Calendar extends Component {
                         size={100}
                     />
                     <Text style={{
-                        fontFamily: 'Nunito-ExtraLight',
                         fontSize: 14,
                         color: "#2c3e50",
                         margin: 15,

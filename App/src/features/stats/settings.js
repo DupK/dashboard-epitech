@@ -10,7 +10,6 @@ export const radarSettings = {
     fill: "#62c462",
     stroke: "rgba(255, 255, 255, 0.1)",
     label: {
-        fontFamily: 'Arial',
         fontSize: 9,
         fill: '#FAFAFA',
         fontWeight: true,
@@ -30,7 +29,6 @@ export const pieSettings = {
     r: 67.5,
     R: 70,
     label: {
-        fontFamily: 'Arial',
         fontWeight: true,
         fontSize: 10,
         color: '#FAFAFA',

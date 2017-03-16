@@ -35,18 +35,15 @@ const styles = StyleSheet.create({
     itemTitleLogout: {
         flex: 0.75,
         fontWeight: 'bold',
-        fontFamily: 'Nunito-ExtraLight',
         alignSelf: 'center',
     },
 
     profileTitle: {
         flex: 0.75,
         fontWeight: 'bold',
-        fontFamily: 'Nunito-Light',
     },
 
     itemDescr: {
-        fontFamily: 'Nunito-Light',
         fontWeight: 'normal',
         fontSize: 12,
         color: 'white',

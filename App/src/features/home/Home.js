@@ -42,7 +42,6 @@ const BlockInfo = observer(({ number, numberType }) => {
                 alignSelf: 'center',
                 color: '#FFFFFF',
                 fontSize: 17,
-                fontFamily: 'Nunito-Light',
             }}>
                 { number }
             </Text>
@@ -467,7 +466,6 @@ const scrollStyle = StyleSheet.create({
     },
     title: {
         color: 'white',
-        fontFamily: 'Nunito-Light',
         fontSize: 16,
     },
     scrollViewContent: {
@@ -503,7 +501,6 @@ const scrollStyle = StyleSheet.create({
     gaugeValue: {
         color: '#FFFFFF',
         fontSize: 17,
-        fontFamily: 'Nunito-Light',
         alignSelf: 'center',
     },
     gaugeDescription: {
@@ -520,7 +517,6 @@ const scrollStyle = StyleSheet.create({
     username: {
         color: 'white',
         fontSize: 17,
-        fontFamily: 'Nunito-Light',
         marginBottom: 20,
         alignSelf: 'center',
     },

@@ -12,7 +12,6 @@ const style = StyleSheet.create({
 
     notLoggedMessage: {
         alignSelf: 'center',
-        fontFamily: 'Nunito-ExtraLight',
         color: "#ff3d31",
         fontSize: 16,
     },

@@ -94,7 +94,6 @@ const Document = ({ documents }) => {
                                 alignSelf: 'center',
                                 color: '#FFF',
                                 fontSize: 12,
-                                fontFamily: 'Nunito-ExtraLight',
                                 margin: 5,
                             }}>{_.truncate(document.title, {length: 15, separator: '...'})}</Text>
                         </View>
@@ -237,8 +236,6 @@ class ProjectDetails extends Component {
                     fontSize: 12,
                     marginLeft: 10,
                     marginTop: 5,
-                    fontFamily: "Nunito-ExtraLight",
-                    paddingBottom: 10,
                 }}>{projectDescription}</Text>
             </View>
         );
@@ -271,7 +268,6 @@ class ProjectDetails extends Component {
                             <Text style={{
                                 fontWeight: "bold",
                                 fontSize: 12,
-                                fontFamily: "Nunito-Light",
                                 color: "#FFF",
                             }}> Information :</Text>
                         </View>
