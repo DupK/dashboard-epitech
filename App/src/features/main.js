@@ -156,7 +156,7 @@ class Main extends Component {
 
                     <Scene
                         key="token"
-                        title="Token"
+                        title="Tokens"
                         hideNavBar={false}
                         component={Token}
                     />
