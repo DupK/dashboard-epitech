@@ -10,7 +10,6 @@ import storage from 'react-native-simple-store';
 import stores from './index';
 import * as Intra from '../api/intra';
 import newsParser from '../features/news/newsParser';
-import _ from 'lodash';
 
 @autobind
 class Session {
@@ -111,13 +110,17 @@ class Session {
         }
     }
 
+    resetSession() {
+        this.isLogged = false;
+        this.session = null;
+        this.username = '';
+        this.news = [];
+    }
+
     async logout() {
         try {
             await Intra.logout();
-            this.username = '';
-            this.isLogged = false;
             await storage.delete('autologin');
-
         } catch (e) {
             this.isLogged = false;
             console.error(e);

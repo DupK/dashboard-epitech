@@ -12,10 +12,8 @@ import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
 import backgroundSource from '../../assets/fond.jpg';
-import logoSource from '../../assets/epitech.png';
 
 import BackgroundImageWithOverlay from './BackgroundImage';
-import LogoBox from './LogoBox';
 import LoginMessage from './LoginMessage';
 import LoginInput from './LoginInput';
 import AnimatedButton from './AnimatedButton';
@@ -39,7 +37,10 @@ export default class Login extends Component {
     }
 
     async componentDidMount() {
+        const { store: { session } } = this.props;
+
         try {
+            session.resetSession();
             this.animatedButton.animate();
         } catch (e) {
             console.error(e);
