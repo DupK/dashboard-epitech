@@ -41,7 +41,7 @@ const getHeaderStyle = () => {
 };
 
 const getTitleStyle = () => {
-    return { color: '#FFFFFF', fontFamily: 'Nunito-Light', marginTop: -3}
+    return { color: '#FFFFFF', marginTop: -3}
 };
 
 const getImageStyle = () => {

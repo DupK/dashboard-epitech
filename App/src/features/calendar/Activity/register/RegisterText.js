@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     container: {
         fontSize: 14,
         color: '#FAFAFA',
-        fontFamily: 'Nunito-ExtraLight'
     }
 });
 

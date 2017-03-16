@@ -89,7 +89,6 @@ const Slot = observer(({ oneshot, state, date, memberPicture, slotObject, activi
             <Text
                 style={{
                     color: textColor[state],
-                    fontFamily: 'Nunito-Light',
                     fontSize: 15,
                 }}
             >
@@ -214,7 +213,6 @@ export default class AvailableSlots extends Component {
                 borderLeftColor: nbSlotsAvailable ? '#62C462' : '#F44235',
             }}>
                 <Text style={{
-                    fontFamily: 'Nunito-Bold',
                     color: '#FAFAFA',
                     marginBottom: 10,
                 }}>
@@ -223,7 +221,6 @@ export default class AvailableSlots extends Component {
                 </Text>
                 <Text style={{
                     color: '#FAFAFA',
-                    fontFamily: 'Nunito-Light',
                 }}>
                     { nbSlotsAvailable } / {slotGroup.slots.length} slots available
                 </Text>

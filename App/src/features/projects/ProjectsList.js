@@ -56,11 +56,9 @@ export default class ProjectsList extends Component {
 
                                     <Text style={{
                                         fontWeight: 'bold',
-                                        fontFamily: 'Nunito-Light',
                                         color: '#233445',
                                     }}>{ project.acti_title }</Text>
                                     <Text style={{
-                                        fontFamily: 'Nunito-Light',
                                         fontSize: 12,
                                         color: '#233445',
                                     }}> / { project.title_module }</Text>
@@ -74,13 +72,11 @@ export default class ProjectsList extends Component {
                                     }}>
                                         <Text style={{
                                             color: '#233445',
-                                            fontFamily: 'Nunito-Light',
                                             fontSize: 10,
                                             marginTop: 5,
                                         }}>{ parsedStart.fromNow() }</Text>
                                         <Text style={{
                                             color: '#233445',
-                                            fontFamily: 'Nunito-Light',
                                             fontSize: 10,
                                             margin: 5,
                                         }}>{ parsedEnd.fromNow() }</Text>

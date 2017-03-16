@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
     },
 
     textLegend: {
-        fontFamily: 'Arial',
         color: '#FAFAFA',
         fontWeight: 'bold',
         fontSize: 10,

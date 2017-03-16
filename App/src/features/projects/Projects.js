@@ -54,7 +54,6 @@ export default class Projects extends Component {
                 height: 50,
             }}
             labelStyle={{
-                fontFamily: 'Nunito-Light',
                 fontSize: 14,
             }}
 

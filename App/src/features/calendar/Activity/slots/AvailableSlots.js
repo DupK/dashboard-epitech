@@ -115,13 +115,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     headerDate: {
-        fontFamily: 'Nunito-Bold',
         color: '#FAFAFA',
         marginBottom: 10,
     },
     headerNbSlots: {
         color: '#FAFAFA',
-        fontFamily: 'Nunito-Light',
     },
     headerSelfSlotContainer: {
         marginTop: 20,

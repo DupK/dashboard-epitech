@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
     },
 
     loadingText: {
-        fontFamily: 'Nunito-ExtraLight',
         fontSize: 14,
         color: "#FFFFFF",
         margin: 15,

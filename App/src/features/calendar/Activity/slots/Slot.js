@@ -90,7 +90,6 @@ const Slot = observer(({ oneshot, state, date, memberPicture, slotObject, activi
             <Text
                 style={{
                     color: textColor[state],
-                    fontFamily: 'Nunito-Light',
                     fontSize: 15,
                 }}
             >

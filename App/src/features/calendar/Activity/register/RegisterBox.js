@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     textContainer: {
         fontSize: 14,
         color: '#FAFAFA',
-        fontFamily: 'Nunito-ExtraLight'
     }
 });
 
