@@ -9,6 +9,7 @@ import { Button, Icon } from 'native-base';
 import { observer } from 'mobx-react/native';
 import IconFO from 'react-native-vector-icons/Foundation';
 import IconFA from 'react-native-vector-icons/FontAwesome';
+import IconEN from 'react-native-vector-icons/Entypo';
 import DayPicker from 'react-native-modal-datetime-picker';
 
 const styles = StyleSheet.create({
@@ -84,9 +85,9 @@ class MonthSelector extends Component {
                     transparent
                     onPress={calendar.today}
                 >
-                    <IconFO style={{
+                    <IconEN style={{
                         color: isToday,
-                    }} name="calendar" size={29}/>
+                    }} name="location" size={20}/>
                 </Button>
                 <DayPicker
                     isVisible={calendar.datePickerVisible}
