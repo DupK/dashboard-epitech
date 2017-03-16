@@ -244,9 +244,9 @@ export default class Tokens extends Component {
                             <IconIO
                                 name="ios-notifications-off-outline"
                                 size={100}
-                                style={{ color: '#203040', alignSelf: 'center' }}
+                                style={{ color: '#203040',   alignSelf: 'center' }}
                             />
-                            <Text style={{ marginTop: 10, color:'#203040', alignSelf: 'center', fontSize: 12 }}>
+                            <Text style={{ marginTop: 10, color:'#203040', alignSelf: 'center', fontSize: 15 }}>
                                 No token to validate
                             </Text>
                         </View>
