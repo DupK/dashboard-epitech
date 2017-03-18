@@ -28,12 +28,14 @@ export default class Login extends Component {
             username: '',
             password: '',
             loginMessage: '',
+            animating: false,
         };
 
         this.login = this.login.bind(this);
         this.onAnimationEnd = this.onAnimationEnd.bind(this);
         this.onAnimationEndError = this.onAnimationEndError.bind(this);
         this.worthStartingAnimation = this.worthStartingAnimation.bind(this);
+        this.buttonIsAnimating = this.buttonIsAnimating.bind(this);
     }
 
     async componentDidMount() {
@@ -52,6 +54,10 @@ export default class Login extends Component {
         const hasAutoLogin = !!(await session.getAutologinFromCache());
 
         return hasAutoLogin || (this.state.username.length && this.state.password.length);
+    }
+
+    buttonIsAnimating(animating) {
+        this.setState({ animating });
     }
 
     async fetchRequiredData() {
@@ -104,7 +110,7 @@ export default class Login extends Component {
     }
 
     onAnimationEndError() {
-        this.setState({ loginMessage: ''});
+        this.setState({ loginMessage: '' });
     }
 
     onAnimationEnd() {
@@ -131,7 +137,7 @@ export default class Login extends Component {
                                     maxLength={40}
                                     placeholder="Email address"
                                     keyboardType="email-address"
-                                    editable={ui.currentState !== ui.state.fetchingState}
+                                    editable={!this.state.animating}
                                     onChangeText={(text) => this.setState({ username: text })}
                                     onSubmitEditing={() => this.passwordInput.nativeInput.focus() }
                                 />
@@ -140,7 +146,7 @@ export default class Login extends Component {
                                     maxLength={8}
                                     placeholder="Unix Password"
                                     secureTextEntry
-                                    editable={ui.currentState !== ui.state.fetchingState}
+                                    editable={!this.state.animating}
                                     onChangeText={(text) => this.setState({ password: text })}
                                     onSubmitEditing={() => this.animatedButton.animate()}
                                 />
@@ -153,10 +159,13 @@ export default class Login extends Component {
                                     onAnimationEnd={this.onAnimationEnd}
                                     onAnimationEndError={this.onAnimationEndError}
                                     worthStartingAnimation={this.worthStartingAnimation}
+                                    isButtonAnimating={this.buttonIsAnimating}
                                 />
                             </View>
-                            <View style={{ flex: 0.1     }}>
-                                <LoginMessage message={this.state.loginMessage} />
+                            <View style={{ flex: 0.1 }}>
+                                <LoginMessage
+                                    message={(this.state.animating && this.state.loginMessage) || ''}
+                                />
                             </View>
                         </View>
                     </BackgroundImageWithOverlay>

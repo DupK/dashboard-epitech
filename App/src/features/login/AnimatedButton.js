@@ -13,9 +13,27 @@ import {
     LayoutAnimation,
     UIManager,
 } from 'react-native';
+import { observer } from 'mobx-react/native';
 import { Button } from 'native-base';
 
 const ButtonAnimated = Animated.createAnimatedComponent(Button);
+
+const TextButton = observer(({ children, opacity }) => {
+    return (
+        <Animated.Text style={{
+            color: '#FFF',
+            fontSize: 12,
+            opacity
+        }}>
+            { children }
+        </Animated.Text>
+    );
+});
+
+TextButton.propTypes = {
+    children: React.PropTypes.string.isRequired,
+    opacity: React.PropTypes.object.isRequired,
+};
 
 const CustomLayoutSpring = {
     duration: 400,
@@ -31,15 +49,11 @@ const CustomLayoutSpring = {
     },
 };
 
+@observer
 export default class AnimatedButton extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            animating: false,
-            error: false,
-        };
 
         this.buttonWidth = new Animated.Value(0);
         this.buttonScale = new Animated.Value(0);
@@ -48,27 +62,61 @@ export default class AnimatedButton extends Component {
         UIManager.setLayoutAnimationEnabledExperimental
         && UIManager.setLayoutAnimationEnabledExperimental(true);
 
+        this.animationState = {
+            default: 'default',
+            animating: 'animating',
+            error: 'error',
+            success: 'success'
+        };
+
+        this.buttonContents = {
+            default: (textOpacity) => (
+                <TextButton opacity={textOpacity}>
+                    {this.props.title}
+                </TextButton>
+            ),
+            animating: () => (
+                <ActivityIndicator
+                    animating={this.state.animationState === this.animationState.animating}
+                    color="#FFFFFF"
+                />
+            ),
+            error: (textOpacity) => (
+                <TextButton opacity={textOpacity}>
+                    {this.props.errorTitle}
+                </TextButton>
+            ),
+            success: () => <View />
+        };
+
+        this.state = {
+            animationState: this.animationState.default,
+        };
+
         this.animate = this.animate.bind(this);
     }
 
     animateSuccess() {
         this.buttonScale.setValue(0);
 
-        Animated.timing(
-            this.buttonScale,
-            {
-                toValue: 1,
-                duration: 600,
-                easing: Easing.in(Easing.quad)
-            }
-        ).start(async () => await this.props.onAnimationEnd())
+        this.props.isButtonAnimating(false);
+        this.setState({ animationState: this.animationState.success }, () => {
+            Animated.timing(
+                this.buttonScale,
+                {
+                    toValue: 1,
+                    duration: 600,
+                    easing: Easing.in(Easing.quad)
+                }
+            ).start(() => this.props.onAnimationEnd())
+        });
     }
 
     animateError() {
         this.buttonColor.setValue(0);
 
         this.props.onAnimationEndError();
-        this.setState({ error: true }, () => {
+        this.setState({ animationState: this.animationState.error }, () => {
             Animated.parallel([
                 Animated.timing(
                     this.buttonWidth,
@@ -88,7 +136,8 @@ export default class AnimatedButton extends Component {
                 )
             ]).start(() => {
                 LayoutAnimation.configureNext(CustomLayoutSpring);
-                this.setState({ error: false, animating: false });
+                this.setState({ animationState: this.animationState.default });
+                this.props.isButtonAnimating(false);
             })
         });
     }
@@ -112,7 +161,8 @@ export default class AnimatedButton extends Component {
         this.buttonWidth.setValue(0);
         this.buttonScale.setValue(0);
 
-        this.setState({ animating: true }, () => {
+        this.setState({ animationState: this.animationState.animating }, () => {
+            this.props.isButtonAnimating(true);
             Animated.timing(
                 this.buttonWidth,
                 {
@@ -127,43 +177,20 @@ export default class AnimatedButton extends Component {
                     } else {
                         this.animateError();
                     }
-                    this.setState({ animating: false });
                 })
             })
         });
     }
 
     renderButtonContent() {
-        const { title, errorTitle } = this.props;
+        const { animationState } = this.state;
 
         const textOpacity = this.buttonWidth.interpolate({
             inputRange: [0, 1],
             outputRange: [1, 0],
         });
 
-        if (!this.state.animating) {
-            return (
-                <Animated.Text
-                    style={{
-                        color: '#FFF',
-                        fontSize: 12,
-                        opacity: textOpacity
-                    }}>
-                    {
-                        this.state.error
-                            ? errorTitle
-                            : title
-                    }
-                </Animated.Text>
-            );
-        }
-
-        return (
-            <ActivityIndicator
-                animating={this.state.animating}
-                color="#FFFFFF"
-            />
-        );
+        return this.buttonContents[animationState](textOpacity);
     }
 
     render() {
@@ -202,7 +229,7 @@ export default class AnimatedButton extends Component {
                     marginTop: 10,
                 }}
                 title={title}
-                disabled={this.state.animating}
+                disabled={this.state.animationState !== this.animationState.default}
                 onPress={this.animate}
             >
                 { this.renderButtonContent() }
@@ -219,4 +246,5 @@ AnimatedButton.propTypes = {
     onAnimationEndError: React.PropTypes.func,
     worthStartingAnimation: React.PropTypes.func,
     width: React.PropTypes.number,
+    isButtonAnimating: React.PropTypes.func,
 };
