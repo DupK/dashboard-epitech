@@ -282,7 +282,7 @@ class Calendar {
             if (calendarEvent.codeevent === event.codeEvent) {
                 return {
                     ...calendarEvent,
-                    event_registered: registered,
+                    event_registered: registered ? 'registered' : 'unregistered',
                 }
             }
 
