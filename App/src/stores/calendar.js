@@ -139,9 +139,13 @@ class Calendar {
             .orderBy((event) => event.start)
             .value();
 
-        return _.find(flattenedEvents, (event) => (
-                moment(event.start, 'YYYY-MM-DD HH:mm:ss').isAfter() && event.registered === 'registered'
-            )) || {};
+        const nextEvent = _.find(flattenedEvents, (event) => (
+            moment(event.start, 'YYYY-MM-DD HH:mm:ss').isAfter() && event.registered === 'registered'
+        ));
+
+        return nextEvent
+            ? `Your next event \"${nextEvent.title}\" starts ${moment(nextEvent.start).fromNow()}`
+            : 'You\'re not registered to any future events';
     }
 
     //Set startingDate to the previous week

@@ -177,7 +177,7 @@ export default class Home extends Component {
                 />
                 <Cell
                     title="Calendar"
-                    description={`Your next event \"${nextEvent.title}\" starts ${moment(nextEvent.start).fromNow()}`}
+                    description={nextEvent}
                     icon={<IconIO name="ios-calendar-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.calendar}
                     color="#1E2C3B"
