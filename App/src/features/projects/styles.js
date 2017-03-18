@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#233445",
         flexDirection: 'row',
         borderBottomWidth: 0.5,
-        borderTopWidth: 0.5,
+        borderBottomColor: '#16212C',
         alignItems: 'center',
     },
 

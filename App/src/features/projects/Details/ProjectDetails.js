@@ -151,7 +151,7 @@ class ProjectDetails extends Component {
                     </ScrollView>
                 </View>
             <View style={{ flex: 0.45, backgroundColor: "#203040" }}>
-                    <ScrollView style={{ flex: 1 }}>
+                    <ScrollView style={{ flex: 1, marginBottom: 10 }}>
                         <Accordion
                             underlayColor="#203040"
                             sections={this._generateSections(projects.projectDetails)}
