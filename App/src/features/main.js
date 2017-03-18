@@ -12,7 +12,7 @@ import Activity from './calendar/Activity/Activity';
 import AvailableSlots from './calendar/Activity/slots/AvailableSlots';
 import News from './news/News';
 import Projects from './projects/Projects';
-import ProjectDetails from './projects/ProjectDetails';
+import ProjectDetails from './projects/Details/ProjectDetails';
 import Marks from './marks/Marks';
 import MarkDetails from './marks/MarkDetails';
 import Stats from './stats/Stats';
