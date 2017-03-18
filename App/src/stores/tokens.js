@@ -57,7 +57,9 @@ class Tokens {
     }
 
     @action selectToken(id) {
-        this.selectedToken = id;
+        if (this.tokenValues[id].length === 8) {
+            this.selectedToken = id;
+        }
     }
 
     @action setTokensValue(id) {
