@@ -60,9 +60,10 @@ class Marks {
             .groupBy((module) => {
                 const moduleId = module.title.substring(0, 2);
 
-                if (moduleId[1] == '0' || moduleId == 'Hu') {
+                if (moduleId[1] == '0' || moduleId == 'Hu' || moduleId == 'Sp') {
                     return 'Others';
                 }
+
                 return moduleId;
             })
             .toPairs()
