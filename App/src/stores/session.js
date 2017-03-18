@@ -71,6 +71,7 @@ class Session {
             this.isLogged = true;
             this.username = username;
             this.session = {
+                ...this.session,
                 board: session.board
             };
             this.news = newsParser(session.history);

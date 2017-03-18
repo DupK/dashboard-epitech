@@ -15,6 +15,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     Dimensions,
+    RefreshControl,
 } from 'react-native';
 import { AnimatedGaugeProgress } from 'react-native-simple-gauge';
 import { observer } from 'mobx-react/native';
@@ -27,39 +28,6 @@ const HEADER_MAX_HEIGHT = 180;
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 64 : 54;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 const AVATAR_SIZE = 70;
-
-const BlockInfo = observer(({ number, numberType }) => {
-    return (
-        <View style={{
-            flex: 5,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            backgroundColor: '#2c3e50',
-            borderRightWidth: 1,
-            borderRightColor: '#495a6d',
-        }}>
-            <Text style={{
-                alignSelf: 'center',
-                color: '#FFFFFF',
-                fontSize: 17,
-            }}>
-                { number }
-            </Text>
-            <Text style={{
-                alignSelf: 'center',
-                color: '#c4c4c4',
-                fontSize: 10,
-            }}>
-                { numberType }
-            </Text>
-        </View>
-    );
-});
-
-BlockInfo.propTypes = {
-    number: React.PropTypes.string,
-    numberType: React.PropTypes.string,
-};
 
 const Cell = observer((props) => {
 
@@ -121,7 +89,10 @@ export default class Home extends Component {
 
         this.state = {
             scrollY: new Animated.Value(0),
+            refreshing: false,
         };
+
+        this.onRefresh = this.onRefresh.bind(this);
     }
 
     menu = {
@@ -266,6 +237,23 @@ export default class Home extends Component {
         ];
     }
 
+    onRefresh() {
+        const { store: { session, calendar, projects, marks } } = this.props;
+
+        this.setState( {refreshing: true }, async () => {
+            await session.tryLoginFromAutoLogin();
+
+            await Promise.all([
+                calendar.fetchCalendar(),
+                session.userInformation(),
+                projects.fetchProjects(),
+                marks.fetchMarks(session.username),
+            ]);
+
+            this.setState({ refreshing: false });
+        });
+    }
+
     render() {
         const headerHeight = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE],
@@ -343,6 +331,13 @@ export default class Home extends Component {
         return (
             <View style={scrollStyle.fill}>
                 <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            progressViewOffset={HEADER_MAX_HEIGHT}
+                            refreshing={this.state.refreshing}
+                            onRefresh={this.onRefresh}
+                        />
+                    }
                     style={scrollStyle.fill}
                     scrollEventThrottle={32}
                     onScroll={Animated.event(
