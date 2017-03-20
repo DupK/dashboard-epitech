@@ -4,7 +4,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import autobind from 'autobind-decorator';
-import { observable } from 'mobx';
+import { observable, computed } from 'mobx';
 import ui from './uiState'
 import * as Intra from '../api/intra';
 
@@ -51,6 +51,18 @@ class Projects {
                 project.codeacti === `acti-${activity.project.id}` && project.registered
             )).length === 1;
     }
+
+    @computed get firstEndingProject() {
+        const nextProject = _(this.projects.slice())
+            .orderBy((project) => moment(project.end_acti, 'YYYY-MM-DD, HH:mm:ss'))
+            .filter((project) => project.registered === 1)
+            .first();
+
+        return nextProject
+            ? `Your next project "${nextProject.acti_title}" ends ${moment(nextProject.end_acti).fromNow()}`
+            : 'You\'re not registered to any future project.';
+    }
+
 }
 
 const projectStore = new Projects();

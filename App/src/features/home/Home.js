@@ -116,6 +116,7 @@ export default class Home extends Component {
                 session: { news },
                 calendar,
                 ranking,
+                projects,
                 marks,
                 tokens,
             }
@@ -127,8 +128,10 @@ export default class Home extends Component {
             .last();
         const lastMark = marks.lastMark;
         const tokenDescription = tokens.nbTokens
-            ? `You have ${tokens.nbTokens} tokens to validate.`
-            : 'There is no token to validate.';
+            ? `You have ${tokens.nbTokens} tokens to validate`
+            : 'There is no token to validate';
+
+        const nextProject = projects.firstEndingProject;
 
         return (
             <View style={scrollStyle.scrollViewContent}>
@@ -140,49 +143,49 @@ export default class Home extends Component {
                     color="#233445"
                 />
                 <Cell
-                    title="Projects"
-                    description="Insert projects description.."
-                    icon={<IconIO name="ios-cafe-outline" style={ styles.iconStyle }/>}
-                    onPress={this.menu.projects}
-                    color="#203040"
-                />
-                <Cell
                     title="Calendar"
                     description={nextEvent}
                     icon={<IconIO name="ios-calendar-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.calendar}
+                    color="#203040"
+                />
+                <Cell
+                    title="Projects"
+                    description={nextProject}
+                    icon={<IconIO name="ios-cafe-outline" style={ styles.iconStyle }/>}
+                    onPress={this.menu.projects}
                     color="#1E2C3B"
-                />
-                <Cell
-                    title="Marks"
-                    description={`Your last mark from ${ lastMark.titlemodule } - ${ lastMark.title } is ${lastMark.final_note}`}
-                    icon={<IconIO name="ios-school-outline" style={ styles.iconStyle }/>}
-                    onPress={this.menu.marks}
-                    color="#1B2836"
-                />
-                <Cell
-                    title="Ranking"
-                    description={
-                        ranking.rankPosition !== '0th'
-                            ? `You\'re currently ${ranking.rankPosition} in your promotion.`
-                            : 'Click here to get your rank.'
-                    }
-                    icon={<IconIO name="ios-trophy-outline" style={ styles.iconStyle }/>}
-                    onPress={this.menu.ranking}
-                    color="#192531"
-                />
-                <Cell
-                    title="Statistics"
-                    description="Insert statistics description.."
-                    icon={<IconIO name="ios-speedometer-outline" style={ styles.iconStyle }/>}
-                    onPress={this.menu.stats}
-                    color="#16212C"
                 />
                 <Cell
                     title="Tokens"
                     description={tokenDescription}
                     icon={<IconIO name="ios-pricetags-outline" style={ styles.iconStyle }/>}
                     onPress={this.menu.tokens}
+                    color="#1B2836"
+                />
+                <Cell
+                    title="Marks"
+                    description={`Your last mark from ${ lastMark.titlemodule } - ${ lastMark.title } is ${lastMark.final_note}`}
+                    icon={<IconIO name="ios-school-outline" style={ styles.iconStyle }/>}
+                    onPress={this.menu.marks}
+                    color="#192531"
+                />
+                <Cell
+                    title="Ranking"
+                    description={
+                        ranking.rankPosition !== '0th'
+                            ? `You\'re currently ${ranking.rankPosition} in your promotion.`
+                            : 'Click here to get your rank'
+                    }
+                    icon={<IconIO name="ios-trophy-outline" style={ styles.iconStyle }/>}
+                    onPress={this.menu.ranking}
+                    color="#16212C"
+                />
+                <Cell
+                    title="Statistics"
+                    description="This feature will be soon available"
+                    icon={<IconIO name="ios-speedometer-outline" style={ styles.iconStyle }/>}
+                    onPress={this.menu.stats}
                     color="#141D27"
                 />
                 <Cell
