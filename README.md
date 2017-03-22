@@ -1,9 +1,6 @@
 Dashboard Epitech
 -
 
-![react]
-(https://getsiphon.com/blog/images/future-of-apps/react-native.png "react")
-
 An open source **Epitech** intranet application with awesome features
 
 Library
