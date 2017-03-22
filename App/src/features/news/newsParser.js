@@ -14,9 +14,9 @@ export default function parseNews(news) {
             link: title.link,
             details,
             date: news.date,
+            user: news.user,
         };
     });
-
     return out;
 }
 
