@@ -42,8 +42,7 @@ const AdministrativeDescription = observer((props) => {
             { roomSentence }
             <TextDescription>
                 There are currently&nbsp;
-                <TextDescription bold>{registeredStudents}</TextDescription>&nbsp;
-                students registered.
+                <TextDescription bold>{registeredStudents}</TextDescription>&nbsp;students registered.
             </TextDescription>
         </View>
     );
