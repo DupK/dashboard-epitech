@@ -103,6 +103,7 @@ export default class Activity extends Component {
             ? activityStore.activity.description
             : 'There is no description for the following activity.';
 
+        console.log(activityStore.activity);
         return (
             <View style={{
                 flex: 1,
@@ -122,7 +123,7 @@ export default class Activity extends Component {
                 >
                     <AdministrativeDescription
                         room={activityStore.roomName}
-                        registeredStudents={activityStore.activity.nb_registered}
+                        registeredStudents={activityStore.activity.events[0].nb_registered}
                         date={moment(event.start).format('DD.MM.YYYY')}
                         startTime={moment(event.start).format('HH:mm')}
                         endTime={moment(event.end).format('HH:mm')}
