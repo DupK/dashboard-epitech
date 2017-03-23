@@ -59,8 +59,6 @@ class Calendar {
             if (fromCache) {
                 const rawCalendar = await storage.get('calendar');
 
-                console.log('calendar from cache', !!rawCalendar);
-
                 if (rawCalendar) {
                     this.rawCalendar = rawCalendar;
                     this.calendar = this.remapCalendar(rawCalendar);

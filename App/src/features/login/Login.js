@@ -70,7 +70,7 @@ export default class Login extends Component {
             await Promise.all([
                 session.userInformation({ fromCache: true }),
                 calendar.fetchCalendar(CALENDAR_START, CALENDAR_END, { fromCache: true }),
-                projects.fetchProjects(),
+                projects.fetchProjects({ fromCache: true }),
             ]);
             await Promise.all([
                 marks.fetchMarks(session.username),

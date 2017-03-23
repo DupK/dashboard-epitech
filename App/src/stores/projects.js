@@ -2,10 +2,11 @@
  * Created by desver_f on 13/02/17.
  */
 import _ from 'lodash';
-import moment from 'moment';
 import autobind from 'autobind-decorator';
-import { observable, computed } from 'mobx';
-import ui from './uiState'
+import moment from 'moment';
+import storage from 'react-native-simple-store';
+import { computed, observable } from 'mobx';
+import ui from './uiState';
 import * as Intra from '../api/intra';
 
 @autobind
@@ -14,12 +15,24 @@ class Projects {
     @observable rawProjects = [];
     @observable projectDetails = [];
 
-    async fetchProjects() {
-        const rawProjects = await Intra.fetchProjects();
+    async fetchProjects({ fromCache = false }) {
+        let rawProjects;
+
+        if (fromCache) {
+            rawProjects = await storage.get('projects');
+
+            if (!rawProjects) {
+                rawProjects = await Intra.fetchProjects();
+                await storage.save('projects', rawProjects);
+            }
+        }
 
         this.rawProjects = rawProjects;
+        this.projects = this.computeRegisteredProjects(rawProjects);
+    }
 
-        this.projects = _.filter(rawProjects, (project) => {
+    computeRegisteredProjects(projects) {
+        return _.filter(projects, (project) => {
             const isProject = project.type_acti_code === 'proj'
                 && (project.type_acti === 'Projet' || project.type_acti === 'Mini-Projets');
             const isNotInPast = moment(project.end_acti, 'YYYY-MM-DD, HH:mm:ss').isAfter(moment());
@@ -31,8 +44,13 @@ class Projects {
     async fetchProjectDetails(year, module, instance, activity) {
         ui.fetchingState();
 
-        const projectDescription = await Intra.fetchProjectDetails({year, module, instance, activity});
-        const projectFiles = await Intra.fetchProjectFiles({year, module, instance, activity});
+        const projectDescription = await Intra.fetchProjectDetails({
+            year,
+            module,
+            instance,
+            activity
+        });
+        const projectFiles = await Intra.fetchProjectFiles({ year, module, instance, activity });
         const pdfFiles = _.filter(projectFiles, (projectFile) => _.endsWith(projectFile.slug, '.pdf'));
 
         this.projectDetails = {

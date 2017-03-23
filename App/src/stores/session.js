@@ -78,7 +78,7 @@ class Session {
         }
     }
 
-    async userInformation({ fromCache }) {
+    async userInformation({ fromCache = false }) {
         try {
 
             if (fromCache) {
