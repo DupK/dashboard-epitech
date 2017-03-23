@@ -6,6 +6,26 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
 
+    headerContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        height: 40,
+        backgroundColor: '#233445',
+        alignItems: 'center',
+        elevation: 3,
+    },
+
+    headerIcon: {
+        marginLeft: 15,
+        marginRight: 10,
+        color: '#FAFAFA',
+    },
+
+    headerText: {
+        fontSize: 14,
+        color: '#FAFAFA',
+    },
+
     documentText: {
         alignSelf: 'center',
         color: '#FAFAFA',
