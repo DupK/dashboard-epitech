@@ -67,8 +67,8 @@ export default class Login extends Component {
 
         try {
             await Promise.all([
+                session.userInformation({ fromCache: true }),
                 calendar.fetchCalendar(),
-                session.userInformation(),
                 projects.fetchProjects(),
             ]);
             await Promise.all([

@@ -29,7 +29,7 @@ export default class News extends Component {
             <Container style={styles.container}>
                 <Content contentContainerStyle={{backgroundColor: '#fafafa'}}>
                     <List
-                        dataArray={session.news.slice()}
+                        dataArray={session.summary.news.slice()}
                         renderRow={(news) => {
                             return (
                                 <ListItem style={{ flex: 1 }}>

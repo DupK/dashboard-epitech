@@ -32,7 +32,7 @@ class Ranking {
 
         // Always reset promotion to empty so that we can detect that we're loading
         this.promotion = [];
-        const { user: { location, year, promo } } = stores.session.session;
+        const { user: { location, year, promo } } = stores.session;
         const promotion = await Intra.fetchPromotion(location, year, promo);
 
         const promotionWithDetails = await bluebird.map(promotion, async ({ login: email }) => {
@@ -43,7 +43,7 @@ class Ranking {
             .filter(({ gpa: [ value ] }) => value.gpa !== 'n/a')
             .orderBy(({ gpa: [ value ] }) => value.gpa, ['desc'])
             .map((student, i) => {
-                if (i == 0) {
+                if (i === 0) {
                     student.img = medal;
                 }
 

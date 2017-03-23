@@ -2,7 +2,7 @@
  * Created by desver_f on 24/01/17.
  */
 
-import { observable, computed } from 'mobx';
+import { computed, observable } from 'mobx';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
 import storage from 'react-native-simple-store';
@@ -14,13 +14,12 @@ import newsParser from '../features/news/newsParser';
 @autobind
 class Session {
     @observable isLogged = false;
-    @observable session = null;
-    @observable news = [];
+    @observable summary = {};
+    @observable user = {};
     @observable username = '';
 
     async login(username = '', password = '') {
         try {
-
             if (username && password) {
                 await this.tryLoginRegular(username, password);
             } else {
@@ -67,43 +66,54 @@ class Session {
     }
 
     setSessionFields(session, username) {
-        if (session && session.message !== "Veuillez vous connecter") {
+        if (session && session.message !== 'Veuillez vous connecter') {
             this.isLogged = true;
             this.username = username;
-            this.session = {
-                ...this.session,
-                board: session.board
+
+            this.summary = {
+                ...this.summary,
+                activities: session.board.activites,
+                news: newsParser(session.history),
             };
-            this.news = newsParser(session.history);
         }
     }
 
-    async userInformation() {
+    async userInformation({ fromCache }) {
         try {
+
+            if (fromCache) {
+                const user = await storage.get('user');
+
+                if (user) {
+                    this.user = user;
+                    this.username = user.login;
+                    return;
+                }
+            }
+
             const information = await Intra.fetchStudent(this.username);
             const netsoul = await Intra.fetchNetsoul(this.username);
 
-            this.session = {
-                ...this.session,
-                user: {
-                    name: information.title,
-                    credits: information.credits,
-                    spices: information.spice || '0',
-                    gpa: information.gpa[0].gpa,
-                    logtime: information.nsstat.active,
-                    expectedLogtime: information.nsstat.nslog_norm,
-                    promo: `tek${information.studentyear}`,
-                    studentyear: information.studentyear,
-                    year: information.scolaryear,
-                    location: information.location,
-                    thumbnail: information.picture,
-                    uid: information.uid,
-                },
-                log: {
-                    data: netsoul,
-                }
+            const user = {
+                login: information.login,
+                name: information.title,
+                credits: information.credits,
+                spices: information.spice || '0',
+                gpa: information.gpa[0].gpa,
+                logtime: information.nsstat.active,
+                expectedLogtime: information.nsstat.nslog_norm,
+                promo: `tek${information.studentyear}`,
+                studentyear: information.studentyear,
+                year: information.scolaryear,
+                location: information.location,
+                thumbnail: information.picture,
+                uid: information.uid,
+                logData: netsoul,
             };
 
+            await storage.save('user', user);
+
+            this.user = user;
             this.username = information.login;
         } catch (e) {
             console.error(e);
@@ -122,6 +132,7 @@ class Session {
         try {
             await Intra.logout();
             await storage.delete('autologin');
+            await storage.delete('user');
         } catch (e) {
             this.isLogged = false;
             console.error(e);
@@ -130,7 +141,7 @@ class Session {
     }
 
     @computed get tokens() {
-        const activities = this.session.board.activites.slice();
+        const activities = this.summary.activities.slice();
 
         return activities
             .filter((activity) => activity.token)
