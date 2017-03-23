@@ -1,13 +1,17 @@
 /**
  * Created by desver_f on 26/01/17.
  */
-import _ from "lodash";
-import autobind from "autobind-decorator";
-import moment from "moment";
-import { observable, action, computed } from "mobx";
-import ui from "./uiState";
-import {WEEK_DAYS} from "../features/calendar/constants";
-import * as Intra from "../api/intra";
+import _ from 'lodash';
+import storage from 'react-native-simple-store';
+import autobind from 'autobind-decorator';
+import moment from 'moment';
+import { action, computed, observable } from 'mobx';
+import ui from './uiState';
+import { WEEK_DAYS } from '../features/calendar/constants';
+import * as Intra from '../api/intra';
+
+export const CALENDAR_START = moment().subtract(3, 'w');
+export const CALENDAR_END = moment().add(3, 'w');
 
 @autobind
 class Calendar {
@@ -18,40 +22,63 @@ class Calendar {
     @observable selectedDate = moment();
     @observable datePickerVisible = false;
 
-    calendarStart = moment().subtract(3, 'w');
-    calendarEnd = moment().add(3, 'w');
-    lastFetchedStart = this.calendarStart;
-    lastFetchedEnd = this.calendarEnd;
+    lastFetchedStart = CALENDAR_START;
+    lastFetchedEnd = CALENDAR_END;
 
     groupByOverlappingRanges(ranges) {
         const endDatesValues = ranges.map((r) => moment(r.end).unix()).sort((a, b) => a - b);
         const datesRanges = ranges.sort((a, b) => moment(a.start).unix() - moment(b.start).unix());
 
-        let i = 0, j = 0, n = datesRanges.length, active = 0;
-        let groups = [], cur = [];
+        let i = 0,
+            j = 0,
+            n = datesRanges.length,
+            active = 0;
+        let groups = [],
+            cur = [];
         while (true) {
             if (i < n && moment(datesRanges[i].start).unix() < endDatesValues[j]) {
                 cur.push(datesRanges[i++]);
                 ++active
             } else if (j < n) {
                 ++j;
-                if (--active == 0) {
+                if (--active === 0) {
                     groups.push(cur);
                     cur = []
                 }
-            } else break
+            } else {
+                break
+            }
         }
         return groups
     }
 
     @action
-    async fetchCalendar(start = this.calendarStart, end = this.calendarEnd) {
+    async fetchCalendar(start, end, { fromCache = false }) {
         try {
-            this.lastFetchedStart = start.isBefore(this.lastFetchedStart) ? start : this.lastFetchedStart;
+
+            if (fromCache) {
+                const rawCalendar = await storage.get('calendar');
+
+                console.log('calendar from cache', !!rawCalendar);
+
+                if (rawCalendar) {
+                    this.rawCalendar = rawCalendar;
+                    this.calendar = this.remapCalendar(rawCalendar);
+                    return;
+                }
+            }
+
+            this.lastFetchedStart = start.isBefore(this.lastFetchedStart) ?
+                                    start :
+                                    this.lastFetchedStart;
             this.lastFetchedEnd = end.isAfter(this.lastFetchedEnd) ? end : this.lastFetchedEnd;
 
-            this.rawCalendar = await Intra.fetchCalendar(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
-            this.calendar = this.remapCalendar(this.rawCalendar);
+            const rawCalendar = await Intra.fetchCalendar(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+
+            this.calendar = this.remapCalendar(rawCalendar);
+            this.rawCalendar = rawCalendar;
+
+            await storage.save('calendar', rawCalendar)
 
         } catch (e) {
             console.error(e);
@@ -140,7 +167,8 @@ class Calendar {
             .value();
 
         const nextEvent = _.find(flattenedEvents, (event) => (
-            moment(event.start, 'YYYY-MM-DD HH:mm:ss').isAfter() && event.registered === 'registered'
+            moment(event.start, 'YYYY-MM-DD HH:mm:ss').isAfter() &&
+            event.registered === 'registered'
         ));
 
         return nextEvent

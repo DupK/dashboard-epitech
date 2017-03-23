@@ -12,6 +12,7 @@ import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
 import backgroundSource from '../../assets/fond.jpg';
+import { CALENDAR_START, CALENDAR_END } from '../../stores/calendar';
 
 import BackgroundImageWithOverlay from './BackgroundImage';
 import LoginMessage from './LoginMessage';
@@ -68,7 +69,7 @@ export default class Login extends Component {
         try {
             await Promise.all([
                 session.userInformation({ fromCache: true }),
-                calendar.fetchCalendar(),
+                calendar.fetchCalendar(CALENDAR_START, CALENDAR_END, { fromCache: true }),
                 projects.fetchProjects(),
             ]);
             await Promise.all([
