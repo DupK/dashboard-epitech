@@ -18,6 +18,7 @@ import MarkDetails from './marks/MarkDetails';
 import Stats from './stats/Stats';
 import Token from './token/Token';
 import Ranking from './ranking/Ranking';
+import Links from './links/Links';
 import store from '../stores';
 import _ from 'lodash';
 
@@ -166,6 +167,13 @@ class Main extends Component {
                         title="Statistics"
                         hideNavBar={false}
                         component={Stats}
+                    />
+
+                    <Scene
+                        key="links"
+                        title="Links"
+                        hideNavBar={false}
+                        component={Links}
                     />
 
                 </Scene>
