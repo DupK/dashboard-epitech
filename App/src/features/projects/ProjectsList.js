@@ -20,7 +20,7 @@ import ProgressBar from './ProgressBar';
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 import IconFA from 'react-native-vector-icons/FontAwesome';
-
+import styles from './styles.js';
 
 @observer
 export default class ProjectsList extends Component {
@@ -71,7 +71,7 @@ export default class ProjectsList extends Component {
         return (
             <View style={styles.headerContainer}>
                 <IconFA style={styles.headerIcon} name={ icon } />
-                <Text style={styles.textHeader}>{ title }</Text>
+                <Text style={styles.headerText}>{ title }</Text>
             </View>
         )
     }

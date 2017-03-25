@@ -103,6 +103,7 @@ export default class Home extends Component {
         ranking: () => Actions.ranking(),
         tokens: () => Actions.token(),
         stats: () => Actions.stats(),
+        links: () => Actions.links(),
         logout: async () => {
             await this.props.store.session.logout();
             this.props.store.ui.defaultState();
@@ -189,11 +190,18 @@ export default class Home extends Component {
                     color="#141D27"
                 />
                 <Cell
+                    title="Links"
+                    description="This feature will be soon available"
+                    icon={<IconIO name="ios-link-outline" style={ styles.iconStyle }/>}
+                    onPress={this.menu.links}
+                    color="#111A22"
+                />
+                <Cell
                     title="Logout"
                     description="Thanks to report any bug"
                     icon={<IconIO name="ios-power-outline" style={ styles.logoutStyle }/>}
                     onPress={this.menu.logout}
-                    color="#111A22"
+                    color="#0F171F"
                 />
             </View>
         );
