@@ -17,6 +17,7 @@ class Session {
     @observable summary = {};
     @observable user = {};
     @observable username = '';
+    @observable loggedFromCache = false;
 
     async login(username = '', password = '') {
         try {
@@ -32,6 +33,7 @@ class Session {
         }
     }
 
+    // Raises an exception if autologin hasn't been cached yet;
     async tryLoginFromAutoLogin() {
         const autoLogin = await this.getAutologinFromCache();
 
@@ -44,8 +46,12 @@ class Session {
     async tryLoginRegular(username, password) {
         const session = await Intra.login(username, password);
 
-        this.setSessionFields(session, username);
-        await this.saveAutoLoginIfNeeded(username);
+        const isLogged = this.setSessionFields(session, username);
+
+        if (isLogged) {
+            await storage.save('session', session);
+            await this.saveAutoLoginIfNeeded(username);
+        }
     }
 
     async saveAutoLoginIfNeeded(username) {
@@ -75,6 +81,17 @@ class Session {
                 activities: session.board.activites,
                 news: newsParser(session.history),
             };
+        }
+
+        return session && session.message !== 'Veuillez vous connecter';
+    }
+
+    async getSessionFromCache() {
+        const session = await storage.get('session');
+        const { username } = await storage.get('autologin');
+
+        if (session) {
+            this.setSessionFields(session, username);
         }
     }
 
@@ -121,6 +138,17 @@ class Session {
         }
     }
 
+   async hasEverythingCached() {
+        const autologin = await storage.get('autologin');
+        const session = await storage.get('session');
+        const user = await storage.get('user');
+        const projects = await storage.get('projects');
+        const marks = await storage.get('marks');
+        const calendar = await storage.get('calendar');
+
+        return !!autologin && !!session && !!user && !!projects && !!marks && !!calendar;
+    }
+
     resetSession() {
         this.isLogged = false;
         this.session = null;
@@ -132,7 +160,11 @@ class Session {
         try {
             await Intra.logout();
             await storage.delete('autologin');
+            await storage.delete('session');
             await storage.delete('user');
+            await storage.delete('projects');
+            await storage.delete('marks');
+            await storage.delete('calendar');
         } catch (e) {
             this.isLogged = false;
             console.error(e);

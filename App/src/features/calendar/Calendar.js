@@ -14,7 +14,9 @@ import {
 } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
 import { observable } from 'react-native-mobx';
-import { WORKING_HOURS, HOUR_SIZE } from './constants'
+
+import Layout from '../../shared/components/Layout';
+import { HOUR_SIZE, WORKING_HOURS } from './constants';
 import DaySelector from './DaySelector';
 import MonthSelector from './MonthSelector';
 import Hour from './Hour';
@@ -62,14 +64,14 @@ CurrentTime.propTypes = {
 };
 
 @observer
-export default class Calendar extends Component {
+class Calendar extends Component {
 
     renderHours() {
         return WORKING_HOURS.map((hour) => <Hour key={hour} hour={hour}/>)
     }
 
     renderEvents() {
-        const { store: { calendar } } = this.props;
+        const { store: { ui, calendar } } = this.props;
 
         if (!calendar.calendar) {
             return null;
@@ -86,6 +88,7 @@ export default class Calendar extends Component {
                     event={event}
                     nbEvents={events.length}
                     nthEvent={nthEvent}
+                    uiStore={ui}
                 />;
             });
         });
@@ -131,28 +134,32 @@ export default class Calendar extends Component {
         const { store: { calendar } } = this.props;
 
         return (
-            <View style={{ flex: 1, flexDirection: 'column' }}>
-                <View style={{ flex: 100, flexDirection: 'row' }}>
-                    <View style={{ flex: 0.2, backgroundColor: '#233445' }}>
-                        <DaySelector
+            <Layout store={this.props.store}>
+                <View style={{ flex: 1, flexDirection: 'column' }}>
+                    <View style={{ flex: 100, flexDirection: 'row' }}>
+                        <View style={{ flex: 0.2, backgroundColor: '#233445' }}>
+                            <DaySelector
+                                calendarStore={calendar}
+                                calendarAnimation={{ duration: 30 }}
+                                selectionAnimation={{ duration: 100 }}
+                                calendarColor={'#233445'}
+                                highlightColor={'#62c462'}
+                                dateNumberStyle={{ color: '#FFFFFF' }}
+                                dateNameStyle={{ color: '#FFFFFF' }}
+                            />
+                        </View>
+                        { this.renderCalendar() }
+                    </View>
+                    <View style={Platform.OS === 'ios' ? styles.monthSelectorIOS : styles.monthSelectorAndroid}>
+                        <MonthSelector
+                            calendarHeaderFormat="MMMM YYYY"
                             calendarStore={calendar}
-                            calendarAnimation={{ duration: 30 }}
-                            selectionAnimation={{ duration: 100 }}
-                            calendarColor={'#233445'}
-                            highlightColor={'#62c462'}
-                            dateNumberStyle={{color: '#FFFFFF'}}
-                            dateNameStyle={{color: '#FFFFFF'}}
                         />
                     </View>
-                    { this.renderCalendar() }
                 </View>
-                <View style={Platform.OS === 'ios' ? styles.monthSelectorIOS : styles.monthSelectorAndroid}>
-                    <MonthSelector
-                        calendarHeaderFormat="MMMM YYYY"
-                        calendarStore={calendar}
-                    />
-                </View>
-            </View>
+            </Layout>
         );
     }
 }
+
+export default Calendar;

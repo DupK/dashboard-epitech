@@ -19,6 +19,9 @@ import { Actions } from 'react-native-router-flux';
 import scrollStyle from './styles';
 import Cell from './Cell';
 
+import Layout from '../../shared/components/Layout';
+import refreshApplicationData from '../../shared/RefreshApplication';
+
 const HEADER_MAX_HEIGHT = 180;
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 64 : 54;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
@@ -50,6 +53,14 @@ export default class Home extends Component {
             Actions.login();
         }
     };
+
+    async componentWillMount() {
+        const { store: { ui, session } } = this.props;
+
+        if (ui.isConnected && session.loggedFromCache) {
+            await this.refreshData();
+        }
+    }
 
     renderScrollView() {
         const {
@@ -187,16 +198,13 @@ export default class Home extends Component {
         ];
     }
 
+    async refreshData() {
+        await refreshApplicationData({ withLogin: true });
+    }
+
     onRefresh() {
-        const { store: { session, calendar, projects, marks } } = this.props;
         this.setState({ refreshing: true }, async () => {
-            await session.tryLoginFromAutoLogin();
-            await Promise.all([
-                calendar.fetchCalendar(),
-                session.userInformation(),
-                projects.fetchProjects(),
-                marks.fetchMarks(session.username),
-            ]);
+            await this.refreshData();
             this.setState({ refreshing: false });
         });
     }
@@ -265,7 +273,8 @@ export default class Home extends Component {
         } = this.props;
 
         return (
-            <View style={scrollStyle.fill}>
+            <Layout store={this.props.store}>
+                <View style={scrollStyle.fill}>
                 <ScrollView
                     refreshControl={
                         <RefreshControl
@@ -325,7 +334,8 @@ export default class Home extends Component {
                                             scrollStyle.picture,
                                             { transform: [{ rotate: rotateIcon }] }
                                         ]}
-                                        source={require('../../assets/epitech.png')}                                    />
+                                        source={require('../../assets/epitech.png')}/>
+
                                     { this.renderGauges(gaugeLeftTranslate, gaugeRightTranslate) }
                                     <Animated.View style={{
                                         transform: [{ translateX: translate50 }],
@@ -357,7 +367,7 @@ export default class Home extends Component {
                         </Animated.View>
                     </Animated.View>
                 </Animated.View>
-            </View>
+            </View></Layout>
         );
     }
 }

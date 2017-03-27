@@ -53,15 +53,14 @@ class Calendar {
     }
 
     @action
-    async fetchCalendar(start, end, { fromCache = false }) {
+    async fetchCalendar(start = CALENDAR_START, end = CALENDAR_END, { fromCache } = false) {
         try {
 
             if (fromCache) {
                 const rawCalendar = await storage.get('calendar');
 
                 if (rawCalendar) {
-                    this.rawCalendar = rawCalendar;
-                    this.calendar = this.remapCalendar(rawCalendar);
+                    this.setCalendarFields(rawCalendar);
                     return;
                 }
             }
@@ -72,15 +71,18 @@ class Calendar {
             this.lastFetchedEnd = end.isAfter(this.lastFetchedEnd) ? end : this.lastFetchedEnd;
 
             const rawCalendar = await Intra.fetchCalendar(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+            await storage.save('calendar', rawCalendar);
 
-            this.calendar = this.remapCalendar(rawCalendar);
-            this.rawCalendar = rawCalendar;
-
-            await storage.save('calendar', rawCalendar)
+            this.setCalendarFields(rawCalendar);
 
         } catch (e) {
             console.error(e);
         }
+    }
+
+    setCalendarFields(calendar) {
+        this.rawCalendar = calendar;
+        this.calendar = this.remapCalendar(calendar);
     }
 
     isRegistered(canRegister, registeredState) {
