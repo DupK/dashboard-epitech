@@ -6,13 +6,28 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
 
-    headerContainer: {
+    headerContainerAndroid: {
         flex: 1,
         flexDirection: 'row',
         height: 40,
         backgroundColor: '#233445',
         alignItems: 'center',
         elevation: 3,
+    },
+
+    headerContainerIOS: {
+        flex: 1,
+        flexDirection: 'row',
+        height: 40,
+        backgroundColor: '#233445',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 1.5,
+        shadowOpacity: 0.5,
     },
 
     headerIcon: {
@@ -56,15 +71,8 @@ const styles = StyleSheet.create({
     },
 
     teamMemberImage: {
-        borderWidth: 1,
         borderRadius: 3,
         margin: 5,
-    },
-
-    teamMasterImage: {
-        borderWidth: 1,
-        borderRadius: 3,
-        margin: 5
     },
 
     teamImageContainer: {
@@ -96,9 +104,22 @@ const styles = StyleSheet.create({
         marginTop: 12,
     },
 
-    detailsContainer: {
+    detailsContainerAndroid: {
         backgroundColor: "#233445",
         elevation: 10,
+        paddingBottom: 15,
+    },
+
+    detailsContainerIOS: {
+        backgroundColor: "#233445",
+        zIndex: 1,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 10,
+        shadowOpacity: 0.5,
         paddingBottom: 15,
     },
 
@@ -135,10 +156,28 @@ const styles = StyleSheet.create({
         flex: 0.05,
     },
 
-    headerDetailsContainer: {
+    headerDetailsContainerAndroid: {
         margin: 10,
         marginBottom: 0,
         elevation: 4,
+        height: 70,
+        backgroundColor: "#233445",
+        flexDirection: 'row',
+        borderBottomWidth: 0.5,
+        borderBottomColor: '#16212C',
+        alignItems: 'center',
+    },
+
+    headerDetailsContainerIOS: {
+        margin: 10,
+        marginBottom: 0,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 0
+        },
+        shadowRadius: 1,
+        shadowOpacity: 0.5,
         height: 70,
         backgroundColor: "#233445",
         flexDirection: 'row',

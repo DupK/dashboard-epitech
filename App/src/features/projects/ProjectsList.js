@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { observer } from 'mobx-react/native';
 import {
-    AppRegistry,
-    StyleSheet,
-    ScrollView,
     Text,
     View,
     TouchableOpacity,
+    Platform
 } from 'react-native';
 import {
     Container,
@@ -69,7 +67,7 @@ export default class ProjectsList extends Component {
 
     renderHeader(title, icon) {
         return (
-            <View style={styles.headerContainer}>
+            <View style={Platform.OS === 'ios' ? styles.headerContainerIOS : styles.headerContainerAndroid}>
                 <IconFA style={styles.headerIcon} name={ icon } />
                 <Text style={styles.headerText}>{ title }</Text>
             </View>

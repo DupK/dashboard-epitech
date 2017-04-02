@@ -49,7 +49,7 @@ const RegisterActivity = observer(({ activityStore, event }) => {
         <RegisterBox>
             <RegisterButton
                 registered={registered}
-                buttonSize={25}
+                buttonSize={35}
                 iconSize={25}
                 onPress={registerActivity}
             />

@@ -5,14 +5,8 @@ import React, {Component} from 'react';
 import moment from 'moment';
 import {
     View,
-    ScrollView,
     StyleSheet,
-    Text,
-    Animated,
-    Easing,
-    TouchableOpacity,
-    InteractionManager,
-    LayoutAnimation
+    Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ENIcon from 'react-native-vector-icons/Entypo';
@@ -110,14 +104,14 @@ export default class Activity extends Component {
                 backgroundColor: '#233445',
             }}>
                 <BoxDescription
-                    style={[styles.boxContainer, { flex: 1 } ]}
+                    style={[Platform.OS === 'ios' ? styles.boxContainerIOS : styles.boxContainerAndroid, {flex: 1}]}
                     title="Activity details"
                     icon={<ENIcon name="info" color="#FAFAFA" size={15}/>}
                 >
                     <TextDescription>{ description }</TextDescription>
                 </BoxDescription>
                 <BoxDescription
-                    style={[styles.boxContainer, { flex: 0.8 } ]}
+                    style={[Platform.OS === 'ios' ? styles.boxContainerIOS : styles.boxContainerAndroid, {flex: 0.8}]}
                     title="Administrative details"
                     icon={<Icon name="ios-school" color="#FAFAFA" size={25}/>}
                 >
@@ -140,29 +134,33 @@ Activity.propTypes = {
 };
 
 const styles = StyleSheet.create({
-    boxContainer: {
+    boxContainerAndroid: {
         elevation: 4,
         backgroundColor: '#233445',
         paddingTop: 10,
         paddingLeft: 15,
         margin: 10,
     },
+
+    boxContainerIOS: {
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 0
+        },
+        shadowRadius: 1.5,
+        shadowOpacity: 0.5,
+        backgroundColor: '#233445',
+        paddingTop: 10,
+        paddingLeft: 15,
+        margin: 10,
+    },
+
     loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#233445',
     },
-    registerSlotsBox: {
-        flex: 0.3,
-        margin: 10,
-        marginBottom: 15,
-        paddingLeft: 15,
-        elevation: 3,
-        backgroundColor: '#233445',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }
 });
 

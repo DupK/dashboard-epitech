@@ -3,7 +3,7 @@
  **/
 
 import React, { Component } from 'react';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { Router, Scene } from 'react-native-mobx';
 import Login from './login/Login';
 import Home from './home/Home'
@@ -22,6 +22,26 @@ import Links from './links/Links';
 import store from '../stores';
 import _ from 'lodash';
 
+const styles = StyleSheet.create({
+    headerAndroid: {
+        backgroundColor: '#233445',
+        elevation: 5,
+        borderBottomWidth: 0,
+    },
+
+    headerIOS: {
+        backgroundColor: '#233445',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 1.5,
+        shadowOpacity: 0.5,
+        borderBottomWidth: 0,
+    },
+});
+
 const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) => {
     const style = {
         flex: 1,
@@ -35,10 +55,6 @@ const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) 
         style.marginTop = computedProps.hideNavBar ? 0 : Platform.OS === 'android' ? 54 : 64;
     }
     return style;
-};
-
-const getHeaderStyle = () => {
-    return { backgroundColor: '#233445', elevation: 5, borderBottomWidth: 0 }
 };
 
 const getTitleStyle = () => {
@@ -61,7 +77,7 @@ class Main extends Component {
             <Router
                 store={store}
                 getSceneStyle={getSceneStyle}
-                navigationBarStyle={getHeaderStyle()}
+                navigationBarStyle={Platform.OS === 'ios' ? styles.headerIOS : styles.headerAndroid}
                 titleStyle={getTitleStyle()}
                 backButtonImage={ require(`../assets/left-arr.png`)}
             >

@@ -4,12 +4,11 @@
 
 import React, { Component } from 'react';
 import {
-    AppRegistry,
     Text,
     View,
-    Image,
     ScrollView,
     TouchableOpacity,
+    Platform,
 } from 'react-native';
 import {
     Button,
@@ -47,7 +46,7 @@ export default class Marks extends Component {
 
         return (
             <View>
-                <View style={[styles.header, { borderLeftColor: gradeColors[grade] }]}>
+                <View style={[Platform.OS === 'ios' ? styles.headerIOS : styles.headerAndroid, { borderLeftColor: gradeColors[grade] }]}>
                     <Text style={styles.moduleText}>{title}</Text>
                     <Text style={styles.gradeText}>{grade}</Text>
                 </View>
@@ -67,7 +66,7 @@ export default class Marks extends Component {
                                     key={`${mark.date}-${i}`}
                                     onPress={() => Actions.markDetails({ mark, title: mark.title })}
                                 >
-                                    <View style={styles.content}>
+                                    <View style={Platform.OS === 'ios' ? styles.contentIOS : styles.contentAndroid}>
                                         <Text style={styles.textContent}> {mark.title}</Text>
                                         <Text style={styles.markContent}> {mark.note}</Text>
                                         <IconMC style={styles.iconContent} size={14} name="chevron-right"/>
@@ -76,7 +75,7 @@ export default class Marks extends Component {
                             )))
                         : (
 
-                            <View style={styles.content}>
+                        <View style={Platform.OS === 'ios' ? styles.contentIOS : styles.contentAndroid}>
                                 <Text style={styles.textContent}> {module.title}</Text>
                                 <Text style={styles.markContent}> {module.grade}</Text>
                             </View>
