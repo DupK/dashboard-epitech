@@ -5,10 +5,9 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react/native';
 import {
-    AppRegistry,
     Text,
-    View,
     Image,
+    Platform,
 } from 'react-native';
 import {
     Container,
@@ -34,7 +33,7 @@ export default class News extends Component {
                         renderRow={(news) => {
                             return (
                                 <ListItem style={{ flex: 1 }}>
-                                    <Image source={{uri: news.user.picture === null ? noPicture : news.user.picture}} style={styles.picture} />
+                                    <Image source={{uri: news.user.picture === null ? noPicture : news.user.picture}} style={Platform.OS === 'ios' ? styles.pictureIOS : styles.pictureAndroid} />
                                     <Text style={styles.title}>{news.title}{'\n'}
                                         <Text style={styles.detail}>
                                             { news.details }

@@ -5,7 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import { observer } from 'mobx-react/native';
 import {
-    StyleSheet,
+    StyleSheet, Platform
 } from 'react-native';
 import { Col, Row } from "react-native-easy-grid";
 import IconIO from 'react-native-vector-icons/Ionicons';
@@ -20,7 +20,7 @@ class Cell extends Component {
     render() {
         return (
             <Row>
-                <Col size={0.5} style={styles.iconCol}>
+                <Col size={0.5} style={Platform.OS === 'ios' ? styles.iconColIOS : styles.iconColAndroid}>
                     <IconIO name={this.props.icon} size={30} style={styles.icon}/>
                 </Col>
                 <Col size={3} style={styles.childrenCol}>
@@ -33,13 +33,29 @@ class Cell extends Component {
 
 const styles = StyleSheet.create({
 
-    iconCol : {
+    iconColAndroid : {
         backgroundColor: '#233445',
         alignItems: 'center',
         justifyContent: 'center',
         borderBottomWidth: 0,
         borderBottomColor: 'rgba(255, 255, 255, 1)',
         elevation: 15
+    },
+
+    iconColIOS : {
+        backgroundColor: '#233445',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 0,
+        borderBottomColor: 'rgba(255, 255, 255, 1)',
+        zIndex: 1,
+        shadowColor: '#1b2636',
+        shadowOffset: {
+            width: 3,
+            height: 0
+       },
+        shadowRadius: 0,
+        shadowOpacity: 0.2,
     },
 
     icon: {

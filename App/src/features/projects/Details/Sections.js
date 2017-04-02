@@ -21,14 +21,14 @@ export const Team = ({ teams }) => {
         <View style={{ flex: 1 }}>
             {_.map(teams.registered, (team, i) => (
                 <View key={i} style={styles.teamContainer}>
-                    <View style={{flex: 1, height: 25, backgroundColor: '#293a4d', justifyContent: 'center', elevation: 1, flexDirection: 'row'}}>
+                    <View style={{flexGrow: 1, height: 25, backgroundColor: '#293a4d', justifyContent: 'center', elevation: 1, flexDirection: 'row'}}>
                         <IconMCI name="brightness-1" size={8} style={{color: isValidTeam(team.members) ? '#62c462' : '#F44336', alignSelf: 'center', marginLeft: 10}}/>
                         <Text style={{ color: '#FAFAFA', fontSize: 11, alignSelf: 'center', flex: 1, marginLeft: 10 }}>{team.title}</Text>
                     </View>
                     <View style={styles.teamSubContainer}>
                         <View style={styles.teamImageContainer}>
                             <View style={{ flexDirection: 'row'}}>
-                                <Image style={styles.teamMasterImage}
+                                <Image style={styles.teamMemberImage}
                                        source={{ uri: team.master.picture, width: 30, height: 30 }} />
                                 <Text style={{ color: '#FAFAFA', fontSize: 12, alignSelf: 'center', marginLeft: 5}}>{team.master.login}</Text>
                             </View>

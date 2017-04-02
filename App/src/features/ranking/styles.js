@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
 
-    dataContainer: {
+    dataContainerAndroid: {
         margin: 5,
         padding: 8,
         elevation: 2,
@@ -34,8 +34,38 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    selfDataContainer: {
+    dataContainerIOS: {
+        margin: 5,
+        padding: 8,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 0
+        },
+        shadowRadius: 1.5,
+        shadowOpacity: 0.5,
+        backgroundColor: '#233445',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    selfDataContainerAndroid: {
         elevation: 5,
+        padding: 10,
+        backgroundColor: '#233445',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    selfDataContainerIOS: {
+        zIndex: 100,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 1.5,
+        shadowOpacity: 0.5,
         padding: 10,
         backgroundColor: '#233445',
         flexDirection: 'row',

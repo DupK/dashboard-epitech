@@ -4,13 +4,10 @@
 
 import React, { Component } from 'react';
 import {
-    AppRegistry,
-    StyleSheet,
     ScrollView,
     Text,
     View,
-    TouchableOpacity,
-    Image,
+    Platform,
 } from 'react-native';
 import {
     Icon
@@ -86,7 +83,7 @@ class ProjectDetails extends Component {
         const { title, icon } = section;
 
         return (
-            <View style={styles.headerDetailsContainer} >
+            <View style={Platform.OS === 'ios' ? styles.headerDetailsContainerIOS : styles.headerDetailsContainerAndroid} >
                 <View style={styles.headerDetailsSubContainer} />
                 <IconFA style={styles.headerDetailsIcon} name={icon} />
                 <Text style={styles.headerDetailsText}>{title}</Text>
@@ -141,7 +138,7 @@ class ProjectDetails extends Component {
         return (
             <View style={{ flex: 1 }}>
                 {this._renderBanner(project.registered)}
-                <View style={styles.detailsContainer}>
+                <View style={Platform.OS === 'ios' ? styles.detailsContainerIOS : styles.detailsContainerAndroid}>
                     <ScrollView>
                         <View style={styles.detailsSubContainer}>
                             <Text style={styles.detailsText}> Information :</Text>

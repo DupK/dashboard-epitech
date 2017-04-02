@@ -6,9 +6,8 @@ import {
     View,
     Text,
     ScrollView,
-    Image,
-    LayoutAnimation,
     StyleSheet,
+    Platform,
 } from 'react-native';
 import _ from 'lodash';
 import Accordion from 'react-native-collapsible/Accordion';
@@ -50,7 +49,7 @@ export default class AvailableSlots extends Component {
 
         return (
             <View style={[
-                styles.headerContainer,
+                Platform.OS === 'ios' ? styles.headerContainerIOS : styles.headerContainerAndroid,
                 { borderLeftColor: nbSlotsAvailable ? '#62C462' : '#F44235' }
             ]}>
                 <View style={styles.headerDateContainer}>
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#233445',
     },
-    headerContainer: {
+    headerContainerAndroid: {
         elevation: 3,
         flexDirection: 'column',
         backgroundColor: '#293a4d',
@@ -110,6 +109,24 @@ const styles = StyleSheet.create({
         padding: 10,
         borderLeftWidth: 3,
     },
+
+    headerContainerIOS: {
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 0
+        },
+        shadowRadius: 1.5,
+        shadowOpacity: 0.5,
+        flexDirection: 'column',
+        backgroundColor: '#293a4d',
+        justifyContent: 'center',
+        margin: 10,
+        marginBottom: 5,
+        padding: 10,
+        borderLeftWidth: 3,
+    },
+
     headerDateContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',

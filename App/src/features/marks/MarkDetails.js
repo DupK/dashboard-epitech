@@ -4,12 +4,12 @@
 
 import React, { Component } from 'react';
 import {
-    AppRegistry,
     Text,
     View,
     Image,
     ScrollView,
     TouchableOpacity,
+    Platform
 } from 'react-native';
 import {
     List,
@@ -162,7 +162,7 @@ class MarkDetails extends Component {
 
         return (
             <View style={{flex: 1, backgroundColor: '#203040'}}>
-                <View style={styles.selfRow}>{ this.renderSelf(selfMark) }</View>
+                <View style={Platform.OS === 'ios' ? styles.selfRowIOS : styles.selfRowAndroid}>{ this.renderSelf(selfMark) }</View>
                 <View style={styles.listContainerStyle}>
                     <List
                         dataArray={marks.projectMarks.slice()}

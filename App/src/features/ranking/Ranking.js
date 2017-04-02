@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {
-    AppRegistry,
     Text,
     View,
     Image,
     ListView,
+    Platform
 } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
 import { observer } from 'mobx-react/native';
@@ -28,7 +28,7 @@ export default class Ranking extends Component {
 
     renderStudent(student) {
         return (
-            <View style={styles.dataContainer}>
+            <View style={Platform.OS === 'ios' ? styles.dataContainerIOS : styles.dataContainerAndroid}>
                 <Text style={styles.rank}>{student.rank}</Text>
                 <Image source={{uri: student.picture}} style={styles.picture} />
                 <Text style={styles.mainText}>{student.title}{'\n'}{student.credits} credits</Text>
@@ -41,7 +41,7 @@ export default class Ranking extends Component {
     renderSelf(student) {
         return (
             <View>
-                <View style={styles.selfDataContainer}>
+                <View style={Platform.OS === 'ios' ? styles.selfDataContainerIOS : styles.selfDataContainerAndroid}>
                     <Text style={styles.rank}>{student.rank}</Text>
                     <Image source={{uri: student.picture}} style={styles.picture} />
                     <Text style={styles.mainText}>{student.title}{'\n'}{student.credits} credits</Text>

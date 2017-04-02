@@ -34,9 +34,9 @@ export default class RegisterButton extends Component {
                 onPress={this.props.onPress}
                 style={{
                     backgroundColor: buttonColor[this.props.registered],
-                    width: this.props.buttonSize,
-                    height: this.props.buttonSize,
-                    borderRadius: 50,
+                    width: this.props.buttonSize + 10,
+                    height: this.props.buttonSize + 10,
+                    borderRadius: 30,
                     elevation: 10,
                     alignItems: 'center',
                     justifyContent: 'center',

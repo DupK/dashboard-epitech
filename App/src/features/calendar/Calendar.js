@@ -6,13 +6,11 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import {
-    AppRegistry,
-    StyleSheet,
     Text,
     View,
-    Image,
     ScrollView,
-    Dimensions
+    Dimensions,
+    Platform
 } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
 import { observable } from 'react-native-mobx';
@@ -21,6 +19,7 @@ import DaySelector from './DaySelector';
 import MonthSelector from './MonthSelector';
 import Hour from './Hour';
 import Event from './Event';
+import styles from './styles';
 
 import { observer } from 'mobx-react/native';
 
@@ -147,7 +146,7 @@ export default class Calendar extends Component {
                     </View>
                     { this.renderCalendar() }
                 </View>
-                <View style={{ flex: 10, backgroundColor: '#233445', elevation: 20 }}>
+                <View style={Platform.OS === 'ios' ? styles.monthSelectorIOS : styles.monthSelectorAndroid}>
                     <MonthSelector
                         calendarHeaderFormat="MMMM YYYY"
                         calendarStore={calendar}

@@ -6,10 +6,17 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
 
-    picture: {
+    pictureAndroid: {
         width: 30,
         height: 30,
         borderRadius: 40,
+        marginRight: 10,
+    },
+
+    pictureIOS: {
+        width: 30,
+        height: 30,
+        borderRadius: 15,
         marginRight: 10,
     },
 

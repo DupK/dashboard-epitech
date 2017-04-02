@@ -30,9 +30,27 @@ const styles = StyleSheet.create({
         flex: 0.9,
     },
 
-    header: {
+    headerAndroid: {
         backgroundColor: '#233445',
         elevation: 3,
+        margin: 6,
+        height: 50,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderLeftWidth: 2,
+    },
+
+    headerIOS: {
+        backgroundColor: '#233445',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 0
+        },
+        shadowRadius: 1.5,
+        shadowOpacity: 0.5,
         margin: 6,
         height: 50,
         flex: 1,
@@ -59,11 +77,27 @@ const styles = StyleSheet.create({
         borderBottomColor: 'rgba(255, 255, 255, 0.1)',
     },
 
-    content: {
+    contentAndroid: {
         backgroundColor: '#203040',
         elevation: 2,
         alignItems: 'center',
-        flex: 1,
+        flexGrow: 1,
+        flexDirection: 'row',
+        margin: 6,
+        height: 35,
+    },
+
+    contentIOS: {
+        backgroundColor: '#203040',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 0
+        },
+        shadowRadius: 1,
+        shadowOpacity: 0.5,
+        alignItems: 'center',
+        flexGrow: 1,
         flexDirection: 'row',
         margin: 6,
         height: 35,
@@ -92,9 +126,21 @@ const styles = StyleSheet.create({
         flex: 0.6,
     },
 
-    selfRow: {
+    selfRowAndroid: {
         backgroundColor: '#233445',
         elevation: 10,
+    },
+
+    selfRowIOS: {
+        backgroundColor: '#233445',
+        zIndex: 1,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 5
+        },
+        shadowRadius: 5,
+        shadowOpacity: 0.5,
     },
 
     selectedMark: {
@@ -138,8 +184,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         margin: 5,
         height: 30,
-        borderBottomWidth: 1,
-        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
     },
 
     studentMarkContainer: {

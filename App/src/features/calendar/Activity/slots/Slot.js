@@ -9,7 +9,8 @@ import {
     Text,
     Image,
     StyleSheet,
-    LayoutAnimation
+    LayoutAnimation,
+    Platform
 } from "react-native";
 import {observer} from "mobx-react/native";
 
@@ -73,14 +74,14 @@ const Slot = observer(({ oneshot, state, date, memberPicture, slotObject, activi
         )
         : (
             <Image
-                style={styles.picture}
+                style={[styles.picture, Platform.OS === 'ios' ? {borderRadius: 13} : {borderRadius: 40}]}
                 source={{ uri: pictureWithUrl }}
             />
         );
 
     return (
         <View style={[
-            styles.container,
+            Platform.OS === 'ios' ? styles.containerIOS : styles.containerAndroid,
             {
                 backgroundColor: backgroundColor[state],
                 borderLeftWidth: borderLeftWidth[state],
@@ -115,7 +116,7 @@ Slot.propTypes = {
 };
 
 const styles = StyleSheet.create({
-    container: {
+    containerAndroid: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -123,10 +124,23 @@ const styles = StyleSheet.create({
         elevation: 3,
         paddingLeft: 10,
     },
+    containerIOS: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: 40,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 0
+        },
+        shadowRadius: 1.5,
+        shadowOpacity: 0.5,
+        paddingLeft: 10,
+    },
     picture: {
         height: 25,
         width: 25,
-        borderRadius: 50,
         marginRight: 15,
     }
 });
