@@ -8,90 +8,30 @@ import moment from 'moment';
 import {
     Text,
     View,
-    Image,
     ScrollView,
     Animated,
-    Platform,
-    StyleSheet,
-    TouchableOpacity,
-    Dimensions,
     RefreshControl,
+    Platform
 } from 'react-native';
 import { AnimatedGaugeProgress } from 'react-native-simple-gauge';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
-import IconSL from 'react-native-vector-icons/SimpleLineIcons';
-import IconIO from 'react-native-vector-icons/Ionicons';
-import styles from './styles.js';
+import scrollStyle from './styles';
+import Cell from './Cell';
 
 const HEADER_MAX_HEIGHT = 180;
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 64 : 54;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
-const AVATAR_SIZE = 70;
-
-const Cell = observer((props) => {
-
-    const {
-        title,
-        description,
-        icon,
-        onPress,
-        color,
-    } = props;
-
-    return (
-        <TouchableOpacity
-            button
-            onPress={onPress}
-            style={{
-                flex: 1,
-                backgroundColor: color,
-                height: 80,
-            }}
-        >
-            <View style={{
-                flex: 1,
-                flexDirection: 'row',
-            }}>
-                { icon }
-                <View style={{
-                    flex: 1,
-                    flexDirection: 'column',
-                    marginTop: 10,
-                    marginLeft: 10,
-                }}>
-                    <View style={{ flex: 0.35 }}>
-                        <Text style={styles.itemTitle}>{ title }</Text>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.itemDescr}>{ description }</Text>
-                    </View>
-                </View>
-                <IconSL name="arrow-right" style={ styles.arrowStyle }/>
-            </View>
-        </TouchableOpacity>
-    );
-});
-
-Cell.propTypes = {
-    title: React.PropTypes.string,
-    description: React.PropTypes.string,
-    icon: React.PropTypes.node,
-    onPress: React.PropTypes.func,
-    color: React.PropTypes.string,
-};
 
 @observer
 export default class Home extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
             scrollY: new Animated.Value(0),
             refreshing: false,
         };
-
         this.onRefresh = this.onRefresh.bind(this);
     }
 
@@ -131,7 +71,6 @@ export default class Home extends Component {
         const tokenDescription = tokens.nbTokens
             ? `You have ${tokens.nbTokens} tokens to validate`
             : 'There is no token to validate';
-
         const nextProject = projects.firstEndingProject;
 
         return (
@@ -139,37 +78,37 @@ export default class Home extends Component {
                 <Cell
                     title="Notifications"
                     description={lastNews.title}
-                    icon={<IconIO name="ios-pulse-outline" style={ styles.iconStyle }/>}
+                    icon="ios-pulse-outline"
                     onPress={this.menu.news}
                     color="#233445"
                 />
                 <Cell
                     title="Calendar"
                     description={nextEvent}
-                    icon={<IconIO name="ios-calendar-outline" style={ styles.iconStyle }/>}
+                    icon="ios-calendar-outline"
                     onPress={this.menu.calendar}
-                    color="#203040"
+                    color="#223243"
                 />
                 <Cell
                     title="Projects"
                     description={nextProject}
-                    icon={<IconIO name="ios-cafe-outline" style={ styles.iconStyle }/>}
+                    icon="ios-cafe-outline"
                     onPress={this.menu.projects}
-                    color="#1E2C3B"
+                    color="#213141"
                 />
                 <Cell
                     title="Tokens"
                     description={tokenDescription}
-                    icon={<IconIO name="ios-pricetags-outline" style={ styles.iconStyle }/>}
+                    icon="ios-pricetags-outline"
                     onPress={this.menu.tokens}
-                    color="#1B2836"
+                    color="#20303F"
                 />
                 <Cell
                     title="Marks"
                     description={`Your last mark from ${ lastMark.titlemodule } - ${ lastMark.title } is ${lastMark.final_note}`}
-                    icon={<IconIO name="ios-school-outline" style={ styles.iconStyle }/>}
+                    icon="ios-school-outline"
                     onPress={this.menu.marks}
-                    color="#192531"
+                    color="#1F2E3D"
                 />
                 <Cell
                     title="Ranking"
@@ -178,30 +117,30 @@ export default class Home extends Component {
                             ? `You\'re currently ${ranking.rankPosition} in your promotion.`
                             : 'Click here to get your rank'
                     }
-                    icon={<IconIO name="ios-trophy-outline" style={ styles.iconStyle }/>}
+                    icon="ios-trophy-outline"
                     onPress={this.menu.ranking}
-                    color="#16212C"
+                    color="#1E2D3C"
                 />
                 <Cell
                     title="Statistics"
                     description="This feature will be soon available"
-                    icon={<IconIO name="ios-speedometer-outline" style={ styles.iconStyle }/>}
+                    icon="ios-speedometer-outline"
                     onPress={this.menu.stats}
-                    color="#141D27"
+                    color="#1D2C3A"
                 />
                 <Cell
                     title="Links"
-                    description="This feature will be soon available"
-                    icon={<IconIO name="ios-link-outline" style={ styles.iconStyle }/>}
+                    description="Your best services at your fingertips"
+                    icon="ios-link-outline"
                     onPress={this.menu.links}
-                    color="#111A22"
+                    color="#1C2A38"
                 />
                 <Cell
                     title="Logout"
                     description="Thanks to report any bug"
-                    icon={<IconIO name="ios-power-outline" style={ styles.logoutStyle }/>}
+                    icon="ios-power-outline"
                     onPress={this.menu.logout}
-                    color="#0F171F"
+                    color="#1B2936"
                 />
             </View>
         );
@@ -250,17 +189,14 @@ export default class Home extends Component {
 
     onRefresh() {
         const { store: { session, calendar, projects, marks } } = this.props;
-
         this.setState( {refreshing: true }, async () => {
             await session.tryLoginFromAutoLogin();
-
             await Promise.all([
                 calendar.fetchCalendar(),
                 session.userInformation(),
                 projects.fetchProjects(),
                 marks.fetchMarks(session.username),
             ]);
-
             this.setState({ refreshing: false });
         });
     }
@@ -271,67 +207,56 @@ export default class Home extends Component {
             outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
             extrapolate: 'clamp',
         });
-
         const imageOpacity = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2],
             outputRange: [1, 0],
             extrapolate: 'clamp',
         });
-
         const imageTranslate = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE],
             outputRange: [0, -75],
             extrapolate: 'clamp',
         });
-
         const translateMinus50 = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, -50, 0],
             extrapolate: 'clamp',
         });
-
         const translate50 = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, 50, 0],
             extrapolate: 'clamp',
         });
-
         const titleOpacity = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, 0, 1],
             extrapolate: 'clamp',
         });
-
         const gaugeLeftTranslate = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, 30, 0],
             extrapolate: 'clamp',
         });
-
         const gaugeRightTranslate = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, -30, 0],
             extrapolate: 'clamp',
         });
-
         const shadow = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, 0, 10],
             extrapolate: 'clamp',
         });
-
         const iOSshadow = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, 0, 0.6],
             extrapolate: 'clamp',
         });
-
         const rotateIcon = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2],
             outputRange: ['0deg', '360deg'],
             extrapolate: 'clamp',
         });
-
 
         const {
             store: {
@@ -399,8 +324,7 @@ export default class Home extends Component {
                                             scrollStyle.picture,
                                             { transform: [ { rotate: rotateIcon }  ] }
                                         ]}
-                                        source={require('../../assets/epitech.png')}
-                                    />
+                                        source={require('../../assets/epitech.png')}                                    />
                                     { this.renderGauges(gaugeLeftTranslate, gaugeRightTranslate) }
                                     <Animated.View style={{
                                         transform: [{ translateX: translate50 }],
@@ -436,103 +360,3 @@ export default class Home extends Component {
         );
     }
 }
-
-const scrollStyle = StyleSheet.create({
-    fill: {
-        flex: 1,
-        backgroundColor: '#233445',
-    },
-    content: {
-        flex: 1,
-    },
-    header: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: '#233445',
-        overflow: 'visible',
-    },
-    headerContainer: {
-        position: 'absolute',
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        top: 0,
-        left: 0,
-        right: 0,
-        width: null,
-        height: HEADER_MAX_HEIGHT,
-        marginTop: 10,
-    },
-    bar: {
-        height: HEADER_MIN_HEIGHT,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        color: 'white',
-        fontSize: 16,
-    },
-    scrollViewContent: {
-        marginTop: HEADER_MAX_HEIGHT + 12,
-    },
-    row: {
-        height: 40,
-        margin: 16,
-        backgroundColor: '#D3D3D3',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    pictureAndGaugesContainer: {
-        flex: 1,
-        flexDirection: 'column',
-    },
-    pictureAndGauges: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-    },
-    leftGauge: {
-        position: 'absolute',
-        top: (HEADER_MAX_HEIGHT / 3) - (100 / 2) + 8,
-        left: Dimensions.get('window').width / 4,
-    },
-    rightGauge: {
-        position: 'absolute',
-        top: (HEADER_MAX_HEIGHT / 3) - (100 / 2) + 8,
-        right: Dimensions.get('window').width / 4
-    },
-    gaugeValue: {
-        color: '#FFFFFF',
-        fontSize: 17,
-        alignSelf: 'center',
-    },
-    gaugeDescription: {
-        color: '#c4c4c4',
-        fontSize: 10,
-        alignSelf: 'center',
-    },
-    picture: {
-        width: AVATAR_SIZE,
-        height: AVATAR_SIZE,
-        resizeMode: 'contain',
-        zIndex: 10,
-    },
-    username: {
-        color: 'white',
-        fontSize: 17,
-        marginBottom: 20,
-        alignSelf: 'center',
-    },
-    blockInfoContainer: {
-        flex: 2,
-        flexDirection: 'row',
-        borderWidth: 0.5,
-        borderColor: '#617487',
-        justifyContent: 'space-around',
-        elevation: 30,
-        backgroundColor: 'black',
-    }
-});
