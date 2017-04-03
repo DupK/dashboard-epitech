@@ -80,30 +80,35 @@ export default class Home extends Component {
                     description={lastNews.title}
                     icon="ios-pulse-outline"
                     onPress={this.menu.news}
+                    color="#233445"
                 />
                 <Cell
                     title="Calendar"
                     description={nextEvent}
                     icon="ios-calendar-outline"
                     onPress={this.menu.calendar}
+                    color="#223243"
                 />
                 <Cell
                     title="Projects"
                     description={nextProject}
                     icon="ios-cafe-outline"
                     onPress={this.menu.projects}
+                    color="#213141"
                 />
                 <Cell
                     title="Tokens"
                     description={tokenDescription}
                     icon="ios-pricetags-outline"
                     onPress={this.menu.tokens}
+                    color="#20303F"
                 />
                 <Cell
                     title="Marks"
                     description={`Your last mark from ${ lastMark.titlemodule } - ${ lastMark.title } is ${lastMark.final_note}`}
                     icon="ios-school-outline"
                     onPress={this.menu.marks}
+                    color="#1F2E3D"
                 />
                 <Cell
                     title="Ranking"
@@ -114,24 +119,28 @@ export default class Home extends Component {
                     }
                     icon="ios-trophy-outline"
                     onPress={this.menu.ranking}
+                    color="#1E2D3C"
                 />
                 <Cell
                     title="Statistics"
                     description="This feature will be soon available"
                     icon="ios-speedometer-outline"
                     onPress={this.menu.stats}
+                    color="#1D2C3A"
                 />
                 <Cell
                     title="Links"
                     description="Your best services at your fingertips"
                     icon="ios-link-outline"
                     onPress={this.menu.links}
+                    color="#1C2A38"
                 />
                 <Cell
                     title="Logout"
                     description="Thanks to report any bug"
                     icon="ios-power-outline"
                     onPress={this.menu.logout}
+                    color="#1B2936"
                 />
             </View>
         );

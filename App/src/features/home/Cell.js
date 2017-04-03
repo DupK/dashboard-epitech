@@ -53,9 +53,8 @@ const styles = StyleSheet.create({
         flex: 0.8,
         flexDirection: 'row',
         justifyContent: 'center',
-        backgroundColor: '#233445',
-        borderBottomWidth: 0.2,
-        borderBottomColor: 'rgba(255, 255, 255, 1)',
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
     },
 
     textContainer: {
@@ -94,7 +93,7 @@ class Cell extends Component {
                 <View style={Platform.OS === 'ios' ? styles.iconContainerIos : styles.iconContainerAndroid}>
                     <IconIO name={this.props.icon} size={25} style={styles.icon}/>
                 </View>
-                <TouchableOpacity onPress={this.props.onPress} style={styles.touchableContainer}>
+                <TouchableOpacity onPress={this.props.onPress} style={[styles.touchableContainer, {backgroundColor:this.props.color}]}>
                     <View style={styles.textContainer}>
                         <Text style={styles.title}>{this.props.title}</Text>
                         <Text style={styles.description}>{this.props.description}</Text>
@@ -113,6 +112,7 @@ Cell.propTypes = {
     description: React.PropTypes.string,
     icon: React.PropTypes.string,
     onPress: React.PropTypes.func,
+    color: React.PropTypes.string,
 };
 
 export default Cell;
