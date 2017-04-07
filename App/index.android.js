@@ -4,12 +4,14 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React from 'react';
+import { AppRegistry } from 'react-native';
+import Main from './src/features/main';
+import monitorNetworkConnection from './src/shared/NetworkConnection';
+
+//observe any network changes and let ui react according to these changes
+monitorNetworkConnection();
 
 /* Modules */
-
-import { AppRegistry } from 'react-native';
-
-import Main from './src/features/main';
 
 AppRegistry.registerComponent('App', () => Main);

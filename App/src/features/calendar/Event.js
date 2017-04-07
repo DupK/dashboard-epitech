@@ -13,7 +13,7 @@ import { wasRegistered } from './utils';
 
 class Event extends Component {
     render() {
-        const { event, nbEvents, nthEvent } = this.props;
+        const { event, nbEvents, nthEvent, uiStore } = this.props;
         const { width: screenWidth } = Dimensions.get('window');
         const startDate = moment(event.start);
         const start = startDate.hours() + (startDate.minutes() / 60);
@@ -22,7 +22,7 @@ class Event extends Component {
 
         return (
             <TouchableOpacity
-                onPress={() => Actions.activity({ title: event.title, event })}
+                onPress={() => uiStore.isConnected && Actions.activity({ title: event.title, event })}
                 style={{
                     backgroundColor: color,
                     position: 'absolute',
@@ -46,9 +46,10 @@ class Event extends Component {
 }
 
 Event.propTypes = {
-    event: t.object,
-    nthEvent: t.number,
-    nbEvents: t.number,
+    event: t.object.isRequired,
+    nthEvent: t.number.isRequired,
+    nbEvents: t.number.isRequired,
+    uiStore : t.object.isRequired,
 };
 
 export default Event;

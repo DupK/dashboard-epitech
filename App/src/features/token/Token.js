@@ -26,6 +26,8 @@ import LoadingIndicator from 'react-native-spinkit';
 import { observer } from 'mobx-react/native';
 import IconIO from 'react-native-vector-icons/Ionicons';
 
+import Layout from '../../shared/components/Layout';
+
 const CustomLayoutSpring = {
     duration: 1000,
     create: {
@@ -189,7 +191,7 @@ class Token extends Component {
                         multiline={false}
                         placeholder="Type your token"
                         placeholderTextColor="rgba(255, 255, 255, 0.6)"
-                        onSubmitEditing={() => tokens.selectToken(id)}
+                        onSubmitEditing={() => this.props.uiStore.isConnected && tokens.selectToken(id)}
                         blurOnSubmit
                         onChangeText={(text) => tokens.updateValues(text, id)}
                         value={value || ''}
@@ -209,6 +211,7 @@ Token.propTypes = {
     remove: React.PropTypes.bool,
     onAnimationEnd: React.PropTypes.func,
     tokensStore: React.PropTypes.object,
+    ui: React.PropTypes.object,
 };
 
 @observer
@@ -223,36 +226,39 @@ export default class Tokens extends Component {
     }
 
     render() {
-        const { store: { tokens } } = this.props;
+        const { store: { ui, tokens } } = this.props;
 
         return (
-            <Container>
-                <Content contentContainerStyle={{ flex: 1, backgroundColor: '#2c3e50'}}>
-                    { tokens.tokens.length > 0 ?
-                        tokens.tokens.slice().map((token, i) => (
-                            <Token
-                                key={i}
-                                token={token}
-                                id={i}
-                                value={tokens.tokenValues[i]}
-                                remove={tokens.selectedToken == i}
-                                tokensStore={tokens}
-                            />
-                        ))
-                        :
-                        <View style={{ flex: 1, flexDirection: 'column', marginBottom: 60, justifyContent: 'center' }}>
-                            <IconIO
-                                name="ios-notifications-off-outline"
-                                size={100}
-                                style={{ color: '#203040',   alignSelf: 'center' }}
-                            />
-                            <Text style={{ marginTop: 10, color:'#203040', alignSelf: 'center', fontSize: 15 }}>
-                                No token to validate
-                            </Text>
-                        </View>
-                    }
-                </Content>
-            </Container>
+            <Layout store={this.props.store}>
+                <Container>
+                    <Content contentContainerStyle={{ flex: 1, backgroundColor: '#2c3e50'}}>
+                        { tokens.tokens.length > 0 ?
+                            tokens.tokens.slice().map((token, i) => (
+                                <Token
+                                    key={i}
+                                    token={token}
+                                    id={i}
+                                    value={tokens.tokenValues[i]}
+                                    remove={tokens.selectedToken === i}
+                                    tokensStore={tokens}
+                                    uiStore={ui}
+                                />
+                            ))
+                            :
+                            <View style={{ flex: 1, flexDirection: 'column', marginBottom: 60, justifyContent: 'center' }}>
+                                <IconIO
+                                    name="ios-notifications-off-outline"
+                                    size={100}
+                                    style={{ color: '#203040',   alignSelf: 'center' }}
+                                />
+                                <Text style={{ marginTop: 10, color:'#203040', alignSelf: 'center', fontSize: 15 }}>
+                                    No token to validate
+                                </Text>
+                            </View>
+                        }
+                    </Content>
+                </Container>
+            </Layout>
         )
     }
 };

@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react/native';
-import { TabViewAnimated, TabBar, TabViewPagerPan } from 'react-native-tab-view';
-import {
-    AppRegistry,
-    StyleSheet,
-    ScrollView,
-    Text,
-    View,
-    TouchableOpacity
-} from 'react-native';
+import { TabBar, TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
+import { StyleSheet } from 'react-native';
+
+import Layout from '../../shared/components/Layout';
 import ProjectsTimeline from './ProjectsTimeline';
 import ProjectsList from './ProjectsList';
 
@@ -61,11 +56,11 @@ export default class Projects extends Component {
     };
 
     _renderScene = ({ route }) => {
-        const { store: { projects: projectsStore } } = this.props;
+        const { store: { ui, projects: projectsStore } } = this.props;
 
         switch (route.key) {
             case '1':
-                return <ProjectsList projectsStore={projectsStore} />;
+                return <ProjectsList uiStore={ui} projectsStore={projectsStore} />;
             case '2':
                 return <ProjectsTimeline projectsStore={projectsStore} />;
             default:
@@ -80,14 +75,16 @@ export default class Projects extends Component {
 
     render() {
         return (
-            <TabViewAnimated
-                style={styles.container}
-                navigationState={this.state}
-                renderScene={this._renderScene}
-                renderFooter={this._renderFooter}
-                renderPager={this._renderPager}
-                onRequestChangeTab={this._handleChangeTab}
-            />
+            <Layout store={this.props.store}>
+                <TabViewAnimated
+                    style={styles.container}
+                    navigationState={this.state}
+                    renderScene={this._renderScene}
+                    renderFooter={this._renderFooter}
+                    renderPager={this._renderPager}
+                    onRequestChangeTab={this._handleChangeTab}
+                />
+            </Layout>
         );
     }
 }
