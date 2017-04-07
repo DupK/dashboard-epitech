@@ -10,16 +10,13 @@ import {
     TouchableOpacity,
     Platform,
 } from 'react-native';
-import {
-    Button,
-    Icon,
-} from 'native-base';
 import _ from "lodash";
 import Accordion from 'react-native-collapsible/Accordion';
 import { Actions } from 'react-native-router-flux';
 import styles from './styles.js';
 import { observer } from 'mobx-react/native';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconIO from 'react-native-vector-icons/Ionicons';
 
 const gradeColors = {
     A: '#62c462',
@@ -130,25 +127,21 @@ export default class Marks extends Component {
                     </ScrollView>
                 </View>
                 <View style={styles.headerContainer}>
-                    <Button
+                    <TouchableOpacity
                         style={styles.headerArrow}
-                        title="prev"
                         onPress={this.previousSemester}
-                        transparent
                     >
-                        <Icon style={styles.headerIcon} name="ios-arrow-back"/>
-                    </Button>
+                        <IconIO size={24} style={styles.headerIcon} name="ios-arrow-back"/>
+                    </TouchableOpacity>
                     <Text style={styles.headerIcon}>
                         { semesterText }
                     </Text>
-                    <Button
+                    <TouchableOpacity
                         style={styles.headerArrow}
-                        title="next"
                         onPress={this.nextSemester}
-                        transparent
                     >
-                        <Icon style={styles.headerIcon} name="ios-arrow-forward"/>
-                    </Button>
+                        <IconIO size={24} style={styles.headerIcon} name="ios-arrow-forward"/>
+                    </TouchableOpacity>
                 </View>
             </View>
         );

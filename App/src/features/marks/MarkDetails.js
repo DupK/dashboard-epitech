@@ -9,13 +9,11 @@ import {
     Image,
     ScrollView,
     TouchableOpacity,
-    Platform
+    Platform,
+    ListView,
 } from 'react-native';
-import {
-    List,
-    Icon,
-} from 'native-base';
 import LoadingIndicator from 'react-native-spinkit';
+import IconIO from 'react-native-vector-icons/Ionicons';
 import { observer } from 'mobx-react/native';
 import styles from './styles.js';
 
@@ -24,6 +22,7 @@ class MarkDetails extends Component {
 
     constructor(props) {
         super(props);
+        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
         this.renderRow = this.renderRow.bind(this);
     }
@@ -146,7 +145,7 @@ class MarkDetails extends Component {
 
         return (
             <View style={{ position: 'absolute', bottom: 0, left: 40, right: 0 }}>
-                <Icon style={{ color: 'white', fontSize: 20, alignSelf: 'center' }} name="ios-arrow-down"/>
+                <IconIO size={24} style={{ color: 'white', alignSelf: 'center' }} name="ios-arrow-down"/>
             </View>
         );
     }
@@ -164,8 +163,8 @@ class MarkDetails extends Component {
             <View style={{flex: 1, backgroundColor: '#203040'}}>
                 <View style={Platform.OS === 'ios' ? styles.selfRowIOS : styles.selfRowAndroid}>{ this.renderSelf(selfMark) }</View>
                 <View style={styles.listContainerStyle}>
-                    <List
-                        dataArray={marks.projectMarks.slice()}
+                    <ListView
+                        dataSource={this.ds.cloneWithRows(marks.projectMarks.slice())}
                         renderRow={this.renderRow}
                         onScroll={() => marks.hideArrowDown()}
                     />

@@ -4,24 +4,16 @@
 
 import React, { Component } from 'react';
 import {
-    AppRegistry,
-    StyleSheet,
     View,
+    Text,
     KeyboardAvoidingView,
     Animated,
-    Alert,
     Easing,
-    InteractionManager,
     LayoutAnimation,
     UIManager,
     Dimensions,
+    TextInput,
 } from 'react-native';
-import {
-    Container,
-    Content,
-    Text,
-    Input
-} from 'native-base';
 import LoadingIndicator from 'react-native-spinkit';
 import { observer } from 'mobx-react/native';
 import IconIO from 'react-native-vector-icons/Ionicons';
@@ -135,8 +127,9 @@ class Token extends Component {
                 style={{
                     backgroundColor: '#233445',
                     margin: 10,
+                    marginTop: 15,
                     elevation: 4,
-                    height: 68.5,
+                    height: 60,
                     transform: [{ translateX: tokenTranslate }]
                 }}
             >
@@ -166,15 +159,17 @@ class Token extends Component {
                                 />
                             )
                     }
-                    <Text style={{ flex: 1, color: '#FFF', fontSize: 12, fontWeight: 'bold' }}>
-                        {token.title}
-                    </Text>
-                    <Text style={{ flex: 0.3, color: '#FFF', fontSize: 12, marginBottom: 8, fontWeight: '100' }}>
-                        {token.date}
-                    </Text>
+                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', padding: 4}}>
+                        <Text style={{ flex: 0.8, color: '#FFF', fontSize: 12, fontWeight: 'bold' }}>
+                            {token.title}
+                        </Text>
+                        <Text style={{ flex: 0.2, color: '#FFF', fontSize: 12, fontWeight: '100' }}>
+                            {token.date}
+                        </Text>
+                    </View>
                 </View>
                 <View>
-                    <Input
+                    <TextInput
                         style={{
                             height: 35,
                             color: '#FFF',
@@ -226,8 +221,7 @@ export default class Tokens extends Component {
         const { store: { tokens } } = this.props;
 
         return (
-            <Container>
-                <Content contentContainerStyle={{ flex: 1, backgroundColor: '#2c3e50'}}>
+           <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#2c3e50' }}>
                     { tokens.tokens.length > 0 ?
                         tokens.tokens.slice().map((token, i) => (
                             <Token
@@ -251,8 +245,7 @@ export default class Tokens extends Component {
                             </Text>
                         </View>
                     }
-                </Content>
-            </Container>
+           </KeyboardAvoidingView>
         )
     }
 };

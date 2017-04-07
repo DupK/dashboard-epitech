@@ -3,11 +3,8 @@ import {
     StyleSheet,
     View,
     Dimensions,
+    KeyboardAvoidingView,
 } from 'react-native';
-import {
-    Container,
-    Content,
-} from 'native-base';
 import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
@@ -124,8 +121,8 @@ export default class Login extends Component {
         const { width } = Dimensions.get('window');
 
         return (
-            <Container>
-                <Content contentContainerStyle={{ flex: 1 }}>
+
+             <KeyboardAvoidingView style={{ flex: 1}}>
                     <BackgroundImageWithOverlay
                         source={backgroundSource}
                         colorOverlay="rgba(45, 45, 45, 0)"
@@ -169,8 +166,7 @@ export default class Login extends Component {
                             </View>
                         </View>
                     </BackgroundImageWithOverlay>
-                </Content>
-            </Container>
+             </KeyboardAvoidingView>
         );
     }
 }
