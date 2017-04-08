@@ -10,8 +10,6 @@ import {
 import { Row, Grid } from "react-native-easy-grid";
 import Link from './Link';
 import Cell from './Cell';
-import {Router} from "react-native-mobx";
-
 
 /*
         L84 : Hack with size(0.01)

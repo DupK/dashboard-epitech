@@ -5,19 +5,15 @@ import {
     Text,
     View,
     TouchableOpacity,
-    Platform
+    Platform,
+    ScrollView,
+    ListView,
 } from 'react-native';
-import {
-    Container,
-    Content,
-    List,
-    ListItem,
-    Icon
-} from 'native-base';
 import ProgressBar from './ProgressBar';
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 import IconFA from 'react-native-vector-icons/FontAwesome';
+import IconIO from 'react-native-vector-icons/Ionicons';
 import styles from './styles.js';
 
 @observer
@@ -28,6 +24,8 @@ export default class ProjectsList extends Component {
 
         this.renderProject = this.renderProject.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
+
+        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     }
 
     renderProject(project) {
@@ -39,13 +37,13 @@ export default class ProjectsList extends Component {
         const progress = Math.max(1, Math.min((durationSoFar / projectDuration) * 100, 100));
 
         return (
-            <ListItem>
+           <View style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: 'rgba(0, 0, 0, 0.2)'}}>
                 <TouchableOpacity onPress={() => uiStore.isConnected && Actions.projectDetails({ progress: progress, project: project, title: project.acti_title }) }>
                     <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#fafafa',}}>
                         <View style={{ flex: 100,}}>
                             <View style={{flex: 1, flexDirection: 'column',}}>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{fontWeight: 'bold', color: '#233445',}}>{ project.acti_title }</Text>
+                                    <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#233445',}}>{ project.acti_title }</Text>
                                     <Text style={{fontSize: 12, color: '#233445',}}> / { project.title_module }</Text>
                                 </View>
                                 <View style={{ marginTop: 2  }}>
@@ -58,11 +56,11 @@ export default class ProjectsList extends Component {
                             </View>
                         </View>
                         <View style={{flex: 15, justifyContent: 'center', alignItems: 'flex-end',}}>
-                            <Icon name="ios-arrow-forward-outline" style={{fontSize: 14, color: '#233445',}}/>
+                            <IconIO name="ios-arrow-forward-outline" style={{fontSize: 14, color: '#233445',}}/>
                         </View>
                     </View>
                 </TouchableOpacity>
-            </ListItem>
+            </View>
         );
     }
 
@@ -88,20 +86,18 @@ export default class ProjectsList extends Component {
         ));
 
         return (
-            <Container>
-                <Content contentContainerStyle={{ backgroundColor: '#fafafa' }}>
+            <ScrollView style={{ backgroundColor: '#FAFAFA' }}>
                     {this.renderHeader('Currents projects', 'hourglass-half')}
-                    <List
-                        dataArray={currentProjects}
+                    <ListView
+                        dataSource={this.ds.cloneWithRows(currentProjects)}
                         renderRow={this.renderProject}>
-                    </List>
+                    </ListView>
                     {this.renderHeader('Incoming projects', 'hourglass-start')}
-                    <List
-                        dataArray={comingsProjects}
+                    <ListView
+                        dataSource={this.ds.cloneWithRows(comingsProjects)}
                         renderRow={this.renderProject}>
-                    </List>
-                </Content>
-            </Container>
+                    </ListView>
+            </ScrollView>
         );
     }
 }

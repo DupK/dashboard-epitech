@@ -5,10 +5,9 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Button, Icon } from 'native-base';
 import { observer } from 'mobx-react/native';
-import IconFO from 'react-native-vector-icons/Foundation';
 import IconFA from 'react-native-vector-icons/FontAwesome';
+import IconIO from 'react-native-vector-icons/Ionicons';
 import IconEN from 'react-native-vector-icons/Entypo';
 import DayPicker from 'react-native-modal-datetime-picker';
 
@@ -54,32 +53,32 @@ class MonthSelector extends Component {
 
         return (
             <View style={styles.container}>
-                <Button
+                <TouchableOpacity
                     style={styles.selectorItems}
                     title="today"
                     transparent
                     onPress={calendar.promptDatePicker}
                 >
                     <IconFA style={styles.selectorIcons} name="calendar" size={20}/>
-                </Button>
-                <Button
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={styles.selectorItems}
                     title="previousMonth"
                     transparent
                     onPress={calendar.previousMonth}
                 >
-                    <Icon style={styles.selectorIcons} name="ios-arrow-back"/>
-                </Button>
+                    <IconIO size={24} style={styles.selectorIcons} name="ios-arrow-back"/>
+                </TouchableOpacity>
                 <Text style={styles.selectorIcons}>{ this.formatCalendarHeader() }</Text>
-                <Button
+                <TouchableOpacity
                     style={styles.selectorItems}
                     title="nextMonth"
                     transparent
                     onPress={calendar.nextMonth}
                 >
-                    <Icon style={styles.selectorIcons} name="ios-arrow-forward"/>
-                </Button>
-                <Button
+                    <IconIO size={24} style={styles.selectorIcons} name="ios-arrow-forward"/>
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={styles.selectorItems}
                     title="today"
                     transparent
@@ -88,7 +87,7 @@ class MonthSelector extends Component {
                     <IconEN style={{
                         color: isToday,
                     }} name="location" size={20}/>
-                </Button>
+                </TouchableOpacity>
                 <DayPicker
                     isVisible={calendar.datePickerVisible}
                     onConfirm={calendar.pickDate}

@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import { Container, Content } from 'native-base';
+import {
+    StyleSheet,
+    View,
+    Dimensions,
+    KeyboardAvoidingView,
+} from 'react-native';
 import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
@@ -141,55 +145,53 @@ export default class Login extends Component {
         const { width } = Dimensions.get('window');
 
         return (
-            <Layout store={this.props.store}>
-                <Container>
-                    <Content contentContainerStyle={{ flex: 1 }}>
-                        <BackgroundImageWithOverlay
-                            source={backgroundSource}
-                            colorOverlay="rgba(45, 45, 45, 0)"
-                        >
-                            <View style={styles.topEmptyBox}/>
-                            <View style={styles.loginBoxContainer}>
-                                <View style={styles.inputsContainer}>
-                                    <LoginInput
-                                        maxLength={40}
-                                        placeholder="Email address"
-                                        keyboardType="email-address"
-                                        editable={!this.state.animating}
-                                        onChangeText={(text) => this.setState({ username: text })}
-                                        onSubmitEditing={() => this.passwordInput.nativeInput.focus() }
-                                    />
-                                    <LoginInput
-                                        ref={(input) => this.passwordInput = input}
-                                        maxLength={8}
-                                        placeholder="Unix Password"
-                                        secureTextEntry
-                                        editable={!this.state.animating}
-                                        onChangeText={(text) => this.setState({ password: text })}
-                                        onSubmitEditing={() => this.animatedButton.animate()}
-                                    />
-                                    <AnimatedButton
-                                        ref={(button) => this.animatedButton = button}
-                                        title="Login"
-                                        errorTitle="Could not log in"
-                                        width={width - 60}
-                                        onPress={this.login}
-                                        onAnimationEnd={this.onAnimationEnd}
-                                        onAnimationEndError={this.onAnimationEndError}
-                                        worthStartingAnimation={this.worthStartingAnimation}
-                                        isButtonAnimating={this.buttonIsAnimating}
-                                    />
-                                </View>
-                                <View style={{ flex: 0.1 }}>
-                                    <LoginMessage
-                                        message={(this.state.animating && this.state.loginMessage) || ''}
-                                    />
-                                </View>
+           <Layout store={this.props.store}>
+             <KeyboardAvoidingView style={{ flex: 1}}>
+                    <BackgroundImageWithOverlay
+                        source={backgroundSource}
+                        colorOverlay="rgba(45, 45, 45, 0)"
+                    >
+                        <View style={styles.topEmptyBox} />
+                        <View style={styles.loginBoxContainer}>
+                            <View style={styles.inputsContainer}>
+                                <LoginInput
+                                    maxLength={40}
+                                    placeholder="Email address"
+                                    keyboardType="email-address"
+                                    editable={!this.state.animating}
+                                    onChangeText={(text) => this.setState({ username: text })}
+                                    onSubmitEditing={() => this.passwordInput.nativeInput.focus() }
+                                />
+                                <LoginInput
+                                    ref={(input) => this.passwordInput = input}
+                                    maxLength={8}
+                                    placeholder="Unix Password"
+                                    secureTextEntry
+                                    editable={!this.state.animating}
+                                    onChangeText={(text) => this.setState({ password: text })}
+                                    onSubmitEditing={() => this.animatedButton.animate()}
+                                />
+                                <AnimatedButton
+                                    ref={(button) => this.animatedButton = button}
+                                    title="Login"
+                                    errorTitle="Could not log in"
+                                    width={width - 60}
+                                    onPress={this.login}
+                                    onAnimationEnd={this.onAnimationEnd}
+                                    onAnimationEndError={this.onAnimationEndError}
+                                    worthStartingAnimation={this.worthStartingAnimation}
+                                    isButtonAnimating={this.buttonIsAnimating}
+                                />
                             </View>
-                        </BackgroundImageWithOverlay>
-                    </Content>
-                </Container>
-            </Layout>
+                            <View style={{ flex: 0.1 }}>
+                                <LoginMessage
+                                    message={(this.state.animating && this.state.loginMessage) || ''}
+                                />
+                            </View>
+                        </View>
+                    </BackgroundImageWithOverlay>
+             </KeyboardAvoidingView>
+        </Layout>
         );
     }
 }

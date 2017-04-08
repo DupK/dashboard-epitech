@@ -8,8 +8,6 @@ import {
 } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
 import { observer } from 'mobx-react/native';
-import { Container, Content } from 'native-base';
-
 import Layout from '../../shared/components/Layout';
 import styles from './styles.js';
 
@@ -84,19 +82,17 @@ export default class Ranking extends Component {
         }
 
         return (
-            <Layout store={this.props.store}>
-                <Container>
+          <Layout store={this.props.store}>
+                <View style={{backgroundColor: '#203040'}}>
                     { this.renderSelf(selfRank) }
-                    <Content contentContainerStyle={{ backgroundColor: '#203040' }}>
-                        <ListView
-                            style={styles.list}
-                            dataSource={this.ds.cloneWithRows(ranking.promotion.slice())}
-                            renderRow={this.renderStudent}
-                            removeClippedSubviews
-                        />
-                    </Content>
-                </Container>
-            </Layout>
+                    <ListView
+                        style={styles.list}
+                        dataSource={this.ds.cloneWithRows(ranking.promotion.slice())}
+                        renderRow={this.renderStudent}
+                        removeClippedSubviews
+                    />
+                </View>
+          </Layout>
         );
     }
 }

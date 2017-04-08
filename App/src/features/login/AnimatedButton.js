@@ -4,12 +4,10 @@
 
 import React, { Component } from 'react';
 import {
-    Text,
     View,
     Animated,
     Easing,
     ActivityIndicator,
-    Dimensions,
     LayoutAnimation,
     UIManager,
 } from 'react-native';

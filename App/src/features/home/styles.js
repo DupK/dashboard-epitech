@@ -7,7 +7,6 @@ import {
     StyleSheet,
     Dimensions,
 } from 'react-native';
-
 const HEADER_MAX_HEIGHT = 180;
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 64 : 54;
 const AVATAR_SIZE = 70;

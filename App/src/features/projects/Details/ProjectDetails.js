@@ -9,10 +9,8 @@ import {
     View,
     Platform,
 } from 'react-native';
-import {
-    Icon
-} from 'native-base';
 import IconFA from 'react-native-vector-icons/FontAwesome';
+import IconIO from 'react-native-vector-icons/Ionicons';
 import Accordion from 'react-native-collapsible/Accordion';
 import LoadingIndicator from 'react-native-spinkit';
 import styles from '../styles';
@@ -102,7 +100,7 @@ class ProjectDetails extends Component {
 
         return (
             <View style={{   flexDirection: 'row', backgroundColor: registered ? "#62c462" : "#f44336", justifyContent: 'center'}}>
-                <Icon style={styles.bannerDetailsIcon} name={ registered ? "ios-checkmark" : "ios-close"} />
+                <IconIO size={24} style={styles.bannerDetailsIcon} name={ registered ? "ios-checkmark" : "ios-close"} />
                 <Text style={styles.bannerDetailsText}>{notification}</Text>
             </View>
         )
