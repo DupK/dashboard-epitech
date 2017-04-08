@@ -13,6 +13,7 @@ import AvailableSlots from './calendar/Activity/slots/AvailableSlots';
 import News from './news/News';
 import Projects from './projects/Projects';
 import ProjectDetails from './projects/Details/ProjectDetails';
+import PDFViewer from './projects/Details/PDFViewer';
 import Marks from './marks/Marks';
 import MarkDetails from './marks/MarkDetails';
 import Stats from './stats/Stats';
@@ -143,6 +144,13 @@ class Main extends Component {
                         title="projects-details"
                         hideNavBar={false}
                         component={ProjectDetails}
+                    />
+
+                    <Scene
+                        key="pdf"
+                        title="pdf"
+                        hideNavBar={false}
+                        component={PDFViewer}
                     />
 
                     <Scene
