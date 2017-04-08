@@ -45,7 +45,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        marginLeft: 20,
+        paddingLeft: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: "rgba(255, 255, 255, 0.1)"
     },
 
     title: {

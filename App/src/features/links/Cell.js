@@ -5,9 +5,8 @@
 import React, { Component, PropTypes } from 'react';
 import { observer } from 'mobx-react/native';
 import {
-    StyleSheet, Platform
+    StyleSheet, Platform, View
 } from 'react-native';
-import { Col, Row } from "react-native-easy-grid";
 import IconIO from 'react-native-vector-icons/Ionicons';
 
 @observer
@@ -19,53 +18,50 @@ class Cell extends Component {
 
     render() {
         return (
-            <Row>
-                <Col size={0.5} style={Platform.OS === 'ios' ? styles.iconColIOS : styles.iconColAndroid}>
-                    <IconIO name={this.props.icon} size={30} style={styles.icon}/>
-                </Col>
-                <Col size={3} style={styles.childrenCol}>
-                    {this.props.children}
-                </Col>
-            </Row>
+            <View style={styles.container}>
+                <View style={Platform.OS === 'ios' ? styles.iconContainerIos : styles.iconContainerAndroid}>
+                    <IconIO name={this.props.icon} size={25} style={styles.icon}/>
+                </View>
+                {this.props.children}
+            </View>
         );
     }
 };
 
 const styles = StyleSheet.create({
 
-    iconColAndroid : {
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        height: 80,
         backgroundColor: '#233445',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderBottomWidth: 0,
-        borderBottomColor: 'rgba(255, 255, 255, 1)',
-        elevation: 15
     },
 
-    iconColIOS : {
+    iconContainerAndroid: {
+        flex: 0.20,
         backgroundColor: '#233445',
+        elevation: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        borderBottomWidth: 0,
-        borderBottomColor: 'rgba(255, 255, 255, 1)',
+    },
+
+    iconContainerIos: {
+        flex: 0.15,
+        backgroundColor: '#233445',
         zIndex: 1,
         shadowColor: '#1b2636',
         shadowOffset: {
             width: 3,
             height: 0
-       },
+        },
         shadowRadius: 0,
         shadowOpacity: 0.2,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     icon: {
-        color: 'rgba(255, 255, 255, 1)'
-    },
-
-    childrenCol: {
-        backgroundColor: '#233445',
-        borderBottomWidth: 0.5,
-        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+        color: '#FAFAFA',
     },
 
 });
