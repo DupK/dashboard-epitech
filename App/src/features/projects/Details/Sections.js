@@ -2,19 +2,12 @@
  * Created by jules on 17/03/17.
  */
 
-import React, { Component } from 'react';
-import {
-    AppRegistry,
-    StyleSheet,
-    ScrollView,
-    Text,
-    View,
-    TouchableOpacity,
-    Image,
-} from 'react-native';
+import React from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from '../styles';
-import _ from "lodash";
+import _ from 'lodash';
 
 export const Team = ({ teams }) => {
     return (
@@ -57,24 +50,29 @@ Team.propTypes = {
 };
 
 export const Document = ({ documents }) => {
-    return (
-        <View style={styles.documentContainer}>
-            {_.map(documents, (document, i) => (
-                <TouchableOpacity key={i}>
-                    <View style={styles.documentSubContainer}>
-                        <IconMCI
-                            style={styles.documentIcon}
-                            name="file-pdf-box"
-                            size={22}
-                        />
-                        <Text style={styles.documentText}>
-                            {_.truncate(document.title, {length: 15, separator: '...'})}
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-            ))}
-        </View>
-    );
+        return (
+            <View style={styles.documentContainer}>
+                {
+                    _.map(documents, (document, i) => (
+                        <TouchableOpacity
+                            key={i}
+                            onPress={() => Actions.pdf({ title: document.title, pdfUrl: document.fullpath })}
+                        >
+                            <View style={styles.documentSubContainer}>
+                                <IconMCI
+                                    style={styles.documentIcon}
+                                    name="file-pdf-box"
+                                    size={22}
+                                />
+                                <Text style={styles.documentText}>
+                                    {_.truncate(document.title, { length: 15, separator: '...' })}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    ))
+                }
+            </View>
+        );
 };
 
 Document.propTypes = {
