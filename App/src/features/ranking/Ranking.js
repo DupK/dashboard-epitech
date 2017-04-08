@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
 import { observer } from 'mobx-react/native';
+import Layout from '../../shared/components/Layout';
 import styles from './styles.js';
 
 @observer
@@ -52,8 +53,20 @@ export default class Ranking extends Component {
     }
 
     render() {
-        const { store: { ranking } } = this.props;
+        const { store: { ui, ranking } } = this.props;
         const selfRank = ranking.selfRank();
+
+        if (!ui.isConnected && !ranking.promotion.length) {
+            return (
+                <Layout store={this.props.store}>
+                    <View style={styles.loadingContainer}>
+                        <Text style={{ color: '#FAFAFA' }}>
+                            Cannot fetch ranking information.
+                        </Text>
+                    </View>
+                </Layout>
+            );
+        }
 
         if (!ranking.promotion.length) {
             return (
@@ -69,6 +82,7 @@ export default class Ranking extends Component {
         }
 
         return (
+          <Layout store={this.props.store}>
                 <View style={{backgroundColor: '#203040'}}>
                     { this.renderSelf(selfRank) }
                     <ListView
@@ -78,6 +92,7 @@ export default class Ranking extends Component {
                         removeClippedSubviews
                     />
                 </View>
+          </Layout>
         );
     }
 }

@@ -11,6 +11,7 @@ import {
     View,
     ListView,
 } from 'react-native';
+import Layout from '../../shared/components/Layout';
 import styles from './styles.js';
 
 const noPicture = 'https://intra.epitech.eu/staticceeb245e183d75bbe0e66d363037166fc670c425/img/nopicture-profilview.png';
@@ -27,6 +28,7 @@ export default class News extends Component {
         const { store: { session } } = this.props;
 
         return (
+          <Layout store={this.props.store}>
             <View style={{ backgroundColor: '#FAFAFA' }}>
                 <ListView
                     dataSource={this.ds.cloneWithRows(session.news.slice())}
@@ -44,6 +46,8 @@ export default class News extends Component {
                     }}
                 />
             </View>
+        </Layout>
+
         );
     }
 };

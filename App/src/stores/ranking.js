@@ -31,32 +31,34 @@ class Ranking {
         }
 
         // Always reset promotion to empty so that we can detect that we're loading
-        this.promotion = [];
-        const { user: { location, year, promo } } = stores.session.session;
-        const promotion = await Intra.fetchPromotion(location, year, promo);
+        if (stores.ui.isConnected) {
+            this.promotion = [];
+            const { user: { location, year, promo } } = stores.session;
+            const promotion = await Intra.fetchPromotion(location, year, promo);
 
-        const promotionWithDetails = await bluebird.map(promotion, async ({ login: email }) => {
-            return await Intra.fetchStudent(email);
-        });
+            const promotionWithDetails = await bluebird.map(promotion, async ({ login: email }) => {
+                return await Intra.fetchStudent(email);
+            });
 
-        const promotionSorted = _(promotionWithDetails)
-            .filter(({ gpa: [ value ] }) => value.gpa !== 'n/a')
-            .orderBy(({ gpa: [ value ] }) => value.gpa, ['desc'])
-            .map((student, i) => {
-                if (i == 0) {
-                    student.img = medal;
-                }
+            const promotionSorted = _(promotionWithDetails)
+                .filter(({ gpa: [ value ] }) => value.gpa !== 'n/a')
+                .orderBy(({ gpa: [ value ] }) => value.gpa, ['desc'])
+                .map((student, i) => {
+                    if (i === 0) {
+                        student.img = medal;
+                    }
 
-                return {
-                    ...student,
-                    rank: n(i + 1)
-                }
-            })
-            .value();
+                    return {
+                        ...student,
+                        rank: n(i + 1)
+                    }
+                })
+                .value();
 
-        this.promotion = promotionSorted;
-        await this.selfRankPosition({ ranking: promotionSorted });
-        await storage.save('ranking', promotionSorted);
+            this.promotion = promotionSorted;
+            await this.selfRankPosition({ ranking: promotionSorted });
+            await storage.save('ranking', promotionSorted);
+        }
     }
 
     getOrdinalNumber(n) {

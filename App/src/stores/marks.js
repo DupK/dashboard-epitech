@@ -5,9 +5,10 @@
 import _ from 'lodash';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
-import { observable, computed, action } from 'mobx';
-import ui from './uiState'
-import session from './session'
+import storage from 'react-native-simple-store';
+import { action, computed, observable } from 'mobx';
+import ui from './uiState';
+import session from './session';
 import * as Intra from '../api/intra';
 
 function formatGrade(grade) {
@@ -36,11 +37,24 @@ class Marks {
         this.sortMethod = sortMethods.byName;
     }
 
-    async fetchMarks(user) {
-        const rawMarks = await Intra.fetchMarks(user);
+    async fetchMarks(user, { fromCache } = false) {
+        if (fromCache) {
+            const rawMarks = await storage.get('marks');
 
-        this.rawMarks = rawMarks;
-        this.marksBySemesters = this.parseMarks(rawMarks);
+            if (rawMarks) {
+                this.setMarksField(rawMarks);
+                return;
+            }
+        }
+
+        const rawMarks = await Intra.fetchMarks(user);
+        await storage.save('marks', rawMarks);
+        this.setMarksField(rawMarks);
+    }
+
+    setMarksField(marks) {
+        this.rawMarks = marks;
+        this.marksBySemesters = this.parseMarks(marks);
         this.nbSemester = _.size(this.marksBySemesters);
     }
 
@@ -60,7 +74,7 @@ class Marks {
             .groupBy((module) => {
                 const moduleId = module.title.substring(0, 2);
 
-                if (moduleId[1] == '0' || moduleId == 'Hu' || moduleId == 'Sp') {
+                if (moduleId[1] === '0' || moduleId === 'Hu' || moduleId === 'Sp') {
                     return 'Others';
                 }
 
@@ -72,7 +86,7 @@ class Marks {
                     .groupBy((module) => module.codemodule)
                     .toPairs()
                     .flatMap(([codemodule, modules]) => {
-                        const newModule = _.flatMap(modules, (module) =>({
+                        const newModule = _.flatMap(modules, (module) => ({
                             marks: _(marksByModules[codemodule])
                                 .filter((mark) => (
                                     mark.codeinstance === module.codeinstance && mark.scolaryear === module.scolaryear
@@ -129,7 +143,9 @@ class Marks {
 
     @action
     sort() {
-        this.sortMethod = (this.sortMethod === sortMethods.byMark) ? sortMethods.byName :sortMethods.byMark;
+        this.sortMethod = (this.sortMethod === sortMethods.byMark) ?
+                          sortMethods.byName :
+                          sortMethods.byMark;
         const sortOrder = (this.sortMethod === sortMethods.byMark) ? 'desc' : 'asc';
         this.projectMarks = _.orderBy(this.projectMarks, this.sortMethod, [sortOrder]);
     }

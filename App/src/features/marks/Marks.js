@@ -18,6 +18,8 @@ import { observer } from 'mobx-react/native';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconIO from 'react-native-vector-icons/Ionicons';
 
+import Layout from '../../shared/components/Layout';
+
 const gradeColors = {
     A: '#62c462',
     B: '#62c462',
@@ -35,6 +37,7 @@ export default class Marks extends Component {
 
         this.nextSemester = this.nextSemester.bind(this);
         this.previousSemester = this.previousSemester.bind(this);
+        this._renderContent = this._renderContent.bind(this);
     };
 
     _renderHeader(module) {
@@ -53,6 +56,8 @@ export default class Marks extends Component {
     }
 
     _renderContent(module) {
+        const { store: { ui } } = this.props;
+
         return (
             <View>
                 {
@@ -61,7 +66,7 @@ export default class Marks extends Component {
                             _.map(module.marks, (mark, i) => (
                                 <TouchableOpacity
                                     key={`${mark.date}-${i}`}
-                                    onPress={() => Actions.markDetails({ mark, title: mark.title })}
+                                    onPress={() => ui.isConnected && Actions.markDetails({ mark, title: mark.title })}
                                 >
                                     <View style={Platform.OS === 'ios' ? styles.contentIOS : styles.contentAndroid}>
                                         <Text style={styles.textContent}> {mark.title}</Text>
@@ -115,17 +120,18 @@ export default class Marks extends Component {
             : 'Others';
 
         return (
-            <View style={{ flex: 1, backgroundColor: '#233445' }}>
-                <View style={styles.bodyContainer}>
-                    <ScrollView>
-                        <Accordion
-                            underlayColor="#233445"
-                            sections={marksBySemesters[semesterId].slice()}
-                            renderHeader={this._renderHeader}
-                            renderContent={this._renderContent}
-                        />
-                    </ScrollView>
-                </View>
+            <Layout store={this.props.store}>
+                <View style={{ flex: 1, backgroundColor: '#233445' }}>
+                    <View style={styles.bodyContainer}>
+                        <ScrollView>
+                            <Accordion
+                                underlayColor="#233445"
+                                sections={marksBySemesters[semesterId].slice()}
+                                renderHeader={this._renderHeader}
+                                renderContent={this._renderContent}
+                            />
+                        </ScrollView>
+                    </View> 
                 <View style={styles.headerContainer}>
                     <TouchableOpacity
                         style={styles.headerArrow}
@@ -144,6 +150,7 @@ export default class Marks extends Component {
                     </TouchableOpacity>
                 </View>
             </View>
+            </Layout>
         );
     }
 };

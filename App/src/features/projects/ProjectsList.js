@@ -29,6 +29,7 @@ export default class ProjectsList extends Component {
     }
 
     renderProject(project) {
+        const { uiStore } = this.props;
         const parsedStart = moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss');
         const parsedEnd = moment(project.end_acti, 'YYYY-MM-DD, HH:mm:ss');
         const projectDuration = parsedEnd.diff(parsedStart, 'days');
@@ -36,8 +37,8 @@ export default class ProjectsList extends Component {
         const progress = Math.max(1, Math.min((durationSoFar / projectDuration) * 100, 100));
 
         return (
-            <View style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: 'rgba(0, 0, 0, 0.2)'}}>
-                <TouchableOpacity onPress={() => Actions.projectDetails({ progress: progress, project: project, title: project.acti_title }) }>
+           <View style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: 'rgba(0, 0, 0, 0.2)'}}>
+                <TouchableOpacity onPress={() => uiStore.isConnected && Actions.projectDetails({ progress: progress, project: project, title: project.acti_title }) }>
                     <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#fafafa',}}>
                         <View style={{ flex: 100,}}>
                             <View style={{flex: 1, flexDirection: 'column',}}>
@@ -102,5 +103,6 @@ export default class ProjectsList extends Component {
 }
 
 ProjectsList.propTypes = {
-    projectsStore: React.PropTypes.object,
+    projectsStore: React.PropTypes.object.isRequired,
+    uiStore: React.PropTypes.object.isRequired,
 };

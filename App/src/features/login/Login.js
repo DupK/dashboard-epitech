@@ -9,7 +9,9 @@ import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
 import backgroundSource from '../../assets/fond.jpg';
+import { CALENDAR_END, CALENDAR_START } from '../../stores/calendar';
 
+import Layout from '../../shared/components/Layout';
 import BackgroundImageWithOverlay from './BackgroundImage';
 import LoginMessage from './LoginMessage';
 import LoginInput from './LoginInput';
@@ -28,6 +30,9 @@ export default class Login extends Component {
             animating: false,
         };
 
+        this.hasEverythingCached = false;
+        this.canLogin = true;
+
         this.login = this.login.bind(this);
         this.onAnimationEnd = this.onAnimationEnd.bind(this);
         this.onAnimationEndError = this.onAnimationEndError.bind(this);
@@ -35,10 +40,24 @@ export default class Login extends Component {
         this.buttonIsAnimating = this.buttonIsAnimating.bind(this);
     }
 
-    async componentDidMount() {
-        const { store: { session } } = this.props;
+    async componentWillMount() {
+        const { store: { session, ui } } = this.props;
 
         try {
+
+            this.hasEverythingCached = await session.hasEverythingCached();
+
+            // Show no internet status bar only if user cannot login at all.
+            // ( Either from cache or by internet for his first connection. )
+            if (!ui.isConnected && !this.hasEverythingCached) {
+                this.canLogIn = false;
+                return;
+            }
+
+            if (this.hasEverythingCached) {
+                session.loggedFromCache = true;
+            }
+
             session.resetSession();
             this.animatedButton.animate();
         } catch (e) {
@@ -59,23 +78,26 @@ export default class Login extends Component {
 
     async fetchRequiredData() {
         const {
-            store: {ui, session, calendar, ranking, marks, projects}
+            store: { ui, session, calendar, ranking, marks, projects }
         } = this.props;
 
         try {
+
+            this.hasEverythingCached && (await session.getSessionFromCache());
+
             await Promise.all([
-                calendar.fetchCalendar(),
-                session.userInformation(),
-                projects.fetchProjects(),
+                session.userInformation({ fromCache: true }),
+                calendar.fetchCalendar(CALENDAR_START, CALENDAR_END, { fromCache: true }),
+                projects.fetchProjects({ fromCache: true }),
             ]);
             await Promise.all([
-                marks.fetchMarks(session.username),
+                marks.fetchMarks(session.username, { fromCache: true }),
                 ranking.selfRankPosition({ fromCache: true }),
             ]);
 
             ui.defaultState();
             return true;
-        } catch(e) {
+        } catch (e) {
             ui.defaultState();
             console.log(e);
             return false;
@@ -87,12 +109,15 @@ export default class Login extends Component {
             store: { ui, session }
         } = this.props;
 
-        ui.fetchingState();
-        this.setState({loginMessage: 'Login in ...'});
-
         try {
-            await session.login(this.state.username, this.state.password);
-            if (session.isLogged) {
+
+            if (!this.hasEverythingCached) {
+                ui.fetchingState();
+                this.setState({ loginMessage: 'Login in ...' });
+                await session.login(this.state.username, this.state.password);
+            }
+
+            if (session.isLogged || this.hasEverythingCached) {
                 this.setState({ loginMessage: 'Fetching data ...' });
 
                 const response = await this.fetchRequiredData();
@@ -117,11 +142,10 @@ export default class Login extends Component {
     }
 
     render() {
-        const { store: { ui } } = this.props;
         const { width } = Dimensions.get('window');
 
         return (
-
+           <Layout store={this.props.store}>
              <KeyboardAvoidingView style={{ flex: 1}}>
                     <BackgroundImageWithOverlay
                         source={backgroundSource}
@@ -167,6 +191,7 @@ export default class Login extends Component {
                         </View>
                     </BackgroundImageWithOverlay>
              </KeyboardAvoidingView>
+        </Layout>
         );
     }
 }

@@ -57,8 +57,8 @@ export default class Stats extends Component {
     render() {
 
         const { store: { session } } = this.props;
-        const gpaPercentage = (session.session.user.gpa / 4) * 100;
-        const creditsPercentage = (session.session.user.credits / (session.session.user.studentyear * 60)) * 100;
+        const gpaPercentage = (session.user.gpa / 4) * 100;
+        const creditsPercentage = (session.user.credits / (session.user.studentyear * 60)) * 100;
 
         return (
             <View style={{ flex: 1, backgroundColor: "#2c3e50" }}>
@@ -74,7 +74,7 @@ export default class Stats extends Component {
                             <HalfCell
                                 iconHeader="brightness-1"
                                 titleHeader="Your GPA"
-                                dataLegend={session.session.user.gpa}
+                                dataLegend={session.user.gpa}
                                 leftCell={true}
                             >
                                 <AnimatedGaugeProgress
@@ -95,7 +95,7 @@ export default class Stats extends Component {
                             <HalfCell
                                 iconHeader="brightness-1"
                                 titleHeader="Your credits"
-                                dataLegend={session.session.user.credits}
+                                dataLegend={session.user.credits}
                                 leftCell={false}
                             >
                                 <AnimatedGaugeProgress

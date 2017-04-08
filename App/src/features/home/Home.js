@@ -19,6 +19,9 @@ import { Actions } from 'react-native-router-flux';
 import scrollStyle from './styles';
 import Cell from './Cell';
 
+import Layout from '../../shared/components/Layout';
+import refreshApplicationData from '../../shared/RefreshApplication';
+
 const HEADER_MAX_HEIGHT = 180;
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 64 : 54;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
@@ -51,10 +54,18 @@ export default class Home extends Component {
         }
     };
 
+    async componentWillMount() {
+        const { store: { ui, session } } = this.props;
+
+        if (ui.isConnected && session.loggedFromCache) {
+            await this.refreshData();
+        }
+    }
+
     renderScrollView() {
         const {
             store: {
-                session: { news },
+                session,
                 calendar,
                 ranking,
                 projects,
@@ -64,7 +75,7 @@ export default class Home extends Component {
         } = this.props;
 
         const nextEvent = calendar.nextEvent;
-        const lastNews = _(news)
+        const lastNews = _(session.summary.news.slice())
             .orderBy((news) => moment(news.date, 'YYYY-MM-DD HH:mm:ss'))
             .last();
         const lastMark = marks.lastMark;
@@ -149,7 +160,7 @@ export default class Home extends Component {
     renderGauges(translateLeft, translateRight) {
         const {
             store: {
-                session: { session: { user } },
+                session: { user },
             }
         } = this.props;
         const creditsPercentage = (user.credits / (user.studentyear * 60)) * 100;
@@ -187,16 +198,13 @@ export default class Home extends Component {
         ];
     }
 
+    async refreshData() {
+        await refreshApplicationData({ withLogin: true });
+    }
+
     onRefresh() {
-        const { store: { session, calendar, projects, marks } } = this.props;
-        this.setState( {refreshing: true }, async () => {
-            await session.tryLoginFromAutoLogin();
-            await Promise.all([
-                calendar.fetchCalendar(),
-                session.userInformation(),
-                projects.fetchProjects(),
-                marks.fetchMarks(session.username),
-            ]);
+        this.setState({ refreshing: true }, async () => {
+            await this.refreshData();
             this.setState({ refreshing: false });
         });
     }
@@ -260,12 +268,13 @@ export default class Home extends Component {
 
         const {
             store: {
-                session: { session: { user } },
+                session: { user },
             }
         } = this.props;
 
         return (
-            <View style={scrollStyle.fill}>
+            <Layout store={this.props.store}>
+                <View style={scrollStyle.fill}>
                 <ScrollView
                     refreshControl={
                         <RefreshControl
@@ -277,7 +286,7 @@ export default class Home extends Component {
                     style={scrollStyle.fill}
                     scrollEventThrottle={32}
                     onScroll={Animated.event(
-                        [{ nativeEvent: {contentOffset: { y: this.state.scrollY } }}]
+                        [{ nativeEvent: { contentOffset: { y: this.state.scrollY } }}]
                     )}
                 >
                     { this.renderScrollView() }
@@ -286,14 +295,15 @@ export default class Home extends Component {
                     scrollStyle.header,
                     {
                         elevation: shadow,
-                        shadowColor: "#000000",
+                        shadowColor: '#000000',
                         shadowOpacity: iOSshadow,
                         shadowRadius: 5,
                         shadowOffset: {
                             height: 3,
                             width: 0
                         },
-                    }]}>
+                    }
+                ]}>
                     <Animated.View style={[
                         {
                             overflow: 'hidden',
@@ -311,7 +321,7 @@ export default class Home extends Component {
                         >
                             <View style={scrollStyle.pictureAndGaugesContainer}>
                                 <View style={scrollStyle.pictureAndGauges}>
-                                    <View style={{ flexDirection: 'column'}}>
+                                    <View style={{ flexDirection: 'column' }}>
                                         <Animated.View style={{
                                             transform: [{ translateX: translateMinus50 }],
                                         }}>
@@ -322,9 +332,10 @@ export default class Home extends Component {
                                     <Animated.Image
                                         style={[
                                             scrollStyle.picture,
-                                            { transform: [ { rotate: rotateIcon }  ] }
+                                            { transform: [{ rotate: rotateIcon }] }
                                         ]}
-                                        source={require('../../assets/epitech.png')}                                    />
+                                        source={require('../../assets/epitech.png')}/>
+
                                     { this.renderGauges(gaugeLeftTranslate, gaugeRightTranslate) }
                                     <Animated.View style={{
                                         transform: [{ translateX: translate50 }],
@@ -347,7 +358,7 @@ export default class Home extends Component {
                             style={[
                                 scrollStyle.bar,
                                 {
-                                    transform: [ {translateY: translateMinus50} ],
+                                    transform: [{ translateY: translateMinus50 }],
                                     opacity: titleOpacity,
                                 },
                             ]}
@@ -356,7 +367,7 @@ export default class Home extends Component {
                         </Animated.View>
                     </Animated.View>
                 </Animated.View>
-            </View>
+            </View></Layout>
         );
     }
 }

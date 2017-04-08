@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { Router, Scene } from 'react-native-mobx';
 import Login from './login/Login';
-import Home from './home/Home'
+import Home from './home/Home';
 import Calendar from './calendar/Calendar';
 import Activity from './calendar/Activity/Activity';
 import AvailableSlots from './calendar/Activity/slots/AvailableSlots';
@@ -19,6 +19,7 @@ import Stats from './stats/Stats';
 import Token from './token/Token';
 import Ranking from './ranking/Ranking';
 import Links from './links/Links';
+
 import store from '../stores';
 import _ from 'lodash';
 
@@ -58,18 +59,18 @@ const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) 
 };
 
 const getTitleStyle = () => {
-    return { color: '#FFFFFF', marginTop: -3}
+    return { color: '#FFFFFF', marginTop: -3 }
 };
 
 const getImageStyle = () => {
-    return { width: 20, height: 20, marginRight: 5}
+    return { width: 20, height: 20, marginRight: 5 }
 };
 
 /*
-* type 'reset' on Login Scene forces all scenes to unmount when logging out.
-* This prevents mobx from re-rendering Home scene when logging in again (by changing variable that Home observes)
-* even though the scene is not in foreground, and therefore causing the app to crash.
-*/
+ * type 'reset' on Login Scene forces all scenes to unmount when logging out.
+ * This prevents mobx from re-rendering Home scene when logging in again (by changing variable that Home observes)
+ * even though the scene is not in foreground, and therefore causing the app to crash.
+ */
 
 class Main extends Component {
     render() {
@@ -79,7 +80,7 @@ class Main extends Component {
                 getSceneStyle={getSceneStyle}
                 navigationBarStyle={Platform.OS === 'ios' ? styles.headerIOS : styles.headerAndroid}
                 titleStyle={getTitleStyle()}
-                backButtonImage={ require(`../assets/left-arr.png`)}
+                backButtonImage={ require(`../assets/left-arr.png`) }
             >
 
                 <Scene key="root">

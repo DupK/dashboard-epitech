@@ -97,9 +97,9 @@ class activity {
                     return {
                         ...slot,
                         master: {
-                            title: session.session.user.name,
+                            title: session.user.name,
                             login: session.username,
-                            picture: session.session.user.thumbnail
+                            picture: session.user.thumbnail
                         }
                     };
                 }
