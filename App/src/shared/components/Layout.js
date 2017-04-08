@@ -4,19 +4,25 @@
 
 import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import LoadingIndicator from 'react-native-spinkit';
+
 import { observer } from 'mobx-react/native';
 
-const AlertBar = observer(({ message, backgroundColor }) => {
+const AlertBar = observer(({ message, backgroundColor, loading }) => {
     const { width } = Dimensions.get('window');
 
     return (
         <View style={{
             width,
-            height: 22,
             backgroundColor,
+            flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
+            padding: 4,
         }}>
+            {
+                loading && <LoadingIndicator size={16} color="#FFFFFF" type="Circle"/>
+            }
             <Text
                 style={{
                     color: '#FAFAFA',
@@ -29,6 +35,12 @@ const AlertBar = observer(({ message, backgroundColor }) => {
         </View>
     );
 });
+
+AlertBar.propTypes = {
+    message: React.PropTypes.string.isRequired,
+    backgroundColor: React.PropTypes.string.isRequired,
+    loading: React.PropTypes.bool.isRequired,
+};
 
 @observer
 class Layout extends React.Component {
@@ -53,7 +65,7 @@ class Layout extends React.Component {
             case ui.state.refreshingData:
                 return 'Your profile is being refreshed automatically...';
             case ui.state.noInternet:
-                return 'You\'re currently offline. Please enable your internet connection.';
+                return 'You\'re offline. Please enable your internet connection.';
             default:
                 return '';
         }
@@ -70,7 +82,7 @@ class Layout extends React.Component {
             <AlertBar
                 message={this.getStatusBarTitle()}
                 backgroundColor={this.getStatusBarColor()}
-                color="#FAFAFA"
+                loading={ui.currentState === ui.state.refreshingData}
             />
         );
     }
