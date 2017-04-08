@@ -109,6 +109,7 @@ class Session {
             }
 
             const information = await Intra.fetchStudent(this.username);
+            const autologin = await Intra.fetchAutoLogin();
             const netsoul = await Intra.fetchNetsoul(this.username);
 
             const user = {
@@ -126,6 +127,7 @@ class Session {
                 thumbnail: information.picture,
                 uid: information.uid,
                 logData: netsoul,
+                autologin: autologin.autologin,
             };
 
             await storage.save('user', user);

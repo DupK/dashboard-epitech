@@ -7,7 +7,6 @@ import { observer } from 'mobx-react/native';
 import {
     View,
 } from 'react-native';
-import { Row, Grid } from "react-native-easy-grid";
 import Link from './Link';
 import Cell from './Cell';
 
@@ -23,11 +22,9 @@ export default class Links extends Component {
     }
 
     render() {
-
+        const { store: { session } } = this.props;
         return (
             <View style={{ flex: 1, backgroundColor: '#233445' }}>
-                <Grid>
-
                     <Cell icon="ios-git-branch">
                         <Link
                             title="Github/DupK/dashboard-epitech"
@@ -40,7 +37,7 @@ export default class Links extends Component {
                         <Link
                             title="Intranet Epitech"
                             description="Epitech official intranet site"
-                            url="https://intra.epitech.eu/"
+                            url={session.user.autologin}
                         />
                     </Cell>
 
@@ -83,10 +80,6 @@ export default class Links extends Component {
                             url="http://taker.epitech.eu/"
                         />
                     </Cell>
-
-                    <Row size={0.01} />
-
-                </Grid>
             </View>
         );
     }
