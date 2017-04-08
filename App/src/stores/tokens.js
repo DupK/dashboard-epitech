@@ -24,6 +24,11 @@ class Tokens {
             this.error = {};
         },
     };
+
+    @action refreshTokens() {
+        this.tokens = session.tokens;
+    }
+
     async validateToken(id) {
         const response = await Intra.validateToken(this.tokens[id].tokenLink, this.tokenValues[id]);
 

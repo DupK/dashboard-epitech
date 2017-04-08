@@ -110,6 +110,7 @@ class Token extends Component {
             id,
             value,
             tokensStore: tokens,
+            uiStore,
         } = this.props;
         const { width } = Dimensions.get('window');
 
@@ -186,7 +187,7 @@ class Token extends Component {
                         multiline={false}
                         placeholder="Type your token"
                         placeholderTextColor="rgba(255, 255, 255, 0.6)"
-                        onSubmitEditing={() => this.props.uiStore.isConnected && tokens.selectToken(id)}
+                        onSubmitEditing={() => uiStore.isConnected && tokens.selectToken(id)}
                         underlineColorAndroid="transparent"
                         blurOnSubmit
                         onChangeText={(text) => tokens.updateValues(text, id)}
@@ -207,7 +208,7 @@ Token.propTypes = {
     remove: React.PropTypes.bool,
     onAnimationEnd: React.PropTypes.func,
     tokensStore: React.PropTypes.object,
-    ui: React.PropTypes.object,
+    uiStore: React.PropTypes.object,
 };
 
 @observer
@@ -234,8 +235,9 @@ export default class Tokens extends Component {
                                   token={token}
                                   id={i}
                                   value={tokens.tokenValues[i]}
-                                  remove={tokens.selectedToken == i}
+                                  remove={tokens.selectedToken === i}
                                   tokensStore={tokens}
+                                  uiStore={ui}
                               />
                           ))
                           :

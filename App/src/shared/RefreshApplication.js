@@ -6,7 +6,7 @@ import { CALENDAR_START, CALENDAR_END } from '../stores/calendar'
 import stores from '../stores';
 
 export default async function refreshApplication({ withLogin } = false) {
-    const { ui, session, calendar, projects, marks } = stores;
+    const { ui, session, calendar, projects, marks, tokens } = stores;
 
     try {
         ui.refreshingData();
@@ -18,6 +18,7 @@ export default async function refreshApplication({ withLogin } = false) {
             session.userInformation({ fromCache: false }),
             projects.fetchProjects({ fromCache: false }),
             marks.fetchMarks(session.username, { fromCache: false }),
+            tokens.refreshTokens(),
         ]);
 
         ui.defaultState();

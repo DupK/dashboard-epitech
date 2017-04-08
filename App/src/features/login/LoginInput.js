@@ -23,7 +23,7 @@ class LoginInput extends Component {
             />
         );
     }
-};
+}
 
 const styles = StyleSheet.create({
     input: {
