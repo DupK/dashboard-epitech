@@ -131,7 +131,7 @@ class Token extends Component {
                     margin: 10,
                     marginTop: 15,
                     elevation: 4,
-                    height: 60,
+                    height: 70,
                     transform: [{ translateX: tokenTranslate }]
                 }}
             >
@@ -162,10 +162,10 @@ class Token extends Component {
                             )
                     }
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', padding: 4}}>
-                        <Text style={{ flex: 0.8, color: '#FFF', fontSize: 12, fontWeight: 'bold' }}>
+                        <Text style={{ flex: 0.75, color: '#FFF', fontSize: 12, fontWeight: 'bold' }}>
                             {token.title}
                         </Text>
-                        <Text style={{ flex: 0.2, color: '#FFF', fontSize: 12, fontWeight: '100' }}>
+                        <Text style={{ flex: 0.25, color: '#FFF', fontSize: 12, fontWeight: '100' }}>
                             {token.date}
                         </Text>
                     </View>
@@ -173,7 +173,7 @@ class Token extends Component {
                 <View>
                     <TextInput
                         style={{
-                            height: 35,
+                            height: 45,
                             color: '#FFF',
                             fontSize: 11,
                             textAlign: 'center',
@@ -187,6 +187,7 @@ class Token extends Component {
                         placeholder="Type your token"
                         placeholderTextColor="rgba(255, 255, 255, 0.6)"
                         onSubmitEditing={() => this.props.uiStore.isConnected && tokens.selectToken(id)}
+                        underlineColorAndroid="transparent"
                         blurOnSubmit
                         onChangeText={(text) => tokens.updateValues(text, id)}
                         value={value || ''}
