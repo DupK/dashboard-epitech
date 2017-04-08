@@ -86,7 +86,7 @@ export default class ProjectsList extends Component {
         ));
 
         return (
-            <ScrollView style={{ backgroundColor: '#FAFAFA' }}>
+            <ScrollView style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
                     {this.renderHeader('Currents projects', 'hourglass-half')}
                     <ListView
                         dataSource={this.ds.cloneWithRows(currentProjects)}

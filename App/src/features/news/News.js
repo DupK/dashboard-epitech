@@ -26,28 +26,27 @@ export default class News extends Component {
 
     render() {
         const { store: { session } } = this.props;
-
         return (
-          <Layout store={this.props.store}>
-            <View style={{ backgroundColor: '#FAFAFA' }}>
-                <ListView
-                    dataSource={this.ds.cloneWithRows(session.news.slice())}
-                    renderRow={(news) => {
-                        return (
-                            <View style={{ flex: 1, flexDirection: 'row', padding: 15, borderBottomWidth: 1, borderBottomColor: 'rgba(0, 0, 0, 0.1)' }}>
-                                <Image source={{uri: news.user.picture === null ? noPicture : news.user.picture}} style={Platform.OS === 'ios' ? styles.pictureIOS : styles.pictureAndroid} />
-                                <Text style={styles.title}>{news.title}{'\n'}
-                                    <Text style={styles.detail}>
-                                    { news.details }
+              <Layout store={this.props.store}>
+                <View style={{ backgroundColor: '#FAFAFA' }}>
+                    <ListView
+                        dataSource={this.ds.cloneWithRows(session.summary.news.slice())}
+                        enableEmptySections={true}
+                        renderRow={(news) => {
+                            return (
+                                <View style={{ flex: 1, flexDirection: 'row', padding: 15, borderBottomWidth: 1, borderBottomColor: 'rgba(0, 0, 0, 0.1)' }}>
+                                    <Image source={{uri: news.user.picture === null ? noPicture : news.user.picture}} style={Platform.OS === 'ios' ? styles.pictureIOS : styles.pictureAndroid} />
+                                    <Text style={styles.title}>{news.title}{'\n'}
+                                        <Text style={styles.detail}>
+                                        { news.details }
+                                        </Text>
                                     </Text>
-                                </Text>
-                            </View>
-                        );
-                    }}
-                />
-            </View>
-        </Layout>
-
+                                </View>
+                            );
+                        }}
+                    />
+                </View>
+            </Layout>
         );
     }
 };
