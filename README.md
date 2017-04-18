@@ -1,3 +1,6 @@
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/12463f4e99504b1794db7d50151d2924)](https://www.codacy.com/app/DupK/dashboard-epitech?utm_source=github.com&utm_medium=referral&utm_content=DupK/dashboard-epitech&utm_campaign=badger)
+
 Dashboard Epitech
 -
 
