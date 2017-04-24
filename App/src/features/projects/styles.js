@@ -42,30 +42,30 @@ const styles = StyleSheet.create({
     },
 
     documentText: {
-        alignSelf: 'center',
         color: '#FAFAFA',
         fontSize: 12,
         margin: 5,
+        alignSelf: 'center'
     },
 
     documentIcon: {
-        marginTop: 5,
         alignSelf: 'center',
+        marginLeft: 5,
         color: '#FAFAFA',
     },
 
     documentSubContainer: {
-        marginTop: 0,
-        margin: 10,
-        width: 100,
+        width: 350,
+        alignSelf: 'center',
+        flexDirection: 'row',
+        padding: 10,
+        margin: 0,
         elevation: 3,
         backgroundColor: '#233445'
     },
 
     documentContainer: {
         flexDirection: 'row',
-        alignItems: 'flex-start',
-        flexWrap: 'wrap',
         flex: 1,
         margin: 10,
     },
