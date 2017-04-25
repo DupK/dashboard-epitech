@@ -1,7 +1,6 @@
 
 
-![logo](http://img4.hostingpics.net/pics/337882iclauncher.png) 
-Dashboard EPITECH
+![logo](http://img4.hostingpics.net/pics/337882iclauncher.png) Dashboard EPITECH
 =================
 
 
