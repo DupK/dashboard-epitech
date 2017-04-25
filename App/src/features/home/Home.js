@@ -272,6 +272,9 @@ export default class Home extends Component {
             }
         } = this.props;
 
+        const nameSplited = user.name.split(' ');
+        let name = nameSplited[0] + ' ' + nameSplited[1].toUpperCase()
+
         return (
             <Layout store={this.props.store}>
                 <View style={scrollStyle.fill}>
@@ -350,7 +353,7 @@ export default class Home extends Component {
                                     flex: 0.3,
                                     transform: [{ translateY: translate50 }],
                                 }}>
-                                    <Text style={scrollStyle.username}>{ user.name }</Text>
+                                    <Text style={scrollStyle.username}>{ name }</Text>
                                 </Animated.View>
                             </View>
                         </Animated.View>

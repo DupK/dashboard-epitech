@@ -106,7 +106,6 @@ Layout.propTypes = {
 
 const styles = StyleSheet.create({
     layoutContainer: {
-        backgroundColor: '#233445',
         flex: 1,
     },
 });

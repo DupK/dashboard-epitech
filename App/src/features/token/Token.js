@@ -164,7 +164,7 @@ class Token extends Component {
                     }
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', padding: 4}}>
                         <Text style={{ flex: 0.75, color: '#FFF', fontSize: 12, fontWeight: 'bold' }}>
-                            {token.title}
+                            {_.truncate(token.title,{ length: 35, separator: '...'})}
                         </Text>
                         <Text style={{ flex: 0.25, color: '#FFF', fontSize: 12, fontWeight: '100' }}>
                             {token.date}
