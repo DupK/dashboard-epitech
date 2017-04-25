@@ -27,7 +27,7 @@ class Marks {
     @observable rawMarks = {};
     @observable marksBySemesters = {};
     @observable nbSemester = 0;
-    @observable currentSemester = 1;
+    @observable currentSemester = session.user.semester;
 
     @observable projectMarks = [];
     @observable selectedMark = null;
@@ -74,7 +74,7 @@ class Marks {
             .groupBy((module) => {
                 const moduleId = module.title.substring(0, 2);
 
-                if (moduleId[1] === '0' || moduleId === 'Hu' || moduleId === 'Sp') {
+                if (moduleId[0] !== 'B' || !(/\d/.test(moduleId[1])) || moduleId === 'B0') {
                     return 'Others';
                 }
 

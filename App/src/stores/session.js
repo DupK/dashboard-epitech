@@ -125,6 +125,7 @@ class Session {
                 year: information.scolaryear,
                 location: information.location,
                 thumbnail: information.picture,
+                semester: information.semester,
                 uid: information.uid,
                 logData: netsoul,
                 autologin: autologin.autologin,
