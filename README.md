@@ -1,10 +1,7 @@
 
 
-Dashboard EPITECH
+Dashboard EPITECH (*Android/iOS*)
 =================
-
-
-![logo](http://img4.hostingpics.net/pics/337882iclauncher.png) 
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/12463f4e99504b1794db7d50151d2924)](https://www.codacy.com/app/DupK/dashboard-epitech?utm_source=github.com&utm_medium=referral&utm_content=DupK/dashboard-epitech&utm_campaign=badger) [![GitHub issues](https://img.shields.io/github/issues/DupK/dashboard-epitech.svg)](https://github.com/DupK/dashboard-epitech/issues)
 
