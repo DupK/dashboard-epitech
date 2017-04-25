@@ -117,7 +117,7 @@ export default class Activity extends Component {
                 >
                     <AdministrativeDescription
                         room={activityStore.roomName}
-                        registeredStudents={activityStore.activity.events[0].nb_registered}
+                        registeredStudents={parseInt(activityStore.activity.events[0].nb_registered)}
                         date={moment(event.start).format('DD.MM.YYYY')}
                         startTime={moment(event.start).format('HH:mm')}
                         endTime={moment(event.end).format('HH:mm')}

@@ -3,9 +3,8 @@
  */
 
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
-
 import { observer } from 'mobx-react/native';
 
 const AlertBar = observer(({ message, backgroundColor, loading }) => {
@@ -20,6 +19,9 @@ const AlertBar = observer(({ message, backgroundColor, loading }) => {
             alignItems: 'center',
             padding: 4,
         }}>
+            <StatusBar
+                hidden={true}
+            />
             {
                 loading && <LoadingIndicator size={16} color="#FFFFFF" type="Circle"/>
             }
@@ -104,8 +106,9 @@ Layout.propTypes = {
 
 const styles = StyleSheet.create({
     layoutContainer: {
+        backgroundColor: '#233445',
         flex: 1,
-    }
+    },
 });
 
 export default Layout;
