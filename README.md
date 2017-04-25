@@ -1,15 +1,18 @@
 
 
-![logo](http://img4.hostingpics.net/pics/337882iclauncher.png) Dashboard EPITECH
+Dashboard EPITECH
 =================
 
+
+![logo](http://img4.hostingpics.net/pics/337882iclauncher.png) 
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/12463f4e99504b1794db7d50151d2924)](https://www.codacy.com/app/DupK/dashboard-epitech?utm_source=github.com&utm_medium=referral&utm_content=DupK/dashboard-epitech&utm_campaign=badger) [![GitHub issues](https://img.shields.io/github/issues/DupK/dashboard-epitech.svg)](https://github.com/DupK/dashboard-epitech/issues)
 
 
-**What is it ? **
+**What is it ?**
 -
-A cross-platform **Epitech** intranet application with awesome features 
+
+A cross-platform **Epitech** intranet application with awesome features 🔥 
 
 * **Notifications**
 * **Calendar** and **registration**
@@ -24,10 +27,10 @@ A cross-platform **Epitech** intranet application with awesome features
 
 And more..
 
-**Contribution**
+**Contributions**
 -
 
-Contributions are always welcome, thank you for your suggestions!
+Contributions are always welcome! 🤘
 
 **Libraries**
 -
@@ -44,7 +47,7 @@ Contributions are always welcome, thank you for your suggestions!
 **API** 
 -
 
-* [gist.github.com/DupK](https://gist.github.com/DupK)
+* [intra.epitech.eu](https://gist.github.com/DupK)
 
 
 
