@@ -109,7 +109,7 @@ class Calendar extends Component {
                     <LoadingIndicator
                         isVisible={ui.currentState === ui.state.fetching}
                         color="#2c3e50"
-                        type="9CubeGrid"
+                        type="Bounce"
                         size={100}
                     />
                     <Text style={{

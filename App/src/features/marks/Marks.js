@@ -134,6 +134,12 @@ export default class Marks extends Component {
                     </View> 
                 <View style={styles.headerContainer}>
                     <TouchableOpacity
+                        hitSlop={{
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
+                            right: 20,
+                        }}
                         style={styles.headerArrow}
                         onPress={this.previousSemester}
                     >
@@ -143,6 +149,12 @@ export default class Marks extends Component {
                         { semesterText }
                     </Text>
                     <TouchableOpacity
+                        hitSlop={{
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
+                            right: 20,
+                        }}
                         style={styles.headerArrow}
                         onPress={this.nextSemester}
                     >
