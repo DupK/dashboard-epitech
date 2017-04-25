@@ -16,7 +16,7 @@ export const Team = ({ teams }) => {
                 <View key={i} style={styles.teamContainer}>
                     <View style={{flexGrow: 1, height: 25, backgroundColor: '#293a4d', justifyContent: 'center', elevation: 1, flexDirection: 'row'}}>
                         <IconMCI name="brightness-1" size={8} style={{color: isValidTeam(team.members) ? '#62c462' : '#F44336', alignSelf: 'center', marginLeft: 10}}/>
-                        <Text style={{ color: '#FAFAFA', fontSize: 11, alignSelf: 'center', flex: 1, marginLeft: 10 }}>{team.title}</Text>
+                        <Text style={{ color: '#FAFAFA', fontSize: 11, alignSelf: 'center', flex: 1, marginLeft: 10 }}>{_.truncate(team.title,{ length: 55, separator: '...'})}</Text>
                     </View>
                     <View style={styles.teamSubContainer}>
                         <View style={styles.teamImageContainer}>
@@ -65,7 +65,7 @@ export const Document = ({ documents }) => {
                                     size={22}
                                 />
                                 <Text style={styles.documentText}>
-                                    {_.truncate(document.title, { length: 15, separator: '...' })}
+                                    {_.truncate(document.title, { length: 45, separator: '...' })}
                                 </Text>
                             </View>
                         </TouchableOpacity>

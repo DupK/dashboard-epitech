@@ -54,6 +54,7 @@ class MonthSelector extends Component {
         return (
             <View style={styles.container}>
                 <TouchableOpacity
+                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
                     style={styles.selectorItems}
                     title="today"
                     transparent
@@ -62,6 +63,7 @@ class MonthSelector extends Component {
                     <IconFA style={styles.selectorIcons} name="calendar" size={20}/>
                 </TouchableOpacity>
                 <TouchableOpacity
+                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
                     style={styles.selectorItems}
                     title="previousMonth"
                     transparent
@@ -71,6 +73,7 @@ class MonthSelector extends Component {
                 </TouchableOpacity>
                 <Text style={styles.selectorIcons}>{ this.formatCalendarHeader() }</Text>
                 <TouchableOpacity
+                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
                     style={styles.selectorItems}
                     title="nextMonth"
                     transparent
@@ -79,6 +82,7 @@ class MonthSelector extends Component {
                     <IconIO size={24} style={styles.selectorIcons} name="ios-arrow-forward"/>
                 </TouchableOpacity>
                 <TouchableOpacity
+                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
                     style={styles.selectorItems}
                     title="today"
                     transparent

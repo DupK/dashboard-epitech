@@ -74,7 +74,7 @@ export default class Ranking extends Component {
                     <LoadingIndicator
                         isVisible={!ranking.promotion.length}
                         color="#FFFFFF"
-                        type="Pulse"
+                        type="Bounce"
                         size={100}
                     />
                 </View>

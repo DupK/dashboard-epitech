@@ -77,7 +77,7 @@ export default class Day extends Component {
 
         return (
             <Animated.View style={[styles.dateContainer, animObject]}>
-                <TouchableOpacity onPress={() => calendar.onDateSelected(date)}>
+                <TouchableOpacity hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }} onPress={() => calendar.onDateSelected(date)}>
                     <Text style={dateNameStyle}>{date.format('ddd').toUpperCase()}</Text>
                     <Text style={dateNumberStyle}>{date.date()}</Text>
                 </TouchableOpacity>

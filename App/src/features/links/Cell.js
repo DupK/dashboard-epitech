@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     },
 
     iconContainerIos: {
-        flex: 0.15,
+        flex: 0.20,
         backgroundColor: '#233445',
         zIndex: 1,
         shadowColor: '#1b2636',

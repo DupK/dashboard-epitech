@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 
     headerArrow: {
         alignSelf: 'center',
-        margin: 20,
+        padding: 20,
     },
 
     headerIcon: {
