@@ -58,9 +58,9 @@ Contributions are always welcome! 🤘
 
 
 
-**Screenshots**
+**Demo**
 -
-![enter image description here](https://gifyu.com/images/demo60d51.md.gif)
+![enter image description here](https://github.com/DupK/demo_storage/blob/master/demo.gif)
 
 
 **Authors**
