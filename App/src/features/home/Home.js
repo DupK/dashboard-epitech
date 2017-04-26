@@ -273,7 +273,7 @@ export default class Home extends Component {
         } = this.props;
 
         const nameSplited = user.name.split(' ');
-        let name = nameSplited[0] + ' ' + nameSplited[1].toUpperCase()
+        const name = nameSplited[0] + ' ' + nameSplited[1].toUpperCase();
 
         return (
             <Layout store={this.props.store}>
