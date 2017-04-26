@@ -16,4 +16,4 @@ import monitorNetworkConnection from './src/shared/NetworkConnection';
 //observe any network changes and let ui react according to these changes
 monitorNetworkConnection();
 
-AppRegistry.registerComponent('App', () => Main);
+AppRegistry.registerComponent('Dashboard', () => Main);

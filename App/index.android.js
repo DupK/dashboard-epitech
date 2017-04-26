@@ -14,4 +14,4 @@ monitorNetworkConnection();
 
 /* Modules */
 
-AppRegistry.registerComponent('App', () => Main);
+AppRegistry.registerComponent('Dashboard', () => Main);
