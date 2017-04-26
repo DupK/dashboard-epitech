@@ -60,7 +60,7 @@ Contributions are always welcome! 🤘
 
 **Screenshots**
 -
-![enter image description here](http://img4.hostingpics.net/pics/386875mockup.png)![enter image description here](http://img4.hostingpics.net/pics/803275menu.png)
+![enter image description here](https://gifyu.com/images/demo60d51.md.gif)
 
 
 **Authors**
