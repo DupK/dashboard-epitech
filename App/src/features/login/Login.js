@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
     StyleSheet,
+    ScrollView,
     View,
     Dimensions,
     KeyboardAvoidingView,
@@ -146,7 +147,8 @@ export default class Login extends Component {
 
         return (
            <Layout store={this.props.store}>
-             <KeyboardAvoidingView style={{ flex: 1}}>
+               <ScrollView contentContainerStyle={{ flex: 1}} keyboardShouldPersistTaps="never" scrollEnabled={false}>
+                 <KeyboardAvoidingView style={{ flex: 1}} behavior="padding">
                     <BackgroundImageWithOverlay
                         source={backgroundSource}
                         colorOverlay="rgba(45, 45, 45, 0)"
@@ -190,7 +192,8 @@ export default class Login extends Component {
                             </View>
                         </View>
                     </BackgroundImageWithOverlay>
-             </KeyboardAvoidingView>
+                 </KeyboardAvoidingView>
+               </ScrollView>
         </Layout>
         );
     }
