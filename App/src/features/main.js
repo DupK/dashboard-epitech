@@ -20,6 +20,7 @@ import Stats from './stats/Stats';
 import Token from './token/Token';
 import Ranking from './ranking/Ranking';
 import Links from './links/Links';
+import Documents from './documents/Documents';
 
 import store from '../stores';
 import _ from 'lodash';
@@ -199,6 +200,13 @@ class Main extends Component {
                         title="Links"
                         hideNavBar={false}
                         component={Links}
+                    />
+
+                    <Scene
+                        key="documents"
+                        title="Documents"
+                        hideNavBar={false}
+                        component={Documents}
                     />
 
                 </Scene>

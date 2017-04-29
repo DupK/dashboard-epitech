@@ -11,6 +11,7 @@ Dashboard EPITECH (*Android/iOS*)
 
 A cross-platform **Epitech** intranet application with awesome features 🔥 
 
+* Authentification with **Office 365**
 * **Notifications**
 * **Calendar** and **registration**
 * **Projects**, **project details** and **timeline**
@@ -19,6 +20,7 @@ A cross-platform **Epitech** intranet application with awesome features 🔥
 * **Projects** and **modules** results
 * Promotion **ranking**
 * **Statistics**
+* Private **documents**
 * Helpful **links**
 * **Cache** system
 

@@ -47,6 +47,7 @@ export default class Home extends Component {
         tokens: () => Actions.token(),
         stats: () => Actions.stats(),
         links: () => Actions.links(),
+        documents: () => Actions.documents(),
         logout: async () => {
             await this.props.store.session.logout();
             this.props.store.ui.defaultState();
@@ -137,6 +138,13 @@ export default class Home extends Component {
                     description="This feature will be soon available"
                     icon="ios-speedometer-outline"
                     onPress={this.menu.stats}
+                    color="#233445"
+                />
+                <Cell
+                    title="Documents"
+                    description="Your private documents"
+                    icon="ios-folder-open-outline"
+                    onPress={this.menu.documents}
                     color="#233445"
                 />
                 <Cell

@@ -243,6 +243,16 @@ export function fetchProjectMarks(year, module, instance, activity) {
     });
 }
 
+export function fetchDocuments(user) {
+    return request(`${BASE_URL}/user/${user}/document/?format=json`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    });
+}
+
 export function validateToken(tokenLink, tokenValue) {
     const formData = new FormData();
     formData.append('token', tokenValue);
