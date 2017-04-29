@@ -111,6 +111,7 @@ class Session {
             const information = await Intra.fetchStudent(this.username);
             const autologin = await Intra.fetchAutoLogin();
             const netsoul = await Intra.fetchNetsoul(this.username);
+            const documents = await Intra.fetchDocuments(this.username);
 
             const user = {
                 login: information.login,
@@ -129,6 +130,7 @@ class Session {
                 uid: information.uid,
                 logData: netsoul,
                 autologin: autologin.autologin,
+                documents: documents,
             };
 
             await storage.save('user', user);
