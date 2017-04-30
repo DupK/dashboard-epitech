@@ -63,7 +63,7 @@ class Layout extends React.Component {
 
         switch (ui.currentState) {
             case ui.state.refreshingData:
-                return 'Your profile is being refreshed automatically...';
+                return 'Your profile is being refreshed...';
             case ui.state.noInternet:
                 return 'You\'re offline. Please enable your internet connection.';
             default:

@@ -171,8 +171,8 @@ export default class Login extends Component {
                 <LoadingIndicator
                     isVisible={this.state.loggingIn}
                     color="#FAFAFA"
-                    type="Bounce"
-                    size={80}
+                    type="ThreeBounce"
+                    size={60}
                 />
             </View>
         );

@@ -236,12 +236,15 @@ export default class Home extends Component {
         const translateMinus50 = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, -50, 0],
+        });
+        const translateHome = this.state.scrollY.interpolate({
+            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+            outputRange: [0, -50, 0],
             extrapolate: 'clamp',
         });
         const translate50 = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, 50, 0],
-            extrapolate: 'clamp',
         });
         const titleOpacity = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
@@ -251,12 +254,10 @@ export default class Home extends Component {
         const gaugeLeftTranslate = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, 30, 0],
-            extrapolate: 'clamp',
         });
         const gaugeRightTranslate = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
             outputRange: [0, -30, 0],
-            extrapolate: 'clamp',
         });
         const shadow = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
@@ -271,7 +272,6 @@ export default class Home extends Component {
         const rotateIcon = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2],
             outputRange: ['0deg', '360deg'],
-            extrapolate: 'clamp',
         });
 
         const {
@@ -369,7 +369,7 @@ export default class Home extends Component {
                             style={[
                                 scrollStyle.bar,
                                 {
-                                    transform: [{ translateY: translateMinus50 }],
+                                    transform: [{ translateY: translateHome }],
                                     opacity: titleOpacity,
                                 },
                             ]}
