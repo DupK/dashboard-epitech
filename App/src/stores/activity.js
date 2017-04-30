@@ -2,7 +2,8 @@
  * Created by desver_f on 10/03/17.
  */
 import autobind from 'autobind-decorator';
-import { observable, action, computed } from 'mobx';
+import _ from 'lodash';
+import { action, computed, observable } from 'mobx';
 
 import calendarStore from './calendar';
 import ui from './uiState';
@@ -84,34 +85,36 @@ class activity {
 
     @action
     markActivityAsRegistered() {
-        this.event.registered =  this.event.registered === 'registered'
+        this.event.registered = this.event.registered === 'registered'
             ? 'unregistered'
             : 'registered';
     }
 
     @action
     markSlotActivityAs(slotToMark, { registered }) {
-        this.activity.slots = this.activity.slots.slice().map((slotGroup) => {
-            const slots = slotGroup.slots.slice().map((slot) => {
-                if (slot.id === slotToMark.id) {
-                    return {
-                        ...slot,
-                        master: {
-                            title: session.user.name,
-                            login: session.username,
-                            picture: session.user.thumbnail
+        this.activity.slots = this.activity.slots.slice()
+            .map((slotGroup) => {
+                const slots = slotGroup.slots.slice()
+                    .map((slot) => {
+                        if (slot.id === slotToMark.id) {
+                            return {
+                                ...slot,
+                                master: {
+                                    title: session.userProfile.name,
+                                    login: session.userProfile.login,
+                                    picture: session.userProfile.thumbnail
+                                }
+                            };
                         }
-                    };
-                }
 
-                return slot;
+                        return slot;
+                    });
+
+                return {
+                    ...slotGroup,
+                    slots: slots
+                };
             });
-
-            return {
-                ...slotGroup,
-                slots: slots
-            };
-        });
     }
 
     async registerActivitySlot(slot) {
@@ -171,8 +174,9 @@ class activity {
         return _(this.activity.slots.slice())
             .map((slotsBlock) => {
                 const self = slotsBlock.slots.filter((slot) => {
-                    const isMember = slot.members.filter((member) => member.login === session.username).length > 0;
-                    const isMaster = slot.master && slot.master.login === session.username;
+                    const userLogin = session.userProfile.login;
+                    const isMember = slot.members.filter((member) => member.login === userLogin).length > 0;
+                    const isMaster = slot.master && slot.master.login === userLogin;
 
                     return isMaster || isMember;
                 });

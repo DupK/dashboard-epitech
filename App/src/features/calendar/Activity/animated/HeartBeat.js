@@ -1,10 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import {
-    View,
-    TouchableOpacity,
-    Animated,
-    Easing,
-} from 'react-native';
+import React, { Component } from 'react';
+import { Animated, Easing, TouchableOpacity } from 'react-native';
 
 class Heartbeat extends Component {
     constructor(props) {

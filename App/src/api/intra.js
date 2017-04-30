@@ -10,33 +10,20 @@ const BASE_URL = 'https://intra.epitech.eu';
 function request(url, data) {
     if (uiState.isConnected) {
         return fetch(url, data)
-            .then((response) => {
-                if (!response.ok) {
-                    return Promise.resolve(false);
-                }
-
-                return response;
-            })
             .then((response) => response.json())
-            .catch(console.log);
+            .catch((e) => console.error('intra.js', url, e));
     } else {
         return Promise.resolve(false);
     }
 }
 
-export function login(login, password) {
-    const formData = new FormData();
-    formData.append('login', login);
-    formData.append('password', password);
-    formData.append('remind', 'on');
-
-    return request(BASE_URL + '/', {
-        method: 'POST',
+export function loginFromRedirectUri(redirectUri) {
+    return request(redirectUri, {
+        method: 'GET',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
-        },
-        body: formData
+            'Content-Type': 'application/json',
+        }
     });
 }
 
@@ -62,6 +49,16 @@ export function autoLog(autoLoginLink) {
 
 export function fetchStudent(student) {
     return request(`${BASE_URL}/user/` + student + '/?format=json', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    });
+}
+
+export function fetchLoggedInStudent() {
+    return request(`${BASE_URL}/user?format=json`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',

@@ -53,17 +53,8 @@ class Calendar {
     }
 
     @action
-    async fetchCalendar(start = CALENDAR_START, end = CALENDAR_END, { fromCache } = false) {
+    async fetchCalendar(start = CALENDAR_START, end = CALENDAR_END) {
         try {
-
-            if (fromCache) {
-                const rawCalendar = await storage.get('calendar');
-
-                if (rawCalendar) {
-                    this.setCalendarFields(rawCalendar);
-                    return;
-                }
-            }
 
             this.lastFetchedStart = start.isBefore(this.lastFetchedStart) ?
                                     start :
@@ -71,12 +62,21 @@ class Calendar {
             this.lastFetchedEnd = end.isAfter(this.lastFetchedEnd) ? end : this.lastFetchedEnd;
 
             const rawCalendar = await Intra.fetchCalendar(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+
             await storage.save('calendar', rawCalendar);
 
             this.setCalendarFields(rawCalendar);
 
         } catch (e) {
             console.error(e);
+        }
+    }
+
+    async retrieveCalendarFromCache() {
+        const rawCalendar = await storage.get('calendar');
+
+        if (rawCalendar) {
+            this.setCalendarFields(rawCalendar);
         }
     }
 

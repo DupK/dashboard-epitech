@@ -114,7 +114,8 @@ export default class Documents extends Component {
 
     render() {
         const { store: { session } } = this.props;
-        const documents = session.user.documents.slice();
+        const documents = session.userProfile.documents.slice();
+
         return (
             <Layout store={this.props.store}>
                 <ScrollView style={styles.container}>

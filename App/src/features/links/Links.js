@@ -19,6 +19,17 @@ export default class Links extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            autologin: 'https://intra.epitech.eu/',
+        }
+    }
+
+    async componentWillMount() {
+        const { store: { session } } = this.props;
+        const autologin = await session.getAutologinCached();
+
+        this.setState({ autologin });
     }
 
     render() {
@@ -37,7 +48,7 @@ export default class Links extends Component {
                         <Link
                             title="Intranet Epitech"
                             description="Epitech official intranet site"
-                            url={session.user.autologin}
+                            url={this.state.autologin}
                         />
                     </Cell>
 
