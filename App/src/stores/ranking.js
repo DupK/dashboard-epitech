@@ -2,7 +2,7 @@
  * Created by desver_f on 06/02/17.
  */
 
-import { observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import bluebird from 'bluebird';
 import autobind from 'autobind-decorator';
 import storage from 'react-native-simple-store';
@@ -10,9 +10,9 @@ import _ from 'lodash';
 
 import stores from './index';
 import * as Intra from '../api/intra';
-import medal from '../assets/medal.png'
+import medal from '../assets/medal.png';
 
-function n(n){
+function n(n) {
     return n > 9 ? '' + n : '0' + n;
 }
 
@@ -21,6 +21,7 @@ class Ranking {
     @observable promotion = [];
     @observable rankPosition = '0th';
 
+    @action
     async computePromotion({ refreshCache }) {
         const cachedPromotion = await this.getCachedRanking();
 
@@ -33,7 +34,7 @@ class Ranking {
         // Always reset promotion to empty so that we can detect that we're loading
         if (stores.ui.isConnected) {
             this.promotion = [];
-            const { user: { location, year, promo } } = stores.session;
+            const { userProfile: { location, year, promo } } = stores.session;
             const promotion = await Intra.fetchPromotion(location, year, promo);
 
             const promotionWithDetails = await bluebird.map(promotion, async ({ login: email }) => {
@@ -41,8 +42,8 @@ class Ranking {
             });
 
             const promotionSorted = _(promotionWithDetails)
-                .filter(({ gpa: [ value ] }) => value.gpa !== 'n/a')
-                .orderBy(({ gpa: [ value ] }) => value.gpa, ['desc'])
+                .filter(({ gpa: [value] }) => value.gpa !== 'n/a')
+                .orderBy(({ gpa: [value] }) => value.gpa, ['desc'])
                 .map((student, i) => {
                     if (i === 0) {
                         student.img = medal;
@@ -68,22 +69,23 @@ class Ranking {
         return n + (s[(v - 20) % 10] || s[v] || s[0]);
     }
 
+    @action
     async selfRankPosition({ ranking, fromCache = false }) {
-        const { username } = stores.session;
+        const { login } = stores.session.userProfile;
         const promotionRanks = fromCache ? await this.getCachedRanking() : ranking;
 
         if (!promotionRanks) {
             return Promise.resolve(true);
         }
 
-        const position = _.findIndex(promotionRanks, (student) => student.login === username) + 1;
+        const position = _.findIndex(promotionRanks, (student) => student.login === login) + 1;
         this.rankPosition = this.getOrdinalNumber(position);
     }
 
     selfRank() {
-        const { username } = stores.session;
+        const { login } = stores.session.userProfile;
 
-        return _.find(this.promotion, (student) => student.login === username);
+        return _.find(this.promotion, (student) => student.login === login);
     }
 
     getCachedRanking() {

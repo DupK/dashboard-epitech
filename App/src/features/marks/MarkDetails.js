@@ -16,6 +16,7 @@ import LoadingIndicator from 'react-native-spinkit';
 import IconIO from 'react-native-vector-icons/Ionicons';
 import { observer } from 'mobx-react/native';
 import styles from './styles.js';
+import _ from 'lodash';
 
 @observer
 class MarkDetails extends Component {

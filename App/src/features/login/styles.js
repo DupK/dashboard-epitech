@@ -9,12 +9,6 @@ const style = StyleSheet.create({
         backgroundColor: '#233445',
         flex: 1,
     },
-
-    notLoggedMessage: {
-        alignSelf: 'center',
-        color: "#ff3d31",
-        fontSize: 16,
-    },
 });
 
 export default style;

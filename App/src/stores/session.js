@@ -2,10 +2,12 @@
  * Created by desver_f on 24/01/17.
  */
 
-import { computed, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
+import bluebird from 'bluebird';
 import storage from 'react-native-simple-store';
+import Cookie from 'react-native-cookie';
 
 import stores from './index';
 import * as Intra from '../api/intra';
@@ -13,180 +15,153 @@ import newsParser from '../features/news/newsParser';
 
 @autobind
 class Session {
-    @observable isLogged = false;
-    @observable summary = {};
-    @observable user = {};
-    @observable username = '';
-    @observable loggedFromCache = false;
+    @observable userData = {};
+    @observable userProfile = {};
+    @observable loggedIn = false;
 
-    async login(username = '', password = '') {
-        try {
-            if (username && password) {
-                await this.tryLoginRegular(username, password);
-            } else {
-                await this.tryLoginFromAutoLogin();
-            }
-        } catch (e) {
-            console.error(e);
-            stores.ui.errorState();
-            this.isLogged = false;
-        }
+    constructor() {
+        this.loggedFromCache = false;
     }
 
-    // Raises an exception if autologin hasn't been cached yet;
-    async tryLoginFromAutoLogin() {
-        const autoLogin = await this.getAutologinFromCache();
+    @action
+    async retrieveSessionFromCache() {
+        const { userData, userProfile } = await bluebird.props({
+            userData: storage.get('userData'),
+            userProfile: storage.get('userProfile'),
+        });
 
-        if (autoLogin.link && autoLogin.username) {
-            const session = await Intra.autoLog(autoLogin.link);
-            this.setSessionFields(session, autoLogin.username);
-        }
+        this.userData = userData;
+        this.userProfile = userProfile;
+        this.loggedFromCache = true;
+        this.loggedIn = true;
     }
 
-    async tryLoginRegular(username, password) {
-        const session = await Intra.login(username, password);
-
-        const isLogged = this.setSessionFields(session, username);
-
-        if (isLogged) {
-            await storage.save('session', session);
-            await this.saveAutoLoginIfNeeded(username);
-        }
-    }
-
-    async saveAutoLoginIfNeeded(username) {
-        const hasAutoLogin = !!(await this.getAutologinFromCache());
-
-        if (this.isLogged && !hasAutoLogin) {
-            const { autologin } = await Intra.fetchAutoLogin();
-
-            await storage.save('autologin', {
-                link: autologin,
-                username,
-            });
-        }
-    }
-
-    getAutologinFromCache() {
-        return storage.get('autologin');
-    }
-
-    setSessionFields(session, username) {
-        if (session && session.message !== 'Veuillez vous connecter') {
-            this.isLogged = true;
-            this.username = username;
-
-            this.summary = {
-                ...this.summary,
-                activities: session.board.activites,
-                news: newsParser(session.history),
-            };
-        }
-
-        return session && session.message !== 'Veuillez vous connecter';
-    }
-
-    async getSessionFromCache() {
-        const session = await storage.get('session');
-        const { username } = await storage.get('autologin');
-
-        if (session) {
-            this.setSessionFields(session, username);
-        }
-    }
-
-    async userInformation({ fromCache = false }) {
-        try {
-
-            if (fromCache) {
-                const user = await storage.get('user');
-
-                if (user) {
-                    this.user = user;
-                    this.username = user.login;
-                    return;
-                }
-            }
-
-            const information = await Intra.fetchStudent(this.username);
-            const autologin = await Intra.fetchAutoLogin();
-            const netsoul = await Intra.fetchNetsoul(this.username);
-            const documents = await Intra.fetchDocuments(this.username);
-
-            const user = {
-                login: information.login,
-                name: information.title,
-                credits: information.credits,
-                spices: information.spice || '0',
-                gpa: information.gpa[0].gpa,
-                logtime: information.nsstat.active,
-                expectedLogtime: information.nsstat.nslog_norm,
-                promo: `tek${information.studentyear}`,
-                studentyear: information.studentyear,
-                year: information.scolaryear,
-                location: information.location,
-                thumbnail: information.picture,
-                semester: information.semester,
-                uid: information.uid,
-                logData: netsoul,
-                autologin: autologin.autologin,
-                documents: documents,
-            };
-
-            await storage.save('user', user);
-
-            this.user = user;
-            this.username = information.login;
-        } catch (e) {
-            console.error(e);
-            stores.ui.errorState();
-        }
-    }
-
-   async hasEverythingCached() {
+    @action
+    async loginWithAutoLogin() {
         const autologin = await storage.get('autologin');
-        const session = await storage.get('session');
-        const user = await storage.get('user');
-        const projects = await storage.get('projects');
-        const marks = await storage.get('marks');
-        const calendar = await storage.get('calendar');
+        const userData = this.remapUserData((await Intra.autoLog(autologin)));
 
-        return !!autologin && !!session && !!user && !!projects && !!marks && !!calendar;
+        this.userData = userData;
+        await storage.save('userData', userData);
     }
 
+    @action
+    async loginWithOffice365(redirectUri) {
+        const userData = await Intra.loginFromRedirectUri(redirectUri);
+        const autologin = await Intra.fetchAutoLogin();
+
+        await Promise.all([
+            this.fetchUserProfile(),
+            storage.save('userData', this.remapUserData(userData)),
+            storage.save('autologin', autologin.autologin),
+        ]);
+
+        this.loggedIn = true;
+        this.userData = this.remapUserData(userData);
+    }
+
+    @action
+    async fetchUserProfile() {
+        const userProfile = await Intra.fetchLoggedInStudent();
+        const { netsoul, documents } = await bluebird.props({
+            documents: Intra.fetchDocuments(userProfile.login),
+            netsoul: Intra.fetchNetsoul(userProfile.login),
+        });
+        const remappedUserProfile = this.remapUserProfile(userProfile, netsoul, documents);
+
+        await storage.save('userProfile', remappedUserProfile);
+        this.userProfile = remappedUserProfile;
+    }
+
+    remapUserProfile(userProfile, netsoul, documents) {
+        return {
+            login: userProfile.login,
+            name: userProfile.title,
+            credits: userProfile.credits,
+            spices: userProfile.spice || '0',
+            gpa: userProfile.gpa[0].gpa,
+            logtime: userProfile.nsstat.active,
+            expectedLogtime: userProfile.nsstat.nslog_norm,
+            promo: `tek${userProfile.studentyear}`,
+            studentyear: userProfile.studentyear,
+            year: userProfile.scolaryear,
+            location: userProfile.location,
+            thumbnail: userProfile.picture,
+            semester: userProfile.semester,
+            uid: userProfile.uid,
+            logData: netsoul,
+            documents
+        };
+    }
+
+    remapUserData(userData) {
+        return {
+            activities: userData.board.activites,
+            news: newsParser(userData.history)
+        };
+    }
+
+    async hasEverythingCached() {
+        const {
+            autologin,
+            calendar,
+            marks,
+            projects,
+            userData,
+            userProfile,
+        } = await bluebird.props({
+            autologin: storage.get('autologin'),
+            calendar: storage.get('calendar'),
+            marks: storage.get('marks'),
+            projects: storage.get('projects'),
+            userData: storage.get('userData'),
+            userProfile: storage.get('userProfile'),
+        });
+
+        return !!autologin && !!calendar && !!marks && !!projects && !!userData && !!userProfile;
+    }
+
+    @action
     resetSession() {
-        this.isLogged = false;
-        this.session = null;
-        this.username = '';
-        this.news = [];
+        this.userData = {};
+        this.userProfile = {};
     }
 
     async logout() {
         try {
             await Intra.logout();
-            await storage.delete('autologin');
-            await storage.delete('session');
-            await storage.delete('user');
-            await storage.delete('projects');
-            await storage.delete('marks');
-            await storage.delete('calendar');
+            //Clear all cookies to remove session from both the intra and Office365
+            await Promise.all([
+                Cookie.clear(),
+                storage.delete('autologin'),
+                storage.delete('userProfile'),
+                storage.delete('userData'),
+                storage.delete('projects'),
+                storage.delete('marks'),
+                storage.delete('calendar'),
+            ]);
+            this.loggedIn = false;
         } catch (e) {
-            this.isLogged = false;
             console.error(e);
             stores.ui.errorState();
         }
     }
 
     @computed get tokens() {
-        const activities = this.summary.activities.slice();
+        const activities = this.userData.activities.slice();
 
         return activities
             .filter((activity) => activity.token)
             .map((activity) => ({
                 title: `${activity.module.split(' - ')[0]} - ${activity.title}`,
-                date: moment(activity.timeline_start, 'DD/MM/YYYY, HH[h]mm').format('DD.MM.YYYY'),
+                date: moment(activity.timeline_start, 'DD/MM/YYYY, HH[h]mm')
+                    .format('DD.MM.YYYY'),
                 tokenLink: activity.token_link,
             }));
+    }
+
+    getAutologinCached() {
+        return storage.get('autologin');
     }
 }
 

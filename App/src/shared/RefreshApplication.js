@@ -11,13 +11,13 @@ export default async function refreshApplication({ withLogin } = false) {
     try {
         ui.refreshingData();
 
-        withLogin && (await session.tryLoginFromAutoLogin());
+        withLogin && (await session.loginWithAutoLogin());
 
         await Promise.all([
-            calendar.fetchCalendar(CALENDAR_START, CALENDAR_END, { fromCache: false }),
-            session.userInformation({ fromCache: false }),
-            projects.fetchProjects({ fromCache: false }),
-            marks.fetchMarks(session.username, { fromCache: false }),
+            session.fetchUserProfile(),
+            calendar.fetchCalendar(CALENDAR_START, CALENDAR_END),
+            projects.fetchProjects(),
+            marks.fetchMarks(),
             tokens.refreshTokens(),
         ]);
 

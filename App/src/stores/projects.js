@@ -15,21 +15,19 @@ class Projects {
     @observable rawProjects = [];
     @observable projectDetails = [];
 
-    async fetchProjects({ fromCache = false }) {
+    async fetchProjects() {
+        const projects = await Intra.fetchProjects();
+        await storage.save('projects', projects);
 
-        if (fromCache) {
-            const rawProjects = await storage.get('projects');
+        this.setProjectsFields(projects);
+    }
 
-            if (rawProjects) {
-                this.setProjectsFields(rawProjects);
-                return;
-            }
+    async retrieveProjectsFromCache() {
+        const projects = await storage.get('projects');
+
+        if (projects) {
+            this.setProjectsFields(projects);
         }
-
-        const rawProjects = await Intra.fetchProjects();
-        await storage.save('projects', rawProjects);
-
-        this.setProjectsFields(rawProjects);
     }
 
     setProjectsFields(projects) {

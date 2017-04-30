@@ -5,7 +5,7 @@
 import _ from 'lodash';
 
 export default function parseNews(news) {
-    const out =  _.map(news, (news) => {
+    return _.map(news, (news) => {
         const title = parseTitle(news.title);
         const details = parseDetails(news.content);
 
@@ -17,7 +17,6 @@ export default function parseNews(news) {
             user: news.user,
         };
     });
-    return out;
 }
 
 function parseTitle(str) {

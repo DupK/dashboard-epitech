@@ -6,6 +6,7 @@ import _ from 'lodash';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
 import storage from 'react-native-simple-store';
+import { Alert } from 'react-native';
 import { action, computed, observable } from 'mobx';
 import ui from './uiState';
 import session from './session';
@@ -27,7 +28,7 @@ class Marks {
     @observable rawMarks = {};
     @observable marksBySemesters = {};
     @observable nbSemester = 0;
-    @observable currentSemester = session.user.semester;
+    @observable currentSemester = session.userProfile.semester;
 
     @observable projectMarks = [];
     @observable selectedMark = null;
@@ -37,24 +38,24 @@ class Marks {
         this.sortMethod = sortMethods.byName;
     }
 
-    async fetchMarks(user, { fromCache } = false) {
-        if (fromCache) {
-            const rawMarks = await storage.get('marks');
+    async fetchMarks() {
+        const marks = await Intra.fetchMarks(session.userProfile.login);
+        await storage.save('marks', marks);
 
-            if (rawMarks) {
-                this.setMarksField(rawMarks);
-                return;
-            }
+        this.setMarksField(marks);
+    }
+
+    async retrieveMarksFromCache() {
+        const marks = await storage.get('marks');
+
+        if (marks) {
+            this.setMarksField(marks);
         }
-
-        const rawMarks = await Intra.fetchMarks(user);
-        await storage.save('marks', rawMarks);
-        this.setMarksField(rawMarks);
     }
 
     setMarksField(marks) {
         this.rawMarks = marks;
-        this.marksBySemesters = this.parseMarks(marks);
+        this.marksBySemesters = this.remapMarksBySemesters(marks);
         this.nbSemester = _.size(this.marksBySemesters);
     }
 
@@ -62,10 +63,11 @@ class Marks {
         ui.fetchingState();
         this.projectMarks = await Intra.fetchProjectMarks(year, module, instance, activity);
         this.selectedMark = this.selfMark;
+        this.sortMethod = sortMethods.byName;
         ui.defaultState();
     }
 
-    parseMarks(rawMarks) {
+    remapMarksBySemesters(rawMarks) {
         const marksByModules = _(rawMarks.notes)
             .groupBy((note) => note.codemodule)
             .value();
@@ -122,11 +124,11 @@ class Marks {
     }
 
     @computed get selfMark() {
-        return _.find(this.projectMarks, (mark) => mark.login === session.username);
+        return _.find(this.projectMarks, (mark) => mark.login === session.userProfile.login);
     }
 
     @computed get lastMark() {
-        return _(this.rawMarks.notes)
+        return _(this.rawMarks.notes.slice())
             .orderBy(({ date }) => moment(date, 'YYYY-MM-DD HH:mm:ss'))
             .last();
     }

@@ -17,12 +17,12 @@ export default function monitorInternetConnection() {
 }
 
 async function _handleConnectionChange(isConnected) {
-    const { ui } = stores;
+    const { ui, session } = stores;
 
     if (isConnected) {
 
         //Refresh application data if user enables his internet connection after being offline
-        if (ui.currentState === ui.state.noInternet) {
+        if (ui.currentState === ui.state.noInternet && session.loggedIn) {
             await refreshApplicationData({ withLogin: true });
             return;
         }

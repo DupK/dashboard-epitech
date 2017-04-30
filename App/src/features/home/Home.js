@@ -76,7 +76,7 @@ export default class Home extends Component {
         } = this.props;
 
         const nextEvent = calendar.nextEvent;
-        const lastNews = _(session.summary.news.slice())
+        const lastNews = _(session.userData.news.slice())
             .orderBy((news) => moment(news.date, 'YYYY-MM-DD HH:mm:ss'))
             .last();
         const lastMark = marks.lastMark;
@@ -168,11 +168,11 @@ export default class Home extends Component {
     renderGauges(translateLeft, translateRight) {
         const {
             store: {
-                session: { user },
+                session: { userProfile },
             }
         } = this.props;
-        const creditsPercentage = (user.credits / (user.studentyear * 60)) * 100;
-        const gpaPercentage = (user.gpa / 4) * 100;
+        const creditsPercentage = (userProfile.credits / (userProfile.studentyear * 60)) * 100;
+        const gpaPercentage = (userProfile.gpa / 4) * 100;
 
         return [
             <AnimatedGaugeProgress
@@ -276,11 +276,11 @@ export default class Home extends Component {
 
         const {
             store: {
-                session: { user },
+                session: { userProfile },
             }
         } = this.props;
 
-        const nameSplited = user.name.split(' ');
+        const nameSplited = userProfile.name.split(' ');
         const name = nameSplited[0] + ' ' + nameSplited[1].toUpperCase();
 
         return (
@@ -336,7 +336,7 @@ export default class Home extends Component {
                                         <Animated.View style={{
                                             transform: [{ translateX: translateMinus50 }],
                                         }}>
-                                            <Text style={scrollStyle.gaugeValue}>{ user.gpa }</Text>
+                                            <Text style={scrollStyle.gaugeValue}>{ userProfile.gpa }</Text>
                                             <Text style={scrollStyle.gaugeDescription}>GPA</Text>
                                         </Animated.View>
                                     </View>
@@ -352,7 +352,7 @@ export default class Home extends Component {
                                         transform: [{ translateX: translate50 }],
                                     }}>
                                         <View style={{ flexDirection: 'column'}}>
-                                            <Text style={scrollStyle.gaugeValue}>{ user.credits }</Text>
+                                            <Text style={scrollStyle.gaugeValue}>{ userProfile.credits }</Text>
                                             <Text style={scrollStyle.gaugeDescription}>Credits</Text>
                                         </View>
                                     </Animated.View>

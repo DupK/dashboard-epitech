@@ -82,7 +82,7 @@ export default class AvailableSlots extends Component {
                     renderHeader={(slotGroup) => this.renderHeader(slotGroup, selfSlot)}
                     renderContent={(slotGroup) => (
                         <SlotGroup
-                            username={session.username}
+                            username={session.userProfile.login}
                             slots={slotGroup.slots.slice()}
                             activityStore={activity}
                             alreadyRegistered={!!selfSlot}

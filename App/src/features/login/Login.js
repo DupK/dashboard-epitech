@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
-import {
-    StyleSheet,
-    ScrollView,
-    View,
-    Dimensions,
-    KeyboardAvoidingView,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, WebView } from 'react-native';
 import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
 import backgroundSource from '../../assets/fond.jpg';
-import { CALENDAR_END, CALENDAR_START } from '../../stores/calendar';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import LoadingIndicator from 'react-native-spinkit';
 
 import Layout from '../../shared/components/Layout';
 import BackgroundImageWithOverlay from './BackgroundImage';
 import LoginMessage from './LoginMessage';
-import LoginInput from './LoginInput';
-import AnimatedButton from './AnimatedButton';
+
+const LOGIN_STATE = {
+    Webview: 'Webview',
+    Login: 'Login'
+};
 
 @observer
 export default class Login extends Component {
@@ -25,191 +23,211 @@ export default class Login extends Component {
         super(props);
 
         this.state = {
-            username: '',
-            password: '',
             loginMessage: '',
-            animating: false,
+            loggingIn: false,
+            loginState: LOGIN_STATE.Login,
+            redirect: '',
         };
 
-        this.hasEverythingCached = false;
-        this.canLogin = true;
-
-        this.login = this.login.bind(this);
-        this.onAnimationEnd = this.onAnimationEnd.bind(this);
-        this.onAnimationEndError = this.onAnimationEndError.bind(this);
-        this.worthStartingAnimation = this.worthStartingAnimation.bind(this);
-        this.buttonIsAnimating = this.buttonIsAnimating.bind(this);
+        this.fetchUserData = this.fetchUserData.bind(this);
+        this.onUrlChange = this.onUrlChange.bind(this);
+        this.loginWithOffice365 = this.loginWithOffice365.bind(this);
     }
 
     async componentWillMount() {
-        const { store: { session, ui } } = this.props;
+        const { store: { session } } = this.props;
 
         try {
-
-            this.hasEverythingCached = await session.hasEverythingCached();
-
-            // Show no internet status bar only if user cannot login at all.
-            // ( Either from cache or by internet for his first connection. )
-            if (!ui.isConnected && !this.hasEverythingCached) {
-                this.canLogIn = false;
-                return;
-            }
-
-            if (this.hasEverythingCached) {
-                session.loggedFromCache = true;
-            }
+            const isEverythingCached = await session.hasEverythingCached();
 
             session.resetSession();
-            this.animatedButton.animate();
+
+            if (isEverythingCached) {
+                await this.retrieveDataFromCache();
+            }
+
         } catch (e) {
             console.error(e);
         }
     }
 
-    async worthStartingAnimation() {
-        const { store: { session } } = this.props;
-        const hasAutoLogin = !!(await session.getAutologinFromCache());
-
-        return hasAutoLogin || (this.state.username.length && this.state.password.length);
-    }
-
-    buttonIsAnimating(animating) {
-        this.setState({ animating });
-    }
-
-    async fetchRequiredData() {
+    async retrieveDataFromCache() {
         const {
-            store: { ui, session, calendar, ranking, marks, projects }
+            store: { session, calendar, ranking, marks, projects }
         } = this.props;
 
         try {
 
-            this.hasEverythingCached && (await session.getSessionFromCache());
+            this.setState({
+                loggingIn: true,
+                loginMessage: 'Retrieving data from cache...'
+            });
+
+            //set session first as most of others stores needs fields from it
+            await session.retrieveSessionFromCache();
 
             await Promise.all([
-                session.userInformation({ fromCache: true }),
-                calendar.fetchCalendar(CALENDAR_START, CALENDAR_END, { fromCache: true }),
-                projects.fetchProjects({ fromCache: true }),
-            ]);
-            await Promise.all([
-                marks.fetchMarks(session.username, { fromCache: true }),
+                calendar.retrieveCalendarFromCache(),
+                projects.retrieveProjectsFromCache(),
+                marks.retrieveMarksFromCache(),
                 ranking.selfRankPosition({ fromCache: true }),
             ]);
 
-            ui.defaultState();
-            return true;
+            Actions.home();
         } catch (e) {
-            ui.defaultState();
-            console.log(e);
-            return false;
+            console.error(e);
         }
     }
 
-    async login() {
+    async fetchUserData() {
         const {
-            store: { ui, session }
+            store: { calendar, marks, projects }
         } = this.props;
 
         try {
 
-            if (!this.hasEverythingCached) {
-                ui.fetchingState();
-                this.setState({ loginMessage: 'Login in ...' });
-                await session.login(this.state.username, this.state.password);
-            }
+            this.setState({ loginMessage: 'Fetching data ...' });
 
-            if (session.isLogged || this.hasEverythingCached) {
-                this.setState({ loginMessage: 'Fetching data ...' });
+            await Promise.all([
+                calendar.fetchCalendar(),
+                projects.fetchProjects(),
+                marks.fetchMarks(),
+            ]);
 
-                const response = await this.fetchRequiredData();
-
-                return Promise.resolve(response);
-            } else {
-                return Promise.resolve(false);
-            }
-        } catch (_) {
-            return Promise.resolve(false);
+            this.setState({ loginMessage: '' });
+            Actions.home();
+        } catch (e) {
+            console.error(e);
         }
     }
 
-    onAnimationEndError() {
-        this.setState({ loginMessage: '' });
+    async onUrlChange(e) {
+        const { store: { session } } = this.props;
+        const redirectUri = e.url;
+
+        if (/https:\/\/intra.epitech.eu\/auth\/office365.*/g.test(redirectUri)) {
+
+            this.setState({
+                loginState: LOGIN_STATE.Login,
+                loginMessage: 'Login in ...',
+            });
+
+            await session.loginWithOffice365(redirectUri);
+            await this.fetchUserData();
+        }
     }
 
-    onAnimationEnd() {
-        this.setState({ loginMessage: '' }, () => {
-            Actions.home();
-        });
+    async loginWithOffice365() {
+        try {
+
+            this.setState({
+                loggingIn: true,
+                loginMessage: 'Redirecting towards Office 365...',
+            }, async () => {
+                const response = await fetch('https://intra.epitech.eu?format=json', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then((response) => response.json());
+
+                this.setState({
+                    loginState: LOGIN_STATE.Webview,
+                    redirect: response.office_auth_uri,
+                });
+            });
+        } catch (e) {
+            console.error('loginWithOffice365', e);
+        }
+    }
+
+    renderLoginButton() {
+        const { store: { ui } } = this.props;
+
+        return (
+            <TouchableOpacity
+                style={styles.office365Button}
+                onPress={this.loginWithOffice365}
+                disabled={!ui.isConnected}
+
+            >
+                <Icon name="office" size={30} color="#E74125"/>
+                <Text style={{ color: '#FAFAFA', marginLeft: 10 }}>
+                    Login with Office&nbsp;
+                    <Text style={{ fontWeight: 'bold' }}>365</Text>
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+
+    renderLoadingIndicator() {
+        return (
+            <View style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <LoadingIndicator
+                    isVisible={this.state.loggingIn}
+                    color="#FAFAFA"
+                    type="Bounce"
+                    size={80}
+                />
+            </View>
+        );
+    }
+
+    renderLoginView() {
+        const buttonOrLoadingIndicator = this.state.loggingIn
+            ? this.renderLoadingIndicator()
+            : this.renderLoginButton();
+
+        return (
+            <Layout store={this.props.store}>
+                <BackgroundImageWithOverlay
+                    source={backgroundSource}
+                    colorOverlay="rgba(45, 45, 45, 0)"
+                >
+                    <View style={{ flex: 0.7 }}/>
+                    { buttonOrLoadingIndicator }
+                    <View style={{ flex: 0.1 }}>
+                        <LoginMessage message={this.state.loginMessage}/>
+                    </View>
+                </BackgroundImageWithOverlay>
+            </Layout>
+        );
+    }
+
+    renderWebView() {
+        return (
+            <WebView
+                style={{ flex: 1 }}
+                source={{ uri: this.state.redirect }}
+                onNavigationStateChange={this.onUrlChange}
+                javaScriptEnabled
+            />
+        );
     }
 
     render() {
-        const { width } = Dimensions.get('window');
-
-        return (
-           <Layout store={this.props.store}>
-               <ScrollView contentContainerStyle={{ flex: 1}} keyboardShouldPersistTaps="never" scrollEnabled={false}>
-                 <KeyboardAvoidingView style={{ flex: 1}} behavior="padding">
-                    <BackgroundImageWithOverlay
-                        source={backgroundSource}
-                        colorOverlay="rgba(45, 45, 45, 0)"
-                    >
-                        <View style={styles.topEmptyBox} />
-                        <View style={styles.loginBoxContainer}>
-                            <View style={styles.inputsContainer}>
-                                <LoginInput
-                                    maxLength={40}
-                                    placeholder="Email address"
-                                    keyboardType="email-address"
-                                    editable={!this.state.animating}
-                                    onChangeText={(text) => this.setState({ username: text })}
-                                    onSubmitEditing={() => this.passwordInput.nativeInput.focus() }
-                                />
-                                <LoginInput
-                                    ref={(input) => this.passwordInput = input}
-                                    maxLength={8}
-                                    placeholder="Unix Password"
-                                    secureTextEntry
-                                    editable={!this.state.animating}
-                                    onChangeText={(text) => this.setState({ password: text })}
-                                    onSubmitEditing={() => this.animatedButton.animate()}
-                                />
-                                <AnimatedButton
-                                    ref={(button) => this.animatedButton = button}
-                                    title="Login"
-                                    errorTitle="Could not log in"
-                                    width={width - 60}
-                                    onPress={this.login}
-                                    onAnimationEnd={this.onAnimationEnd}
-                                    onAnimationEndError={this.onAnimationEndError}
-                                    worthStartingAnimation={this.worthStartingAnimation}
-                                    isButtonAnimating={this.buttonIsAnimating}
-                                />
-                            </View>
-                            <View style={{ flex: 0.1 }}>
-                                <LoginMessage
-                                    message={(this.state.animating && this.state.loginMessage) || ''}
-                                />
-                            </View>
-                        </View>
-                    </BackgroundImageWithOverlay>
-                 </KeyboardAvoidingView>
-               </ScrollView>
-        </Layout>
-        );
+        switch (this.state.loginState) {
+            case LOGIN_STATE.Login:
+                return this.renderLoginView();
+            case LOGIN_STATE.Webview:
+                return this.renderWebView();
+        }
     }
 }
 
 const styles = StyleSheet.create({
-    topEmptyBox: {
-        flex: 20
+    office365Button: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        padding: 10,
+        alignSelf: 'center',
+        backgroundColor: '#1d2b3b'
     },
-
-    loginBoxContainer: {
-        flex: 70,
-    },
-
-    inputsContainer: {
-        flex: 1,
-        justifyContent: 'flex-end',
-    }
 });
