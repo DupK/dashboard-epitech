@@ -8,8 +8,6 @@ import moment from 'moment';
 import bluebird from 'bluebird';
 import storage from 'react-native-simple-store';
 import Cookie from 'react-native-cookie';
-
-import stores from './index';
 import * as Intra from '../api/intra';
 import newsParser from '../features/news/newsParser';
 
@@ -141,9 +139,9 @@ class Session {
                 storage.delete('calendar'),
             ]);
             this.loggedIn = false;
+            this.loggedFromCache = false;
         } catch (e) {
             console.error(e);
-            stores.ui.errorState();
         }
     }
 
