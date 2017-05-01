@@ -20,6 +20,7 @@ function n(n) {
 class Ranking {
     @observable promotion = [];
     @observable rankPosition = '0th';
+    @observable searchField = "";
 
     @action
     async computePromotion({ refreshCache }) {
@@ -80,6 +81,12 @@ class Ranking {
 
         const position = _.findIndex(promotionRanks, (student) => student.login === login) + 1;
         this.rankPosition = this.getOrdinalNumber(position);
+    }
+
+    @computed get renderResults() {
+        return this.searchField === ""
+            ? this.promotion.slice()
+            : _.filter(this.promotion, (student) => new RegExp(this.searchField, 'i').test(student.login));
     }
 
     selfRank() {
