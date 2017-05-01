@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
     },
 
     selfDataContainerIOS: {
-        zIndex: 100,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
