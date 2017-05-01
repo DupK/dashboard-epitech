@@ -22,7 +22,7 @@
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" image="LaunchScreen.png" translatesAutoresizingMaskIntoConstraints="NO" id="bHs-J7-9dL">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" image="epitech.png" translatesAutoresizingMaskIntoConstraints="NO" id="bHs-J7-9dL">
                     <rect key="frame" x="162" y="145" width="51" height="7"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                 </imageView>
@@ -34,6 +34,6 @@
         </view>
     </objects>
     <resources>
-        <image name="LaunchScreen.png" width="491" height="490"/>
+        <image name="epitech.png" width="491" height="490"/>
     </resources>
 </document>
