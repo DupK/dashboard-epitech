@@ -1,6 +1,8 @@
 /**
  * Created by desver_f on 10/03/17.
  */
+
+import { Alert } from 'react-native';
 import autobind from 'autobind-decorator';
 import _ from 'lodash';
 import { action, computed, observable } from 'mobx';
@@ -47,6 +49,8 @@ class activity {
 
         if (isValidated) {
             calendarStore.markEventAs(event, { registered: false });
+        } else {
+            Alert.alert("Error", response.error);
         }
 
         ui.defaultState();
@@ -76,6 +80,8 @@ class activity {
 
         if (isValidated) {
             calendarStore.markEventAs(event, { registered: true });
+        } else {
+            Alert.alert('Error', response.error);
         }
 
         ui.defaultState();
@@ -133,6 +139,8 @@ class activity {
 
         if (isValidated) {
             this.markSlotActivityAs(slot, { registered: true });
+        } else {
+            Alert.alert('Error', response.error);
         }
 
         return isValidated;
@@ -154,6 +162,8 @@ class activity {
 
         if (isValidated) {
             this.markSlotActivityAs(slot, { registered: false });
+        } else {
+            Alert.alert('Error', response.error);
         }
 
         return isValidated;

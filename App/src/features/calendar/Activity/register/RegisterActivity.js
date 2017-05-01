@@ -2,10 +2,9 @@
  * Created by Utilisateur on 15/03/2017.
  */
 
-import React, {Component} from 'react';
+import React from 'react';
 import moment from 'moment';
 import {
-    View,
     LayoutAnimation
 } from 'react-native';
 import {observer} from 'mobx-react/native';
