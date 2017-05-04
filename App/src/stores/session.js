@@ -88,7 +88,7 @@ class Session {
             semester: userProfile.semester,
             uid: userProfile.uid,
             logData: netsoul,
-            documents
+            documents: documents.error ? [] : documents
         };
     }
 
