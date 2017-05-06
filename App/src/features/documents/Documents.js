@@ -4,17 +4,13 @@
 
 import React, { Component } from 'react';
 import { observer } from 'mobx-react/native';
-import {
-    View,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-    StyleSheet
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import LoadingIndicator from 'react-native-spinkit';
 import _ from 'lodash';
 import moment from 'moment';
 import Layout from '../../shared/components/Layout';
 import IconIO from 'react-native-vector-icons/Ionicons';
+import * as Intra from '../../api/intra';
 import { Actions } from 'react-native-router-flux';
 
 const styles = StyleSheet.create({
@@ -22,7 +18,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 8,
-        backgroundColor: '#233445',
+        backgroundColor: '#2c3e50',
     },
 
     cell: {
@@ -31,7 +27,7 @@ const styles = StyleSheet.create({
         height: 60,
         margin: 8,
         padding: 10,
-        backgroundColor: '#203040',
+        backgroundColor: '#233445',
         elevation: 5,
         shadowColor: '#000',
         shadowOffset: {
@@ -75,23 +71,27 @@ const styles = StyleSheet.create({
         color: '#FAFAFA',
     },
 
-    alternativeContainer: {
+    noDocumentContainer: {
         flex: 1,
-        flexDirection: 'column',
-        marginBottom: 60,
+        backgroundColor: '#2c3e50',
+        alignItems: 'center',
         justifyContent: 'center',
     },
 
     alternativeIcon: {
         color: '#203040',
-        alignSelf: 'center',
     },
 
     alternativeText: {
         marginTop: 10,
         color:'#203040',
-        alignSelf: 'center',
         fontSize: 15
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#233445',
     },
 });
 
@@ -100,7 +100,24 @@ export default class Documents extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            documents: null,
+        };
+
         this._renderIcon = this._renderIcon.bind(this);
+    }
+
+    async componentWillMount() {
+        const { store: { session, ui } } = this.props;
+
+        if (ui.isConnected) {
+            const documents = await Intra.fetchDocuments(session.userProfile.login);
+
+            this.setState({ documents: documents.error ? [] : documents });
+        } else {
+            this.setState({ documents: [] });
+        }
     }
 
     _renderIcon(title) {
@@ -112,42 +129,77 @@ export default class Documents extends Component {
             return 'ios-copy-outline';
     }
 
+    _renderDocuments() {
+        const { store: { ui } } = this.props;
+
+        return (
+            <ScrollView style={styles.container}>
+                {
+                    this.state.documents.map((document, i) => (
+                        <TouchableOpacity
+                            key={i}
+                            onPress={() => ui.isConnected && Actions.pdf({ title: document.title, pdfUrl: document.fullpath })}
+                            style={styles.cell}
+                        >
+                            <View style={styles.iconContainer}>
+                                <IconIO name={this._renderIcon(document.title)} size={30} style={styles.icon}/>
+                            </View>
+                            <View style={styles.textContainer}>
+                                <Text style={styles.title}>
+                                    {_.truncate(document.title, { length: 50, seperator: '...' })}
+                                </Text>
+                                <Text style={styles.date}>{moment(document.ctime).format('LL')}</Text>
+                                <Text style={styles.author}>Uploaded by {document.modifier.title}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    ))
+                }
+            </ScrollView>
+        );
+    }
+
+    _renderNoDocument() {
+        return (
+            <View style={styles.noDocumentContainer}>
+                <IconIO
+                    name="ios-folder-open-outline"
+                    size={100}
+                    style={styles.alternativeIcon}
+                />
+                <Text style={styles.alternativeText}>
+                    No documents available
+                </Text>
+            </View>
+        );
+    }
+
+    renderLoadingIndicator() {
+        return (
+            <View style={styles.loadingContainer}>
+                <LoadingIndicator
+                    isVisible={!this.state.documents}
+                    color="#FFFFFF"
+                    type="Bounce"
+                    size={70}
+                />
+                <Text style={{ color: 'white', fontSize: 15, marginTop: 10 }}>Loading documents...</Text>
+            </View>
+        );
+    }
+
     render() {
-        const { store: { session } } = this.props;
-        const documents = session.userProfile.documents.slice();
+
+        if (!this.state.documents) {
+            return this.renderLoadingIndicator();
+        }
 
         return (
             <Layout store={this.props.store}>
-                <ScrollView style={styles.container}>
-                    {
-                        documents.length > 0 ?
-                        documents.map((document, i) => (
-                            <TouchableOpacity
-                                key={i}
-                                onPress={() => Actions.pdf({ title: document.title, pdfUrl: document.fullpath })}
-                                style={styles.cell}>
-                                    <View style={styles.iconContainer}>
-                                        <IconIO name={this._renderIcon(document.title)} size={30} style={styles.icon} />
-                                    </View>
-                                    <View style={styles.textContainer}>
-                                        <Text style={styles.title}>{_.truncate(document.title, { length: 50, seperator: '...'})}</Text>
-                                        <Text style={styles.date}>{moment(document.ctime).format('LL')}</Text>
-                                        <Text style={styles.author}>Upload by {document.modifier.title}</Text>
-                                    </View>
-                            </TouchableOpacity>
-                        )) :
-                            <View style={styles.alternativeContainer}>
-                                <IconIO
-                                    name="ios-folder-open-outline"
-                                    size={100}
-                                    style={styles.alternativeIcon}
-                                />
-                                <Text style={styles.alternativeText}>
-                                    No documents available
-                                </Text>
-                            </View>
-                    }
-                </ScrollView>
+                {
+                    this.state.documents.length > 0
+                        ? this._renderDocuments()
+                        : this._renderNoDocument()
+                }
             </Layout>
         );
     }

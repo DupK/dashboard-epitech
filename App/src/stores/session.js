@@ -61,17 +61,14 @@ class Session {
     @action
     async fetchUserProfile() {
         const userProfile = await Intra.fetchLoggedInStudent();
-        const { netsoul, documents } = await bluebird.props({
-            documents: Intra.fetchDocuments(userProfile.login),
-            netsoul: Intra.fetchNetsoul(userProfile.login),
-        });
-        const remappedUserProfile = this.remapUserProfile(userProfile, netsoul, documents);
+        const netsoul = await Intra.fetchNetsoul(userProfile.login);
+        const remappedUserProfile = this.remapUserProfile(userProfile, netsoul);
 
         await storage.save('userProfile', remappedUserProfile);
         this.userProfile = remappedUserProfile;
     }
 
-    remapUserProfile(userProfile, netsoul, documents) {
+    remapUserProfile(userProfile, netsoul) {
         return {
             login: userProfile.login,
             name: userProfile.title,
@@ -88,7 +85,6 @@ class Session {
             semester: userProfile.semester,
             uid: userProfile.uid,
             logData: netsoul,
-            documents: documents.error ? [] : documents
         };
     }
 
