@@ -14,6 +14,7 @@ import {
     Dimensions,
     TextInput,
 } from 'react-native';
+import _ from 'lodash';
 import LoadingIndicator from 'react-native-spinkit';
 import { observer } from 'mobx-react/native';
 import IconIO from 'react-native-vector-icons/Ionicons';

@@ -3,6 +3,7 @@
  */
 
 import { observable, computed, action } from 'mobx';
+import { Alert } from 'react-native';
 import _ from 'lodash';
 import session from '../stores/session';
 import autobind from 'autobind-decorator';
@@ -31,8 +32,11 @@ class Tokens {
 
     async validateToken(id) {
         const response = await Intra.validateToken(this.tokens[id].tokenLink, this.tokenValues[id]);
+        const isValidated = Object.keys(response).length === 0;
 
-        return Object.keys(response).length === 0;
+        !isValidated && Alert.alert("Wrong token", response.error);
+
+        return isValidated;
     }
 
     @action resetTokens() {

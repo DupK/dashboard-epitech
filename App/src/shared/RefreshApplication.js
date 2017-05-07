@@ -2,7 +2,6 @@
  * Created by desver_f on 27/03/17.
  */
 
-import { CALENDAR_START, CALENDAR_END } from '../stores/calendar'
 import stores from '../stores';
 
 export default async function refreshApplication({ withLogin } = false) {
@@ -15,7 +14,7 @@ export default async function refreshApplication({ withLogin } = false) {
 
         await Promise.all([
             session.fetchUserProfile(),
-            calendar.fetchCalendar(CALENDAR_START, CALENDAR_END),
+            calendar.fetchCalendar(),
             projects.fetchProjects(),
             marks.fetchMarks(),
             tokens.refreshTokens(),
