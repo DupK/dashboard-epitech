@@ -8,6 +8,7 @@ import moment from 'moment';
 import { action, computed, observable } from 'mobx';
 import ui from './uiState';
 import { WEEK_DAYS } from '../features/calendar/constants';
+import { wasRegistered } from '../features/calendar/utils';
 import * as Intra from '../api/intra';
 
 export const CALENDAR_START = moment().subtract(3, 'w');
@@ -24,33 +25,6 @@ class Calendar {
 
     lastFetchedStart = CALENDAR_START;
     lastFetchedEnd = CALENDAR_END;
-
-    groupByOverlappingRanges(ranges) {
-        const endDatesValues = ranges.map((r) => moment(r.end).unix()).sort((a, b) => a - b);
-        const datesRanges = ranges.sort((a, b) => moment(a.start).unix() - moment(b.start).unix());
-
-        let i = 0,
-            j = 0,
-            n = datesRanges.length,
-            active = 0;
-        let groups = [],
-            cur = [];
-        while (true) {
-            if (i < n && moment(datesRanges[i].start).unix() < endDatesValues[j]) {
-                cur.push(datesRanges[i++]);
-                ++active
-            } else if (j < n) {
-                ++j;
-                if (--active === 0) {
-                    groups.push(cur);
-                    cur = []
-                }
-            } else {
-                break
-            }
-        }
-        return groups
-    }
 
     @action
     async fetchCalendar(start = CALENDAR_START, end = CALENDAR_END) {
@@ -97,6 +71,90 @@ class Calendar {
         return 'unregistered';
     }
 
+    remapRangesWithEnglishEventsAtBack(eventsRanges) {
+        const [englishRanges, othersRanges] = _.partition(eventsRanges, (events) => (
+            events.every((event) => event.codeModule.includes('B-ANG'))
+        ));
+
+        return [...othersRanges, ...englishRanges];
+    }
+
+    groupByRangesOfConsecutiveEvents(overlappingEvents) {
+
+        if (overlappingEvents.length === 1) {
+            return [overlappingEvents];
+        }
+
+        const sortedEvents = _.orderBy(overlappingEvents, [
+            (date) => date.start,
+            (date) => date.end,
+        ], ['asc', 'asc']);
+
+        let event = _.first(sortedEvents);
+        let consecutiveRanges = [event];
+
+        const markedEvents = [event.uid];
+        const rangeOfConsecutiveEvents = [];
+
+        while (markedEvents.length < sortedEvents.length) {
+
+            const consecutiveEvent = sortedEvents.find((consEvent) => (
+                (event.end === consEvent.start || consEvent.start >= event.end)
+                && !markedEvents.find((uid) => consEvent.uid === uid)
+            ));
+
+            if (consecutiveEvent) {
+                consecutiveRanges.push(consecutiveEvent);
+                markedEvents.push(consecutiveEvent.uid);
+                event = consecutiveEvent;
+            } else {
+                //take the one that starts and ends ealier amoung the remainings events
+                event = _.first(sortedEvents.filter(({ uid }) => !markedEvents.includes(uid)));
+                rangeOfConsecutiveEvents.push(consecutiveRanges);
+                consecutiveRanges = [event];
+                markedEvents.push(event.uid);
+
+                if (markedEvents.length >= sortedEvents.length) {
+                    rangeOfConsecutiveEvents.push(consecutiveRanges);
+
+                    return this.remapRangesWithEnglishEventsAtBack(rangeOfConsecutiveEvents);
+                }
+            }
+
+        }
+
+        consecutiveRanges.length && rangeOfConsecutiveEvents.push(consecutiveRanges);
+
+        return this.remapRangesWithEnglishEventsAtBack(rangeOfConsecutiveEvents);
+    }
+
+    groupByOverlappingRanges(events) {
+        const endDatesValues = events.map((r) => moment(r.end).unix()).sort((a, b) => a - b);
+        const datesRanges = events.sort((a, b) => moment(a.start).unix() - moment(b.start).unix());
+
+        let i = 0,
+            j = 0,
+            n = datesRanges.length,
+            active = 0;
+        let groups = [],
+            cur = [];
+        while (true) {
+            if (i < n && moment(datesRanges[i].start).unix() < endDatesValues[j]) {
+                cur.push(datesRanges[i++]);
+                ++active
+            } else if (j < n) {
+                ++j;
+                if (--active === 0) {
+                    groups.push(cur);
+                    cur = []
+                }
+            } else {
+                break
+            }
+        }
+        return groups
+    }
+
     remapCalendar(rawCalendar) {
         const remappedCalendar = _(rawCalendar)
             .filter((event) => event.start && event.module_registered)
@@ -121,10 +179,13 @@ class Calendar {
             .toPairs()
             .map(([date, events]) => {
                 const eventsGroupedByOverlappingTimes = this.groupByOverlappingRanges(events);
+                const consecutiveEventsRanges = eventsGroupedByOverlappingTimes.map((range) => (
+                    this.groupByRangesOfConsecutiveEvents(range)
+                ));
 
                 return [
                     date,
-                    eventsGroupedByOverlappingTimes
+                    consecutiveEventsRanges
                 ];
             })
             .fromPairs()
@@ -141,11 +202,15 @@ class Calendar {
             .map((date) => {
                 const formattedDate = date.format('DD-MM-YYYY');
                 const registeredEvents = _(this.calendar[formattedDate])
-                    .flatMap((events) => (
-                        _.flatMap(events, (event) => event.registered))
+                    .flatMap((rangeEvents) => (
+                        _.flatMap(rangeEvents, (events) => (
+                            events.map((event) => event.registered)
+                        )))
                     )
                     .value();
-                const isRegisteredToAnEvent = _.some(registeredEvents, (registered) => registered === 'registered');
+                const isRegisteredToAnEvent = _.some(registeredEvents, (registered) => (
+                    wasRegistered(registered)
+                ));
 
                 return [
                     date,

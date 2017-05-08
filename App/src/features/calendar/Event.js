@@ -8,11 +8,11 @@ import { HOUR_SIZE, QUARTER_SIZE } from './constants';
 import { wasRegistered } from './utils';
 
 const Event = observer((props) => {
-    const { event, nbEvents, nthEvent, uiStore } = props;
+    const { event, nbRows, currentRow, uiStore } = props;
     const { width: screenWidth } = Dimensions.get('window');
     const startDate = moment(event.start);
     const start = startDate.hours() + (startDate.minutes() / 60);
-    const eventWidth = (screenWidth * .7) / nbEvents;
+    const eventWidth = (screenWidth * .75) / nbRows;
     const color = wasRegistered(event.registered) ? '#62c462' : '#B9B9B9';
 
     return (
@@ -24,7 +24,7 @@ const Event = observer((props) => {
                 height: (event.duration / 15) * QUARTER_SIZE,
                 top: ((start * HOUR_SIZE) - (8 * HOUR_SIZE)),
                 width: eventWidth,
-                left: 30 + ((eventWidth + 1) * (nthEvent - 1)),
+                left: 25 + ((eventWidth + 1) * (currentRow - 1)),
                 borderBottomWidth: 1,
                 borderBottomColor: 'white',
             }}
@@ -43,8 +43,8 @@ const Event = observer((props) => {
 
 Event.propTypes = {
     event: t.object.isRequired,
-    nthEvent: t.number.isRequired,
-    nbEvents: t.number.isRequired,
+    currentRow: t.number.isRequired,
+    nbRows: t.number.isRequired,
     uiStore: t.object.isRequired,
 };
 

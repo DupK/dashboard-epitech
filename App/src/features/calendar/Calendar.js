@@ -72,25 +72,30 @@ class Calendar extends Component {
 
     renderEvents() {
         const { store: { ui, calendar } } = this.props;
+        const dayFormatted = moment(calendar.selectedDate).format('DD-MM-YYYY');
+        const overlappingRanges = calendar.calendar[dayFormatted];
 
-        if (!calendar.calendar) {
+        if (!calendar.calendar || !overlappingRanges) {
             return null;
         }
 
-        const dayFormatted = moment(calendar.selectedDate).format('DD-MM-YYYY');
+        return _.flatMap(overlappingRanges, (overlappingRange) => {
+            const nbRows = overlappingRange.length;
+            let currentRow = 0;
 
-        return _.flatMap(calendar.calendar[dayFormatted], (events) => {
-            let nthEvent = 0;
-            return _.map(events, (event) => {
-                nthEvent++;
-                return <Event
-                    key={event.uid}
-                    event={event}
-                    nbEvents={events.length}
-                    nthEvent={nthEvent}
-                    uiStore={ui}
-                />;
+            return _.flatMap(overlappingRange, (rangeEvents) => {
+                currentRow++;
+                return rangeEvents.map((event) => (
+                    <Event
+                        key={event.uid}
+                        event={event}
+                        nbRows={nbRows}
+                        currentRow={currentRow}
+                        uiStore={ui}
+                    />
+                ))
             });
+
         });
     }
 
