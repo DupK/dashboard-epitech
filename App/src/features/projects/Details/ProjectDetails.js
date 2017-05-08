@@ -53,7 +53,7 @@ class ProjectDetails extends Component {
             content: <Team teams={ projects.details } />
         };
         const document = {
-            title: 'Documents',
+            title: `Documents (${projects.files.length})`,
             icon: 'dropbox',
             content: <Document documents={ projects.files } />
         };
