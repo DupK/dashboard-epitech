@@ -75,7 +75,7 @@ const MonthBar = observer(() =>  {
     );
 });
 
-const ProjectLine = observer(({ projectName, nthProject, start, end }) => {
+const ProjectLine = observer(({ projectName, nthProject, start, end, color }) => {
     const { width } = Dimensions.get('window');
     const parsedStart = moment(start, 'YYYY-MM-DD, HH:mm:ss');
     const parsedEnd = moment(end, 'YYYY-MM-DD, HH:mm:ss');
@@ -102,7 +102,7 @@ const ProjectLine = observer(({ projectName, nthProject, start, end }) => {
                 height: PROJECT_LINE_HEIGHT,
                 width: nbDays * DAY_IN_PIXEL,
                 borderRadius: 30,
-                backgroundColor: 'rgba(35, 52, 69, 0.9)',
+                backgroundColor: color,
             }}/>
         </View>
     );
@@ -113,6 +113,7 @@ ProjectLine.propTypes = {
     start: React.PropTypes.string,
     end: React.PropTypes.string,
     projectName: React.PropTypes.string,
+    color: React.PropTypes.string,
 };
 
 const VerticalMonthDelimitors = observer(({ nthMonth, viewHeight }) => {
@@ -275,6 +276,7 @@ export default class ProjectsTimeline extends Component {
                 end={project.end_acti}
                 nthProject={i}
                 projectName={project.acti_title}
+                color={project.rights.includes('assistant') ? "rgba(98, 196, 98, 0.9)" : "rgba(35, 52, 69, 0.9)"}
             />
         ));
     }
