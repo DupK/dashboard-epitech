@@ -24,6 +24,7 @@ export default class ProjectsList extends Component {
 
         this.renderProject = this.renderProject.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
+        this.renderAerProjects = this.renderAerProjects.bind(this);
 
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     }
@@ -66,23 +67,40 @@ export default class ProjectsList extends Component {
 
     renderHeader(title, icon) {
         return (
-            <View style={Platform.OS === 'ios' ? styles.headerContainerIOS : styles.headerContainerAndroid}>
+            <View key={title} style={Platform.OS === 'ios' ? styles.headerContainerIOS : styles.headerContainerAndroid}>
                 <IconFA style={styles.headerIcon} name={ icon } />
                 <Text style={styles.headerText}>{ title }</Text>
             </View>
         )
     }
 
+    renderAerProjects(projects) {
+        return [
+            this.renderHeader('AER projects', 'life-bouy'),
+            <ListView
+                key="aer"
+                dataSource={this.ds.cloneWithRows(projects)}
+                renderRow={this.renderProject}>
+            </ListView>
+        ];
+    }
+
     render() {
         const { projectsStore } = this.props;
         const projects = projectsStore.projects.slice();
 
+        console.log(projects);
+
         const currentProjects = _.filter(projects, (project) => (
-            moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss').isBefore(moment())
+            moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss').isBefore(moment()) && project.rights.includes('student')
         ));
 
         const comingsProjects = _.filter(projects, (project) => (
-            moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss').isAfter(moment())
+            moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss').isAfter(moment()) && project.rights.includes('student')
+        ));
+
+        const aerProjects = _.filter(projects, (project) => (
+            project.rights.includes('assistant')
         ));
 
         return (
@@ -97,6 +115,7 @@ export default class ProjectsList extends Component {
                         dataSource={this.ds.cloneWithRows(comingsProjects)}
                         renderRow={this.renderProject}>
                     </ListView>
+                    { aerProjects.length != 0 && this.renderAerProjects(aerProjects) }
             </ScrollView>
         );
     }

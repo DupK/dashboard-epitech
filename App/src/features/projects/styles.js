@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 40,
         backgroundColor: '#233445',
+        justifyContent: 'center',
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
@@ -31,12 +32,14 @@ const styles = StyleSheet.create({
     },
 
     headerIcon: {
+        alignSelf: 'center',
         marginLeft: 15,
         marginRight: 10,
         color: '#FAFAFA',
     },
 
     headerText: {
+        alignSelf: 'center',
         fontSize: 14,
         color: '#FAFAFA',
     },
