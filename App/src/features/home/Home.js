@@ -5,19 +5,14 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
-import {
-    Text,
-    View,
-    ScrollView,
-    Animated,
-    RefreshControl,
-    Platform
-} from 'react-native';
+import { Animated, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { AnimatedGaugeProgress } from 'react-native-simple-gauge';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
 import scrollStyle from './styles';
 import Cell from './Cell';
+import EVIcon from 'react-native-vector-icons/EvilIcons';
+import SLIcon from 'react-native-vector-icons/SimpleLineIcons';
 
 import Layout from '../../shared/components/Layout';
 import refreshApplicationData from '../../shared/RefreshApplication';
@@ -35,7 +30,6 @@ export default class Home extends Component {
             scrollY: new Animated.Value(0),
             refreshing: false,
         };
-        this.onRefresh = this.onRefresh.bind(this);
     }
 
     menu = {
@@ -59,7 +53,7 @@ export default class Home extends Component {
         const { store: { ui, session } } = this.props;
 
         if (ui.isConnected && session.loggedFromCache) {
-            await this.refreshData();
+            await refreshApplicationData({ withLogin: true });
         }
     }
 
@@ -154,13 +148,6 @@ export default class Home extends Component {
                     onPress={this.menu.links}
                     color="#233445"
                 />
-                <Cell
-                    title="Logout"
-                    description="Thanks to report any bug"
-                    icon="ios-power-outline"
-                    onPress={this.menu.logout}
-                    color="#233445"
-                />
             </View>
         );
     }
@@ -186,7 +173,7 @@ export default class Home extends Component {
                 fill={gpaPercentage}
                 rotation={0}
                 cropDegree={230}
-                tintColor="#62c462"
+                tintColor="#56ab56"
                 backgroundColor="#152839"
             />,
             <AnimatedGaugeProgress
@@ -200,21 +187,10 @@ export default class Home extends Component {
                 fill={creditsPercentage}
                 rotation={180}
                 cropDegree={230}
-                tintColor="#62c462"
+                tintColor="#56ab56"
                 backgroundColor="#152839"
             />
         ];
-    }
-
-    async refreshData() {
-        await refreshApplicationData({ withLogin: true });
-    }
-
-    onRefresh() {
-        this.setState({ refreshing: true }, async () => {
-            await this.refreshData();
-            this.setState({ refreshing: false });
-        });
     }
 
     render() {
@@ -287,99 +263,134 @@ export default class Home extends Component {
         return (
             <Layout store={this.props.store}>
                 <View style={scrollStyle.fill}>
-                <ScrollView
-                    refreshControl={
-                        <RefreshControl
-                            progressViewOffset={HEADER_MAX_HEIGHT}
-                            refreshing={this.state.refreshing}
-                            onRefresh={this.onRefresh}
-                        />
-                    }
-                    style={scrollStyle.fill}
-                    scrollEventThrottle={32}
-                    onScroll={Animated.event(
-                        [{ nativeEvent: { contentOffset: { y: this.state.scrollY } }}]
-                    )}
-                >
-                    { this.renderScrollView() }
-                </ScrollView>
-                <Animated.View style={[
-                    scrollStyle.header,
-                    {
-                        elevation: shadow,
-                        shadowColor: '#000000',
-                        shadowOpacity: iOSshadow,
-                        shadowRadius: 5,
-                        shadowOffset: {
-                            height: 3,
-                            width: 0
-                        },
-                    }
-                ]}>
+                    <ScrollView
+                        style={scrollStyle.fill}
+                        scrollEventThrottle={32}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }]
+                        )}
+                    >
+                        { this.renderScrollView() }
+                    </ScrollView>
                     <Animated.View style={[
+                        scrollStyle.header,
                         {
-                            overflow: 'hidden',
-                            height: headerHeight,
+                            elevation: shadow,
+                            shadowColor: '#000000',
+                            shadowOpacity: iOSshadow,
+                            shadowRadius: 5,
+                            shadowOffset: {
+                                height: 3,
+                                width: 0
+                            },
                         }
                     ]}>
-                        <Animated.View
-                            style={[
-                                scrollStyle.headerContainer,
-                                {
-                                    opacity: imageOpacity,
-                                    transform: [{ translateY: imageTranslate }],
-                                },
-                            ]}
-                        >
-                            <View style={scrollStyle.pictureAndGaugesContainer}>
-                                <View style={scrollStyle.pictureAndGauges}>
-                                    <View style={{ flexDirection: 'column' }}>
+                        <Animated.View style={[
+                            {
+                                overflow: 'hidden',
+                                height: headerHeight,
+                            }
+                        ]}>
+                            <Animated.View
+                                style={[
+                                    scrollStyle.headerContainer,
+                                    {
+                                        opacity: imageOpacity,
+                                        transform: [{ translateY: imageTranslate }],
+                                    },
+                                ]}
+                            >
+                                <View style={scrollStyle.pictureAndGaugesContainer}>
+                                    <View style={scrollStyle.pictureAndGauges}>
+                                        <View style={{ flexDirection: 'column' }}>
+                                            <Animated.View style={{
+                                                transform: [{ translateX: translateMinus50 }],
+                                            }}>
+                                                <Text style={scrollStyle.gaugeValue}>
+                                                    { userProfile.gpa }
+                                                </Text>
+                                                <Text style={scrollStyle.gaugeDescription}>
+                                                    GPA
+                                                </Text>
+                                            </Animated.View>
+                                        </View>
+                                        <Animated.Image
+                                            style={[
+                                                scrollStyle.picture,
+                                                { transform: [{ rotate: rotateIcon }] }
+                                            ]}
+                                            source={require('../../assets/epitech.png')}/>
+
+                                        { this.renderGauges(gaugeLeftTranslate, gaugeRightTranslate) }
                                         <Animated.View style={{
-                                            transform: [{ translateX: translateMinus50 }],
+                                            transform: [{ translateX: translate50 }],
                                         }}>
-                                            <Text style={scrollStyle.gaugeValue}>{ userProfile.gpa }</Text>
-                                            <Text style={scrollStyle.gaugeDescription}>GPA</Text>
+                                            <View style={{ flexDirection: 'column' }}>
+                                                <Text style={scrollStyle.gaugeValue}>
+                                                    { userProfile.credits }
+                                                </Text>
+                                                <Text style={scrollStyle.gaugeDescription}>
+                                                    Credits
+                                                </Text>
+                                            </View>
                                         </Animated.View>
                                     </View>
-                                    <Animated.Image
-                                        style={[
-                                            scrollStyle.picture,
-                                            { transform: [{ rotate: rotateIcon }] }
-                                        ]}
-                                        source={require('../../assets/epitech.png')}/>
-
-                                    { this.renderGauges(gaugeLeftTranslate, gaugeRightTranslate) }
                                     <Animated.View style={{
-                                        transform: [{ translateX: translate50 }],
+                                        flex: 0.3,
+                                        flexDirection: 'row',
+                                        transform: [{ translateY: translate50 }],
                                     }}>
-                                        <View style={{ flexDirection: 'column'}}>
-                                            <Text style={scrollStyle.gaugeValue}>{ userProfile.credits }</Text>
-                                            <Text style={scrollStyle.gaugeDescription}>Credits</Text>
-                                        </View>
+                                        <TouchableOpacity
+                                            onPress={refreshApplicationData}
+                                            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                                            style={{
+                                                flex: 0.19,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                backgroundColor: '#56ab56',
+                                                height: 41,
+                                                borderTopRightRadius: 5,
+                                                borderBottomRightRadius: 5,
+                                                elevation: 5
+                                            }}>
+                                            <EVIcon name="refresh" size={30} color="#FAFAFA"/>
+                                        </TouchableOpacity>
+                                        <Text style={scrollStyle.username}>{ name }</Text>
+                                        <TouchableOpacity
+                                            onPress={this.menu.logout}
+                                            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                                            style={{
+                                                flex: 0.19,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                height: 41,
+                                                backgroundColor: '#DA5040',
+                                                borderTopLeftRadius: 5,
+                                                borderBottomLeftRadius: 5,
+                                                elevation: 5
+                                            }}>
+                                            <View style={{ transform: [{ rotate: '180deg' }] }}>
+                                                <SLIcon name="logout" size={18} color="#FAFAFA"/>
+                                            </View>
+                                        </TouchableOpacity>
                                     </Animated.View>
                                 </View>
-                                <Animated.View style={{
-                                    flex: 0.3,
-                                    transform: [{ translateY: translate50 }],
-                                }}>
-                                    <Text style={scrollStyle.username}>{ name }</Text>
-                                </Animated.View>
-                            </View>
-                        </Animated.View>
-                        <Animated.View
-                            style={[
-                                scrollStyle.bar,
-                                {
-                                    transform: [{ translateY: translateMinus50 }],
-                                    opacity: titleOpacity,
-                                },
-                            ]}
-                        >
-                            <Text style={scrollStyle.title}>Home</Text>
+                            </Animated.View>
+                            <Animated.View
+                                style={[
+                                    scrollStyle.bar,
+                                    {
+                                        transform: [{ translateY: translateMinus50 }],
+                                        opacity: titleOpacity,
+                                    },
+                                ]}
+                            >
+                                <Text style={scrollStyle.title}>Home</Text>
+                            </Animated.View>
                         </Animated.View>
                     </Animated.View>
-                </Animated.View>
-            </View></Layout>
+                </View>
+            </Layout>
         );
     }
 }

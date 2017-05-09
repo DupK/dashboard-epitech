@@ -50,7 +50,7 @@ class Layout extends React.Component {
 
         switch (ui.currentState) {
             case ui.state.refreshingData:
-                return '#62c462';
+                return '#56ab56';
             case ui.state.noInternet:
                 return '#F44336';
             default:

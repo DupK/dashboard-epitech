@@ -37,7 +37,6 @@ const scrollStyle = StyleSheet.create({
         right: 0,
         width: null,
         height: HEADER_MAX_HEIGHT,
-        marginTop: 10,
     },
     bar: {
         height: HEADER_MIN_HEIGHT,
@@ -95,10 +94,11 @@ const scrollStyle = StyleSheet.create({
         zIndex: 10,
     },
     username: {
+        flex: 1,
         color: 'white',
         fontSize: 17,
-        marginBottom: 20,
         alignSelf: 'center',
+        textAlign: 'center',
     },
     blockInfoContainer: {
         flex: 2,
