@@ -128,13 +128,6 @@ export default class Home extends Component {
                     color="#233445"
                 />
                 <Cell
-                    title="Statistics"
-                    description="This feature will be soon available"
-                    icon="ios-speedometer-outline"
-                    onPress={this.menu.stats}
-                    color="#233445"
-                />
-                <Cell
                     title="Documents"
                     description="Your private documents"
                     icon="ios-folder-open-outline"
