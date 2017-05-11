@@ -8,12 +8,14 @@ import { HOUR_SIZE, QUARTER_SIZE } from './constants';
 import { wasRegistered } from './utils';
 
 const Event = observer((props) => {
-    const { event, nbRows, currentRow, uiStore } = props;
+    const { event, nbRows, currentRow, uiStore, smallEvent } = props;
     const { width: screenWidth } = Dimensions.get('window');
     const startDate = moment(event.start);
     const start = startDate.hours() + (startDate.minutes() / 60);
     const eventWidth = (screenWidth * .75) / nbRows;
     const color = wasRegistered(event.registered) ? '#62c462' : '#B9B9B9';
+    const eventTitleSize = smallEvent ? 8 : 10;
+    const eventHourSize = smallEvent ? 7 : 8;
 
     return (
         <TouchableOpacity
@@ -30,9 +32,9 @@ const Event = observer((props) => {
             }}
         >
             <View style={{ flex: 1, flexDirection: 'row' }}>
-                <Text style={{ padding: 3, fontSize: 10, color: 'white' }}>
-                    <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>&nbsp;&nbsp;
-                    <Text style={{ fontSize: 8 }}>
+                <Text style={{ padding: 3, fontSize: eventTitleSize, color: 'white' }}>
+                <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>&nbsp;&nbsp;
+                    <Text style={{ fontSize: eventHourSize }}>
                         {moment(event.start) .format('HH:mm')} - {moment(event.end) .format('HH:mm')}
                     </Text>
                 </Text>
@@ -46,6 +48,7 @@ Event.propTypes = {
     currentRow: t.number.isRequired,
     nbRows: t.number.isRequired,
     uiStore: t.object.isRequired,
+    smallEvent: t.bool.isRequired,
 };
 
 export default Event;

@@ -5,13 +5,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
-import {
-    Text,
-    View,
-    ScrollView,
-    Dimensions,
-    Platform
-} from 'react-native';
+import { Dimensions, Platform, ScrollView, Text, View } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
 import { observable } from 'react-native-mobx';
 
@@ -85,15 +79,20 @@ class Calendar extends Component {
 
             return _.flatMap(overlappingRange, (rangeEvents) => {
                 currentRow++;
-                return rangeEvents.map((event) => (
-                    <Event
-                        key={event.uid}
-                        event={event}
-                        nbRows={nbRows}
-                        currentRow={currentRow}
-                        uiStore={ui}
-                    />
-                ))
+                return rangeEvents.map((event) => {
+                    const eventDuration = moment(event.end).diff(event.start, 'minutes');
+
+                    return (
+                        <Event
+                            key={event.uid}
+                            event={event}
+                            nbRows={nbRows}
+                            currentRow={currentRow}
+                            uiStore={ui}
+                            smallEvent={eventDuration <= 30 && nbRows > 1}
+                        />
+                    );
+                })
             });
 
         });
