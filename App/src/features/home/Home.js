@@ -246,6 +246,7 @@ export default class Home extends Component {
 
         const {
             store: {
+                ui,
                 session: { userProfile },
             }
         } = this.props;
@@ -334,7 +335,7 @@ export default class Home extends Component {
                                         transform: [{ translateY: translate50 }],
                                     }}>
                                         <TouchableOpacity
-                                            onPress={refreshApplicationData}
+                                            onPress={() => ui.isConnected && refreshApplicationData()}
                                             hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
                                             style={{
                                                 flex: 0.19,
