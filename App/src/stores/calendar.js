@@ -54,6 +54,7 @@ class Calendar {
         }
     }
 
+    @action
     setCalendarFields(calendar) {
         this.rawCalendar = calendar;
         this.calendar = this.remapCalendar(calendar);
@@ -71,6 +72,8 @@ class Calendar {
         return 'unregistered';
     }
 
+    //Put english events at back so they're rendered in the last row on the calendar
+    //in order to prioritize more important event
     remapRangesWithEnglishEventsAtBack(eventsRanges) {
         const [englishRanges, othersRanges] = _.partition(eventsRanges, (events) => (
             events.every((event) => event.codeModule.includes('B-ANG'))
@@ -100,7 +103,7 @@ class Calendar {
 
             const consecutiveEvent = sortedEvents.find((consEvent) => (
                 (event.end === consEvent.start || consEvent.start >= event.end)
-                && !markedEvents.find((uid) => consEvent.uid === uid)
+                && !markedEvents.includes(consEvent.uid)
             ));
 
             if (consecutiveEvent) {
@@ -288,9 +291,11 @@ class Calendar {
         this.selectedDate = prevMonth;
 
         if (shouldFetchMore) {
+            const nextDate = moment(prevMonth).subtract(1, 'M').startOf('isoWeek');
+
             try {
                 ui.fetchingState();
-                await this.fetchCalendar(moment(prevMonth).subtract(1, 'M'), this.lastFetchedStart);
+                await this.fetchCalendar(nextDate, this.lastFetchedStart);
                 ui.defaultState();
             } catch (e) {
                 console.error(e);
@@ -307,9 +312,11 @@ class Calendar {
         this.selectedDate = nextMonth;
 
         if (shouldFetchMore) {
+            const nextDate = moment(nextMonth).add(1, 'M').endOf('isoWeek');
+
             try {
                 ui.fetchingState();
-                await this.fetchCalendar(this.lastFetchedEnd, moment(nextMonth).add(1, 'M'));
+                await this.fetchCalendar(this.lastFetchedEnd, nextDate);
                 ui.defaultState();
             } catch (e) {
                 console.error(e);
@@ -358,13 +365,13 @@ class Calendar {
 
         if (pickedDate.isAfter(currentSelectedDate) && this.selectedDate.isAfter(this.lastFetchedEnd)) {
             ui.fetchingState();
-            await this.fetchCalendar(this.lastFetchedEnd, moment(date).add(1, 'M'));
+            await this.fetchCalendar(this.lastFetchedEnd, moment(date).add(1, 'M').endOf('isoWeek'));
             ui.defaultState();
         }
 
         if (pickedDate.isBefore(currentSelectedDate) && this.selectedDate.isBefore(this.lastFetchedStart)) {
             ui.fetchingState();
-            await this.fetchCalendar(moment(date).subtract(1, 'M'), this.lastFetchedStart);
+            await this.fetchCalendar(moment(date).subtract(1, 'M').startOf('isoWeek'), this.lastFetchedStart);
             ui.defaultState();
         }
     }
