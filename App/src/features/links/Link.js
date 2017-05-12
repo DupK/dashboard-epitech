@@ -2,43 +2,30 @@
  * Created by jules on 24/03/17.
  */
 
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { observer } from 'mobx-react/native';
-import {
-    Text,
-    View,
-    Linking,
-    StyleSheet,
-    TouchableOpacity
-} from 'react-native';
+import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-@observer
-class Link extends Component {
+const Link = observer((props) => {
 
-    constructor(props) {
-        super(props);
-        this._handleUrl = this._handleUrl.bind(this);
-    }
+    const _handleUrl = () => {
+        Linking.canOpenURL(props.url)
+            .then((supported) => {
+                if (supported) {
+                    Linking.openURL(props.url);
+                }
+            });
+    };
 
-    _handleUrl() {
-        Linking.canOpenURL(this.props.url).then(supported => {
-            if (supported) {
-                Linking.openURL(this.props.url);
-            }
-        });
-    }
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <TouchableOpacity onPress={this._handleUrl}>
-                    <Text style={styles.title}>{this.props.title}</Text>
-                    <Text style={styles.description}>{this.props.description}</Text>
-                </TouchableOpacity>
-            </View>
-        );
-    }
-};
+    return (
+        <View style={styles.container}>
+            <TouchableOpacity onPress={_handleUrl}>
+                <Text style={styles.title}>{props.title}</Text>
+                <Text style={styles.description}>{props.description}</Text>
+            </TouchableOpacity>
+        </View>
+    );
+});
 
 const styles = StyleSheet.create({
 

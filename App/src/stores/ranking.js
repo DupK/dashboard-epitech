@@ -89,7 +89,7 @@ class Ranking {
             : _.filter(this.promotion, (student) => new RegExp(this.searchField, 'i').test(student.login));
     }
 
-    selfRank() {
+    @computed get selfRank() {
         const { login } = stores.session.userProfile;
 
         return _.find(this.promotion, (student) => student.login === login);

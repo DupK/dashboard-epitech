@@ -2,15 +2,9 @@
  * Created by jules on 04/02/17.
  */
 
-import React, { Component } from 'react';
-import {
-    Text,
-    View,
-    ScrollView,
-    TouchableOpacity,
-    Platform,
-} from 'react-native';
-import _ from "lodash";
+import React from 'react';
+import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import _ from 'lodash';
 import Accordion from 'react-native-collapsible/Accordion';
 import { Actions } from 'react-native-router-flux';
 import styles from './styles.js';
@@ -29,18 +23,26 @@ const gradeColors = {
     '-': '#FFD783',
 };
 
-@observer
-export default class Marks extends Component {
+function getOrdinalNumber(n) {
+    const s = ['th', 'st', 'nd', 'rd'];
+    const v = n % 100;
 
-    constructor(props) {
-        super(props);
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
 
-        this.nextSemester = this.nextSemester.bind(this);
-        this.previousSemester = this.previousSemester.bind(this);
-        this._renderContent = this._renderContent.bind(this);
-    };
+const Marks = observer((props) => {
 
-    _renderHeader(module) {
+    const { store: { marks, ui } } = props;
+    const { marksBySemesters, currentSemester, nbSemester } = marks;
+
+    const semesterId = (currentSemester < nbSemester)
+        ? `B${currentSemester}`
+        : 'Others';
+    const semesterText = (currentSemester < nbSemester)
+        ? `${getOrdinalNumber(currentSemester)} semester`
+        : 'Others';
+
+    function _renderHeader(module) {
         const title = module.title;
         const grade = module.grade;
 
@@ -55,9 +57,7 @@ export default class Marks extends Component {
         );
     }
 
-    _renderContent(module) {
-        const { store: { ui } } = this.props;
-
+    function _renderContent(module) {
         return (
             <View>
                 {
@@ -87,51 +87,27 @@ export default class Marks extends Component {
         );
     }
 
-    getOrdinalNumber(n) {
-        const s = ['th', 'st', 'nd', 'rd'];
-        const v = n % 100;
-
-        return n + (s[(v - 20) % 10] || s[v] || s[0]);
-    }
-
-    nextSemester() {
-        const { store: { marks } } = this.props;
-        const { nbSemester, currentSemester } = marks;
-
+    function nextSemester() {
         marks.setCurrentSemester((currentSemester >= nbSemester) ? 1 : currentSemester + 1);
     }
 
-    previousSemester() {
-        const { store: { marks } } = this.props;
-        const { nbSemester, currentSemester } = marks;
-
+    function previousSemester() {
         marks.setCurrentSemester((currentSemester <= 1) ? nbSemester : currentSemester - 1);
     }
 
-    render() {
-        const { store: { marks } } = this.props;
-        const { marksBySemesters, currentSemester, nbSemester } = marks;
-
-        const semesterId = (currentSemester < nbSemester)
-            ? `B${currentSemester}`
-            : 'Others';
-        const semesterText = (currentSemester < nbSemester)
-            ? `${this.getOrdinalNumber(currentSemester)} semester`
-            : 'Others';
-
-        return (
-            <Layout store={this.props.store}>
-                <View style={{ flex: 1, backgroundColor: '#233445' }}>
-                    <View style={styles.bodyContainer}>
-                        <ScrollView>
-                            <Accordion
-                                underlayColor="#233445"
-                                sections={marksBySemesters[semesterId].slice()}
-                                renderHeader={this._renderHeader}
-                                renderContent={this._renderContent}
-                            />
-                        </ScrollView>
-                    </View> 
+    return (
+        <Layout store={props.store}>
+            <View style={{ flex: 1, backgroundColor: '#233445' }}>
+                <View style={styles.bodyContainer}>
+                    <ScrollView>
+                        <Accordion
+                            underlayColor="#233445"
+                            sections={marksBySemesters[semesterId].slice()}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                        />
+                    </ScrollView>
+                </View>
                 <View style={styles.headerContainer}>
                     <TouchableOpacity
                         hitSlop={{
@@ -139,9 +115,8 @@ export default class Marks extends Component {
                             bottom: 20,
                             left: 20,
                             right: 20,
-                        }}
-                        style={styles.headerArrow}
-                        onPress={this.previousSemester}
+                        }} style={styles.headerArrow}
+                        onPress={previousSemester}
                     >
                         <IconIO size={24} style={styles.headerIcon} name="ios-arrow-back"/>
                     </TouchableOpacity>
@@ -156,13 +131,14 @@ export default class Marks extends Component {
                             right: 20,
                         }}
                         style={styles.headerArrow}
-                        onPress={this.nextSemester}
+                        onPress={nextSemester}
                     >
                         <IconIO size={24} style={styles.headerIcon} name="ios-arrow-forward"/>
                     </TouchableOpacity>
                 </View>
             </View>
-            </Layout>
-        );
-    }
-};
+        </Layout>
+    );
+});
+
+export default Marks;

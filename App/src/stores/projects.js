@@ -5,7 +5,7 @@ import _ from 'lodash';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
 import storage from 'react-native-simple-store';
-import { computed, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import ui from './uiState';
 import * as Intra from '../api/intra';
 
@@ -15,6 +15,7 @@ class Projects {
     @observable rawProjects = [];
     @observable projectDetails = [];
 
+    @action
     async fetchProjects() {
         const projects = await Intra.fetchProjects();
         await storage.save('projects', projects);
@@ -22,6 +23,7 @@ class Projects {
         this.setProjectsFields(projects);
     }
 
+    @action
     async retrieveProjectsFromCache() {
         const projects = await storage.get('projects');
 
@@ -30,6 +32,7 @@ class Projects {
         }
     }
 
+    @action
     setProjectsFields(projects) {
         this.rawProjects = projects;
         this.projects = this.computeRegisteredProjects(projects);
@@ -45,6 +48,7 @@ class Projects {
         });
     }
 
+    @action
     async fetchProjectDetails(year, module, instance, activity) {
         ui.fetchingState();
 

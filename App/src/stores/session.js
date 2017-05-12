@@ -133,6 +133,7 @@ class Session {
                 storage.delete('projects'),
                 storage.delete('marks'),
                 storage.delete('calendar'),
+                storage.delete('ranking'),
             ]);
             this.loggedIn = false;
             this.loggedFromCache = false;

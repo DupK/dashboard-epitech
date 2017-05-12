@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
 const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) => {
     const style = {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#233445',
         shadowColor: null,
         shadowOffset: null,
         shadowOpacity: null,

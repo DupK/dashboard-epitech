@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
+import { Dimensions, StatusBar, StyleSheet, Text, View } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
 import { observer } from 'mobx-react/native';
 
@@ -19,15 +19,17 @@ const AlertBar = observer(({ message, backgroundColor, loading }) => {
             alignItems: 'center',
             padding: 4,
         }}>
-            <StatusBar hidden={true} />
+            <StatusBar hidden={true} barStyle="light-content" />
             {
-                loading && <LoadingIndicator size={10} color="#FFFFFF" type="Circle"/>
+                loading && <LoadingIndicator size={12} color="#FAFAFA" type="Circle"/>
             }
             <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
                 style={{
                     color: '#FAFAFA',
-                    fontSize: 13,
-                    marginLeft: 10,
+                    fontSize: 12,
+                    marginLeft: loading ? 10 : 0,
                 }}
             >
                 { message }
@@ -42,11 +44,11 @@ AlertBar.propTypes = {
     loading: React.PropTypes.bool.isRequired,
 };
 
-@observer
-class Layout extends React.Component {
+const Layout = observer(({ store, children }) => {
 
-    getStatusBarColor() {
-        const { store: { ui } } = this.props;
+    const { ui } = store;
+
+    function getStatusBarColor() {
 
         switch (ui.currentState) {
             case ui.state.refreshingData:
@@ -58,9 +60,7 @@ class Layout extends React.Component {
         }
     }
 
-    getStatusBarTitle() {
-        const { store: { ui } } = this.props;
-
+    function getStatusBarTitle() {
         switch (ui.currentState) {
             case ui.state.refreshingData:
                 return 'Your profile is being refreshed...';
@@ -71,31 +71,27 @@ class Layout extends React.Component {
         }
     }
 
-    renderStatusBar() {
-        const { store: { ui } } = this.props;
-
+    function renderStatusBar() {
         if (!ui.shouldShowStatusBar) {
             return null;
         }
 
         return (
             <AlertBar
-                message={this.getStatusBarTitle()}
-                backgroundColor={this.getStatusBarColor()}
+                message={getStatusBarTitle()}
+                backgroundColor={getStatusBarColor()}
                 loading={ui.currentState === ui.state.refreshingData}
             />
         );
     }
 
-    render() {
-        return (
-            <View style={styles.layoutContainer}>
-                { this.renderStatusBar() }
-                { this.props.children }
-            </View>
-        );
-    }
-}
+    return (
+        <View style={styles.layoutContainer}>
+            { renderStatusBar() }
+            { children }
+        </View>
+    );
+});
 
 Layout.propTypes = {
     children: React.PropTypes.node,

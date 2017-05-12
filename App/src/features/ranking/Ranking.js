@@ -56,7 +56,7 @@ export default class Ranking extends Component {
 
     render() {
         const { store: { ui, ranking } } = this.props;
-        const selfRank = ranking.selfRank();
+        const selfRank = ranking.selfRank;
 
         if (!ui.isConnected && !ranking.promotion.length) {
             return (

@@ -27,9 +27,7 @@ const ViewAvailableSlots = observer(({ activityTitle, isRegisteredToRelatedProje
     return (
         <RegisterBox>
             <TouchableOpacity
-                style={{
-                    flexDirection: 'row',
-                }}
+                style={{ flexDirection: 'row', }}
                 onPress={() => Actions.availableSlots({ title: `Slots for ${activityTitle}`})}
             >
                 <RegisterText>

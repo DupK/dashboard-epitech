@@ -6,7 +6,6 @@ import _ from 'lodash';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
 import storage from 'react-native-simple-store';
-import { Alert } from 'react-native';
 import { action, computed, observable } from 'mobx';
 import ui from './uiState';
 import session from './session';
@@ -38,6 +37,7 @@ class Marks {
         this.sortMethod = sortMethods.byName;
     }
 
+    @action
     async fetchMarks() {
         const marks = await Intra.fetchMarks(session.userProfile.login);
         await storage.save('marks', marks);
@@ -45,6 +45,7 @@ class Marks {
         this.setMarksField(marks);
     }
 
+    @action
     async retrieveMarksFromCache() {
         const marks = await storage.get('marks');
 
@@ -53,12 +54,14 @@ class Marks {
         }
     }
 
+    @action
     setMarksField(marks) {
         this.rawMarks = marks;
         this.marksBySemesters = this.remapMarksBySemesters(marks);
         this.nbSemester = _.size(this.marksBySemesters);
     }
 
+    @action
     async fetchProjectNotes(year, module, instance, activity) {
         ui.fetchingState();
         this.projectMarks = await Intra.fetchProjectMarks(year, module, instance, activity);

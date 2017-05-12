@@ -105,7 +105,6 @@ export default class Documents extends Component {
             documents: null,
         };
 
-        this._renderIcon = this._renderIcon.bind(this);
     }
 
     async componentWillMount() {

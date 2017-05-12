@@ -1,14 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import moment from 'moment';
 import { observer } from 'mobx-react/native';
-import {
-    Text,
-    View,
-    TouchableOpacity,
-    Platform,
-    ScrollView,
-    ListView,
-} from 'react-native';
+import { ListView, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import ProgressBar from './ProgressBar';
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
@@ -16,21 +9,25 @@ import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconIO from 'react-native-vector-icons/Ionicons';
 import styles from './styles.js';
 
-@observer
-export default class ProjectsList extends Component {
+const ProjectsList = observer((props) => {
 
-    constructor(props) {
-        super(props);
+    const { projectsStore, uiStore } = props;
+    const projects = projectsStore.projects.slice();
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-        this.renderProject = this.renderProject.bind(this);
-        this.renderHeader = this.renderHeader.bind(this);
-        this.renderAerProjects = this.renderAerProjects.bind(this);
+    const currentProjects = _.filter(projects, (project) => (
+        moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss')
+            .isBefore(moment()) && project.rights.includes('student')
+    ));
+    const comingsProjects = _.filter(projects, (project) => (
+        moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss')
+            .isAfter(moment()) && project.rights.includes('student')
+    ));
+    const aerProjects = _.filter(projects, (project) => (
+        project.rights.includes('assistant')
+    ));
 
-        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    }
-
-    renderProject(project) {
-        const { uiStore } = this.props;
+    function renderProject(project) {
         const parsedStart = moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss');
         const parsedEnd = moment(project.end_acti, 'YYYY-MM-DD, HH:mm:ss');
         const projectDuration = parsedEnd.diff(parsedStart, 'days');
@@ -65,7 +62,7 @@ export default class ProjectsList extends Component {
         );
     }
 
-    renderHeader(title, icon) {
+    function renderHeader(title, icon) {
         return (
             <View key={title} style={Platform.OS === 'ios' ? styles.headerContainerIOS : styles.headerContainerAndroid}>
                 <IconFA style={styles.headerIcon} name={ icon } />
@@ -74,54 +71,37 @@ export default class ProjectsList extends Component {
         )
     }
 
-    renderAerProjects(projects) {
+    function renderAerProjects(projects) {
         return [
-            this.renderHeader('AER projects', 'life-bouy'),
+            renderHeader('AER projects', 'life-bouy'),
             <ListView
                 key="aer"
-                dataSource={this.ds.cloneWithRows(projects)}
-                renderRow={this.renderProject}>
+                dataSource={ds.cloneWithRows(projects)}
+                renderRow={renderProject}>
             </ListView>
         ];
     }
 
-    render() {
-        const { projectsStore } = this.props;
-        const projects = projectsStore.projects.slice();
-
-        console.log(projects);
-
-        const currentProjects = _.filter(projects, (project) => (
-            moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss').isBefore(moment()) && project.rights.includes('student')
-        ));
-
-        const comingsProjects = _.filter(projects, (project) => (
-            moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss').isAfter(moment()) && project.rights.includes('student')
-        ));
-
-        const aerProjects = _.filter(projects, (project) => (
-            project.rights.includes('assistant')
-        ));
-
-        return (
-            <ScrollView style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
-                    {this.renderHeader('Currents projects', 'hourglass-half')}
-                    <ListView
-                        dataSource={this.ds.cloneWithRows(currentProjects)}
-                        renderRow={this.renderProject}>
-                    </ListView>
-                    {this.renderHeader('Incoming projects', 'hourglass-start')}
-                    <ListView
-                        dataSource={this.ds.cloneWithRows(comingsProjects)}
-                        renderRow={this.renderProject}>
-                    </ListView>
-                    { aerProjects.length != 0 && this.renderAerProjects(aerProjects) }
-            </ScrollView>
-        );
-    }
-}
+    return (
+        <ScrollView style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
+            {renderHeader('Currents projects', 'hourglass-half')}
+            <ListView
+                dataSource={ds.cloneWithRows(currentProjects)}
+                renderRow={renderProject}>
+            </ListView>
+            {renderHeader('Incoming projects', 'hourglass-start')}
+            <ListView
+                dataSource={ds.cloneWithRows(comingsProjects)}
+                renderRow={renderProject}>
+            </ListView>
+            { aerProjects.length !== 0 && renderAerProjects(aerProjects) }
+        </ScrollView>
+    );
+});
 
 ProjectsList.propTypes = {
     projectsStore: React.PropTypes.object.isRequired,
     uiStore: React.PropTypes.object.isRequired,
 };
+
+export default ProjectsList;

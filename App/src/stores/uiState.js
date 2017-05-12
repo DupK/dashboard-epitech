@@ -11,7 +11,6 @@ class UiState {
         fetching: 1,
         refreshingData: 2,
         noInternet: 3,
-        error: 4
     };
 
     @observable currentState = this.state.default;
@@ -28,11 +27,6 @@ class UiState {
         if (this.isConnected) {
             this.currentState = this.state.fetching;
         }
-    }
-
-    @action
-    errorState() {
-        this.currentState = this.state.error;
     }
 
     @action

@@ -2,30 +2,33 @@
  * Created by jules on 25/03/17.
  */
 
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { observer } from 'mobx-react/native';
-import {
-    StyleSheet, Platform, View
-} from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import IconIO from 'react-native-vector-icons/Ionicons';
 
-@observer
-class Cell extends Component {
-
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={Platform.OS === 'ios' ? styles.iconContainerIos : styles.iconContainerAndroid}>
-                    <IconIO name={this.props.icon} size={25} style={styles.icon}/>
-                </View>
-                {this.props.children}
+const Cell = observer(({ icon, children }) => {
+    return (
+        <View style={styles.container}>
+            <View style={Platform.OS === 'ios' ?
+                         styles.iconContainerIos :
+                         styles.iconContainerAndroid}
+            >
+                <IconIO name={icon} size={25} style={styles.icon}/>
             </View>
-        );
-    }
+            {children}
+        </View>
+    );
+});
+
+Cell.propTypes = {
+    icon: PropTypes.string,
+    color: PropTypes.string,
+};
+
+Cell.defaultProps = {
+    icon : 'ios-git-branch',
+    color: '#FFFFFF',
 };
 
 const styles = StyleSheet.create({
@@ -65,15 +68,5 @@ const styles = StyleSheet.create({
     },
 
 });
-
-Cell.propTypes = {
-    icon: PropTypes.string,
-    color: PropTypes.string,
-};
-
-Cell.defaultProps = {
-    icon : 'ios-git-branch',
-    color: '#FFFFFF',
-}
 
 export default Cell;

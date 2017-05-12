@@ -1,14 +1,8 @@
 /**
  * Created by desver_f on 11/03/17.
  */
-import React, {Component, PropTypes} from 'react';
-import {
-    View,
-    Text,
-    ScrollView,
-    StyleSheet,
-    Platform,
-} from 'react-native';
+import React from 'react';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import _ from 'lodash';
 import Accordion from 'react-native-collapsible/Accordion';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -18,17 +12,15 @@ import { observer } from 'mobx-react/native';
 import Slot from './Slot';
 import SlotGroup from './SlotGroup';
 
-@observer
-export default class AvailableSlots extends Component {
+const AvailableSlots = observer((props) => {
 
-    constructor(props) {
-        super(props);
+    const {
+        store: { session, activity }
+    } = props;
 
-        this.renderHeader = this.renderHeader.bind(this);
-    }
+    const selfSlot = activity.selfSlot;
 
-    renderHeader(slotGroup, selfSlot) {
-        const {store: { activity }} = this.props;
+    function renderHeader(slotGroup, selfSlot) {
         const nbSlotsAvailable = slotGroup.slots.filter((slot) => !slot.master).length;
         const firstDate = moment(_.first(slotGroup.slots).date, 'YYYY-MM-DD HH:mm:ss');
         const lastDate = moment(_.last(slotGroup.slots).date, 'YYYY-MM-DD HH:mm:ss');
@@ -44,7 +36,7 @@ export default class AvailableSlots extends Component {
                         activityStore={activity.activity}
                     />
                 </View>
-            )
+              )
             : null;
 
         return (
@@ -67,32 +59,24 @@ export default class AvailableSlots extends Component {
         );
     }
 
-    render() {
-        const {
-            store: {session, activity}
-        } = this.props;
-
-        const selfSlot = activity.selfSlot;
-
-        return (
-            <ScrollView style={styles.container}>
-                <Accordion
-                    underlayColor="transparent"
-                    sections={activity.activity.slots.slice()}
-                    renderHeader={(slotGroup) => this.renderHeader(slotGroup, selfSlot)}
-                    renderContent={(slotGroup) => (
-                        <SlotGroup
-                            username={session.userProfile.login}
-                            slots={slotGroup.slots.slice()}
-                            activityStore={activity}
-                            alreadyRegistered={!!selfSlot}
-                        />
-                    )}
-                />
-            </ScrollView>
-        );
-    }
-}
+    return (
+        <ScrollView style={styles.container}>
+            <Accordion
+                underlayColor="transparent"
+                sections={activity.activity.slots.slice()}
+                renderHeader={(slotGroup) => renderHeader(slotGroup, selfSlot)}
+                renderContent={(slotGroup) => (
+                    <SlotGroup
+                        username={session.userProfile.login}
+                        slots={slotGroup.slots.slice()}
+                        activityStore={activity}
+                        alreadyRegistered={!!selfSlot}
+                    />
+                )}
+            />
+        </ScrollView>
+    );
+});
 
 const styles = StyleSheet.create({
     container: {
@@ -143,3 +127,5 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     }
 });
+
+export default AvailableSlots;

@@ -3,18 +3,13 @@
  */
 
 import React, { Component } from 'react';
-import {
-    ScrollView,
-    Text,
-    View,
-    Platform,
-} from 'react-native';
+import { Platform, ScrollView, Text, View } from 'react-native';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconIO from 'react-native-vector-icons/Ionicons';
 import Accordion from 'react-native-collapsible/Accordion';
 import LoadingIndicator from 'react-native-spinkit';
 import styles from '../styles';
-import { Team, Document } from './Sections';
+import { Document, Team } from './Sections';
 import { observer } from 'mobx-react/native';
 
 @observer
@@ -22,14 +17,6 @@ class ProjectDetails extends Component {
 
     constructor(props) {
         super(props);
-
-        this._renderBanner = this._renderBanner.bind(this);
-        this._renderHeader = this._renderHeader.bind(this);
-        this._renderContent = this._renderContent.bind(this);
-        this._renderDescription = this._renderDescription.bind(this);
-        this._renderLoadingScreen = this._renderLoadingScreen.bind(this);
-        this._generateSections = this._generateSections.bind(this);
-        this._renderTeamRules = this._renderTeamRules.bind(this);
     }
 
     async componentWillMount() {
@@ -136,16 +123,26 @@ class ProjectDetails extends Component {
         return (
             <View style={{ flex: 1 }}>
                 {this._renderBanner(project.registered)}
-                <View style={Platform.OS === 'ios' ? styles.detailsContainerIOS : styles.detailsContainerAndroid}>
+                <View style={Platform.OS === 'ios' ?
+                             styles.detailsContainerIOS :
+                             styles.detailsContainerAndroid}>
                     <ScrollView>
                         <View style={styles.detailsSubContainer}>
                             <Text style={styles.detailsText}> Information :</Text>
                         </View>
                         {this._renderDescription(projects.projectDetails.details.description)}
-                        <Text style={{ color: '#FAFAFA', fontSize: 12, marginLeft: 10, marginTop: 10, fontWeight: 'bold' }}>Team details : {this._renderTeamRules(projects.projectDetails.details)}</Text>
+                        <Text style={{
+                            color: '#FAFAFA',
+                            fontSize: 12,
+                            marginLeft: 10,
+                            marginTop: 10,
+                            fontWeight: 'bold'
+                        }}>
+                            Team details : {this._renderTeamRules(projects.projectDetails.details)}
+                        </Text>
                     </ScrollView>
                 </View>
-            <View style={{ flex: 0.45, backgroundColor: "#203040" }}>
+                <View style={{ flex: 0.45, backgroundColor: '#203040' }}>
                     <ScrollView style={{ flex: 1, marginBottom: 10 }}>
                         <Accordion
                             underlayColor="#203040"
