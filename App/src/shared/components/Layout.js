@@ -19,7 +19,7 @@ const AlertBar = observer(({ message, backgroundColor, loading }) => {
             alignItems: 'center',
             padding: 4,
         }}>
-            <StatusBar hidden={true} />
+            <StatusBar hidden={true} barStyle="light-content"/>
             {
                 loading && <LoadingIndicator size={10} color="#FFFFFF" type="Circle"/>
             }
