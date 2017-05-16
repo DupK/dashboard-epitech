@@ -89,8 +89,6 @@ export default class ProjectsList extends Component {
         const { projectsStore } = this.props;
         const projects = projectsStore.projects.slice();
 
-        console.log(projects);
-
         const currentProjects = _.filter(projects, (project) => (
             moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss').isBefore(moment()) && project.rights.includes('student')
         ));
@@ -115,7 +113,7 @@ export default class ProjectsList extends Component {
                         dataSource={this.ds.cloneWithRows(comingsProjects)}
                         renderRow={this.renderProject}>
                     </ListView>
-                    { aerProjects.length != 0 && this.renderAerProjects(aerProjects) }
+                    { aerProjects.length !== 0 && this.renderAerProjects(aerProjects) }
             </ScrollView>
         );
     }

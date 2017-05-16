@@ -50,7 +50,8 @@ class activity {
         if (isValidated) {
             calendarStore.markEventAs(event, { registered: false });
         } else {
-            Alert.alert("Error", response.error);
+            response.error && Alert.alert('Error', response.error);
+            response.message && Alert.alert('Error', response.message);
         }
 
         ui.defaultState();
@@ -81,7 +82,8 @@ class activity {
         if (isValidated) {
             calendarStore.markEventAs(event, { registered: true });
         } else {
-            Alert.alert('Error', response.error);
+            response.error && Alert.alert('Error', response.error);
+            response.message && Alert.alert('Error', response.message);
         }
 
         ui.defaultState();
@@ -118,9 +120,17 @@ class activity {
 
                 return {
                     ...slotGroup,
-                    slots: slots
+                    slots
                 };
             });
+
+        const calendarEvent = calendarStore.findEvent(
+            this.activity.codemodule,
+            this.activity.codeinstance,
+            this.activity.codeacti
+        );
+
+        calendarEvent && calendarStore.markEventAs(calendarEvent, { registered });
     }
 
     async registerActivitySlot(slot) {
@@ -130,8 +140,8 @@ class activity {
             codeinstance: instance,
             codeacti: codeActivity,
         } = this.activity;
-
-        const response = await Intra.registerActivitySlot(slot.id,
+        const teamId = this.activity.group ? this.activity.group.id : null;
+        const response = await Intra.registerActivitySlot(slot.id, teamId,
             { year, module: codeModule, instance, activity: codeActivity }
         );
 
@@ -140,12 +150,14 @@ class activity {
         if (isValidated) {
             this.markSlotActivityAs(slot, { registered: true });
         } else {
-            Alert.alert('Error', response.error);
+            response.message && Alert.alert('Error', response.message);
+            response.error && Alert.alert('Error', response.error);
         }
 
         return isValidated;
     }
 
+    //TODO: Find out if teamId is needed to unregister slots
     async unregisterActivitySlot(slot) {
         const {
             scolaryear: year,
@@ -153,8 +165,8 @@ class activity {
             codeinstance: instance,
             codeacti: codeActivity,
         } = this.activity;
-
-        const response = await Intra.unregisterActivitySlot(slot.id,
+        const teamId = this.activity.group ? this.activity.group.id : null;
+        const response = await Intra.unregisterActivitySlot(slot.id, teamId,
             { year, module: codeModule, instance, activity: codeActivity }
         );
 
@@ -163,7 +175,8 @@ class activity {
         if (isValidated) {
             this.markSlotActivityAs(slot, { registered: false });
         } else {
-            Alert.alert('Error', response.error);
+            response.message && Alert.alert('Error', response.message);
+            response.error && Alert.alert('Error', response.error);
         }
 
         return isValidated;

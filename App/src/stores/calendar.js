@@ -398,6 +398,14 @@ class Calendar {
         this.rawCalendar = calendarWithEventMarked;
         this.calendar = this.remapCalendar(calendarWithEventMarked);
     }
+
+    findEvent(module, instance, activity) {
+        const event = _.find(this.rawCalendar.slice(), ({ codeinstance, codemodule, codeacti }) => (
+            codeinstance === instance && codemodule === module && codeacti === activity
+        ));
+
+        return event ? this.remapEvent(event) : null;
+    }
 }
 
 const calendarStore = new Calendar();

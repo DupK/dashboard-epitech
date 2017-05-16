@@ -121,9 +121,10 @@ export function unregisterActivity({ year, module, instance, activity, event }) 
     });
 }
 
-export function registerActivitySlot(slotId, { year, module, instance, activity }) {
+export function registerActivitySlot(slotId, teamId, { year, module, instance, activity }) {
     const formData = new FormData();
     formData.append('id_creneau', slotId);
+    teamId && formData.append('id_team', teamId);
 
     return request(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/rdv/register?format=json`, {
         method: 'POST',
@@ -135,9 +136,10 @@ export function registerActivitySlot(slotId, { year, module, instance, activity 
     });
 }
 
-export function unregisterActivitySlot(slotId, { year, module, instance, activity }) {
+export function unregisterActivitySlot(slotId, idTeam, { year, module, instance, activity }) {
     const formData = new FormData();
     formData.append('id_creneau', slotId);
+    idTeam && formData.append('id_team', idTeam);
 
     return request(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/rdv/unregister?format=json`, {
         method: 'POST',

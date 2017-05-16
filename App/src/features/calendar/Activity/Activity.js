@@ -97,7 +97,6 @@ export default class Activity extends Component {
             ? activityStore.activity.description
             : 'There is no description for the following activity.';
 
-        console.log(activityStore.activity);
         return (
             <View style={{
                 flex: 1,

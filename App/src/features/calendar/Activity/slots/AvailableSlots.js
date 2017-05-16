@@ -1,14 +1,8 @@
 /**
  * Created by desver_f on 11/03/17.
  */
-import React, {Component, PropTypes} from 'react';
-import {
-    View,
-    Text,
-    ScrollView,
-    StyleSheet,
-    Platform,
-} from 'react-native';
+import React, { Component } from 'react';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import _ from 'lodash';
 import Accordion from 'react-native-collapsible/Accordion';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -32,13 +26,14 @@ export default class AvailableSlots extends Component {
         const nbSlotsAvailable = slotGroup.slots.filter((slot) => !slot.master).length;
         const firstDate = moment(_.first(slotGroup.slots).date, 'YYYY-MM-DD HH:mm:ss');
         const lastDate = moment(_.last(slotGroup.slots).date, 'YYYY-MM-DD HH:mm:ss');
+        const isOneshot = slotGroup.bloc_status === 'oneshot';
 
         const renderSelfSlot = selfSlot && selfSlot.id === slotGroup.id
             ? ( <View style={styles.headerSelfSlotContainer}>
                     <Slot
                         state="yours"
                         date={selfSlot.slot.date}
-                        oneshot={slotGroup.oneshot === 'oneshot'}
+                        oneshot={isOneshot}
                         memberPicture={selfSlot.slot.master.picture}
                         slotObject={selfSlot.slot}
                         activityStore={activity.activity}
@@ -53,10 +48,13 @@ export default class AvailableSlots extends Component {
                 { borderLeftColor: nbSlotsAvailable ? '#62C462' : '#F44235' }
             ]}>
                 <View style={styles.headerDateContainer}>
-                    <Text style={styles.headerDate}>
-                        { firstDate.format('ddd D MMM') }
-                        &nbsp;({firstDate.format('HH:mm')} - {lastDate.format('HH:mm')} )
-                    </Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={styles.headerDate}>
+                            { firstDate.format('ddd D MMM') }
+                            &nbsp;({firstDate.format('HH:mm')} - {lastDate.format('HH:mm')} )
+                        </Text>
+                        { isOneshot && <Text style={styles.labelOneshot}>Oneshot</Text> }
+                    </View>
                     <Icon name="ios-arrow-down" color="#FAFAFA" size={20}/>
                 </View>
                 <Text style={styles.headerNbSlots}>
@@ -141,5 +139,17 @@ const styles = StyleSheet.create({
     headerSelfSlotContainer: {
         marginTop: 20,
         marginBottom: 5,
+    },
+    labelOneshot: {
+        alignSelf: 'flex-start',
+        backgroundColor: '#F44336',
+        borderColor: '#bf352a',
+        borderWidth: 1,
+        borderRadius: 2,
+        color: 'white',
+        padding: 2,
+        marginLeft: 8,
+        fontWeight: 'bold',
+        fontSize: 10,
     }
 });
