@@ -158,26 +158,30 @@ class Calendar {
         return groups
     }
 
+    remapEvent(event) {
+        return {
+            title: event.acti_title,
+            type: event.type_title,
+            module: event.titlemodule,
+            instance: event.codeinstance,
+            codeModule: event.codemodule,
+            codeEvent: event.codeevent,
+            activity: event.codeacti,
+            year: event.scolaryear,
+            start: event.start,
+            end: event.end,
+            date: moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY'),
+            room: event.room,
+            duration: moment(event.end).diff(moment(event.start), 'minutes'),
+            uid: event.codeevent,
+            registered: this.isRegistered(event.allow_register, event.event_registered),
+        }
+    }
+
     remapCalendar(rawCalendar) {
         const remappedCalendar = _(rawCalendar)
             .filter((event) => event.start && event.module_registered)
-            .map((event) => ({
-                title: event.acti_title,
-                type: event.type_title,
-                module: event.titlemodule,
-                instance: event.codeinstance,
-                codeModule: event.codemodule,
-                codeEvent: event.codeevent,
-                activity: event.codeacti,
-                year: event.scolaryear,
-                start: event.start,
-                end: event.end,
-                date: moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY'),
-                room: event.room,
-                duration: moment(event.end).diff(moment(event.start), 'minutes'),
-                uid: event.codeevent,
-                registered: this.isRegistered(event.allow_register, event.event_registered),
-            }))
+            .map((event) => this.remapEvent(event))
             .groupBy((event) => moment(event.start, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY'))
             .toPairs()
             .map(([date, events]) => {
@@ -225,10 +229,12 @@ class Calendar {
     }
 
     @computed get nextEvent() {
-        const flattenedEvents = _(this.calendar)
-            .flatMap((dayWithEvents) => (
-                _.flatMap(dayWithEvents, (events) => (
-                    _.flatMap(events, (event) => event))
+       const flattenedEvents = _(this.calendar)
+            .flatMap((overlappingRanges) => (
+                _.flatMap(overlappingRanges, (overlappingRange) => (
+                    _.flatMap(overlappingRange, (rangeEvents) => (
+                        _.flatMap(rangeEvents, (event) => event)
+                    )))
                 )
             ))
             .orderBy((event) => event.start)
