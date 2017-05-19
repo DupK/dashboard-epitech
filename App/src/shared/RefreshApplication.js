@@ -4,13 +4,15 @@
 
 import stores from '../stores';
 
-export default async function refreshApplication({ withLogin } = false) {
+export default async function refreshApplication() {
     const { ui, session, calendar, projects, marks, tokens } = stores;
 
     try {
         ui.refreshingData();
 
-        withLogin && (await session.loginWithAutoLogin());
+        if (!stores.session.loggedIn) {
+            await session.loginWithAutoLogin();
+        }
 
         await Promise.all([
             session.fetchUserProfile(),
@@ -23,6 +25,5 @@ export default async function refreshApplication({ withLogin } = false) {
         ui.defaultState();
     } catch (e) {
         console.log('refreshApplication', e);
-        ui.defaultState();
     }
 }

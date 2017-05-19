@@ -3,20 +3,13 @@
  */
 
 import React, { Component } from 'react';
-import {
-    Text,
-    View,
-    Image,
-    ScrollView,
-    TouchableOpacity,
-    Platform,
-    ListView,
-} from 'react-native';
-import LoadingIndicator from 'react-native-spinkit';
+import { Image, ListView, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import IconIO from 'react-native-vector-icons/Ionicons';
 import { observer } from 'mobx-react/native';
 import styles from './styles.js';
 import _ from 'lodash';
+import ConnectionError from '../../shared/components/ConnectionError';
+import LoadingIndicator from '../../shared/components/LoadingIndicator';
 
 @observer
 class MarkDetails extends Component {
@@ -26,9 +19,14 @@ class MarkDetails extends Component {
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
         this.renderRow = this.renderRow.bind(this);
+        this.fetchMarkDetails = this.fetchMarkDetails.bind(this);
     }
 
     async componentWillMount() {
+        await this.fetchMarkDetails();
+    }
+
+    async fetchMarkDetails() {
         const {
             mark: { year, codeModule, instance, activity },
             store: { marks }
@@ -126,14 +124,10 @@ class MarkDetails extends Component {
         const { store: { ui } } = this.props;
 
         return (
-            <View style={styles.loadingContainer}>
-                <LoadingIndicator
-                    isVisible={ui.currentState === ui.state.fetching}
-                    color="#FFFFFF"
-                    type="Pulse"
-                    size={100}
-                />
-            </View>
+            <LoadingIndicator
+                isVisible={ui.currentState === ui.state.fetching}
+                message="Loading mark details..."
+            />
         );
     }
 
@@ -153,6 +147,12 @@ class MarkDetails extends Component {
 
     render() {
         const { store: { marks, ui } } = this.props;
+
+        if (ui.currentState === ui.state.error) {
+            return (
+                <ConnectionError onPress={this.fetchMarkDetails}/>
+            );
+        }
 
         if (ui.currentState === ui.state.fetching) {
             return this.renderLoadingScreen();

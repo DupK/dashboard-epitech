@@ -1,26 +1,23 @@
 /**
  * Created by desver_f on 10/03/17.
  */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import moment from 'moment';
-import {
-    View,
-    StyleSheet,
-    Platform,
-} from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ENIcon from 'react-native-vector-icons/Entypo';
-import {observer} from 'mobx-react/native';
-import LoadingIndicator from 'react-native-spinkit';
-import {wasRegistered} from '../utils';
+import { observer } from 'mobx-react/native';
+import { wasRegistered } from '../utils';
 
 import BoxDescription from './description/BoxDescription';
 import TextDescription from './description/TextDescription';
-import AdministrativeDescription from './description/AdministrativeDescription'
+import AdministrativeDescription from './description/AdministrativeDescription';
 import RegisterBox from './register/RegisterBox';
 import RegisterText from './register/RegisterText';
 import ViewAvailableSlots from './register/ViewAvailableSlots';
 import RegisterActivity from './register/RegisterActivity';
+import ConnectionError from '../../../shared/components/ConnectionError';
+import LoadingIndicator from '../../../shared/components/LoadingIndicator';
 
 @observer
 export default class Activity extends Component {
@@ -28,16 +25,21 @@ export default class Activity extends Component {
     constructor(props) {
         super(props);
 
+        this.fetchActivity = this.fetchActivity.bind(this);
     }
 
-    async componentWillMount() {
-        const { store: { activity: activityStore }, event} = this.props;
+    async fetchActivity() {
+        const { store: { activity: activityStore }, event } = this.props;
 
         await activityStore.fetchActivity(event);
     }
 
+    async componentWillMount() {
+        await this.fetchActivity();
+    }
+
     componentWillUnmount() {
-        const { store: { activity: activityStore }} = this.props;
+        const { store: { activity: activityStore } } = this.props;
 
         activityStore.resetActivity();
     }
@@ -48,7 +50,9 @@ export default class Activity extends Component {
             store: { activity: activityStore, projects },
         } = this.props;
 
-        const pastOneDay = moment(event.start).isBefore(moment().add(1, 'd'));
+        const pastOneDay = moment(event.start)
+            .isBefore(moment()
+                .add(1, 'd'));
 
         if (pastOneDay && !wasRegistered(event.registered)) {
             return (
@@ -77,19 +81,21 @@ export default class Activity extends Component {
     render() {
         const {
             event,
-            store: { activity: activityStore },
+            store: { activity: activityStore, ui },
         } = this.props;
 
-        if (!activityStore.activity) {
+        if (ui.currentState === ui.state.error) {
             return (
-                <View style={styles.loadingContainer}>
-                    <LoadingIndicator
-                        isVisible={!activityStore.activity}
-                        color="#FFFFFF"
-                        type="Pulse"
-                        size={100}
-                    />
-                </View>
+                <ConnectionError onPress={this.fetchActivity}/>
+            );
+        }
+
+        if (ui.currentState === ui.state.fetching) {
+            return (
+                <LoadingIndicator
+                    isVisible={!activityStore.activity}
+                    message="Loading activity..."
+                />
             );
         }
 
@@ -155,11 +161,5 @@ const styles = StyleSheet.create({
         margin: 10,
     },
 
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#233445',
-    },
 });
 

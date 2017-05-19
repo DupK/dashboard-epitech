@@ -21,8 +21,10 @@ class activity {
     async fetchActivity(event) {
         const { year, codeModule, instance, activity } = event;
 
+        ui.fetchingState();
         this.event = event;
         this.activity = await Intra.fetchActivity({ year, module: codeModule, instance, activity });
+        ui.defaultState();
     }
 
 
@@ -185,6 +187,7 @@ class activity {
     @action
     resetActivity() {
         this.activity = null;
+        ui.defaultState();
     }
 
     @computed get roomName() {

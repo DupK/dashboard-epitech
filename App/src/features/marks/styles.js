@@ -212,13 +212,6 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
 
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#233445',
-    },
-
     loadingText: {
         fontSize: 14,
         color: "#FFFFFF",

@@ -3,19 +3,15 @@
  */
 
 import React, { Component } from 'react';
-import {
-    ScrollView,
-    Text,
-    View,
-    Platform,
-} from 'react-native';
+import { Platform, ScrollView, Text, View } from 'react-native';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconIO from 'react-native-vector-icons/Ionicons';
 import Accordion from 'react-native-collapsible/Accordion';
-import LoadingIndicator from 'react-native-spinkit';
 import styles from '../styles';
-import { Team, Document } from './Sections';
+import { Document, Team } from './Sections';
 import { observer } from 'mobx-react/native';
+import ConnectionError from '../../../shared/components/ConnectionError';
+import LoadingIndicator from '../../../shared/components/LoadingIndicator';
 
 @observer
 class ProjectDetails extends Component {
@@ -30,9 +26,14 @@ class ProjectDetails extends Component {
         this._renderLoadingScreen = this._renderLoadingScreen.bind(this);
         this._generateSections = this._generateSections.bind(this);
         this._renderTeamRules = this._renderTeamRules.bind(this);
+        this.fetchProjectDetails = this.fetchProjectDetails.bind(this);
     }
 
     async componentWillMount() {
+        await this.fetchProjectDetails();
+    }
+
+    async fetchProjectDetails() {
         const {
             project: {
                 scolaryear: year,
@@ -65,15 +66,10 @@ class ProjectDetails extends Component {
         const { store: { ui } } = this.props;
 
         return (
-            <View style={styles.loadingContainer}>
-                <LoadingIndicator
-                    isVisible={ui.currentState === ui.state.fetching}
-                    color="#FFFFFF"
-                    type="Bounce"
-                    size={100}
-                />
-                <Text style={styles.loadingText}>Loading project details...</Text>
-            </View>
+            <LoadingIndicator
+                isVisible={ui.currentState === ui.state.fetching}
+                message="Loading project details..."
+            />
         );
     }
 
@@ -128,6 +124,12 @@ class ProjectDetails extends Component {
     render() {
         const { store : { projects, ui } } = this.props;
         const { project } = this.props;
+
+        if (ui.currentState === ui.state.error) {
+            return (
+                <ConnectionError onPress={this.fetchProjectDetails}/>
+            );
+        }
 
         if (ui.currentState === ui.state.fetching) {
             return this._renderLoadingScreen();

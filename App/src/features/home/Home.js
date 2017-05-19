@@ -53,7 +53,7 @@ export default class Home extends Component {
         const { store: { ui, session } } = this.props;
 
         if (ui.isConnected && session.loggedFromCache) {
-            await refreshApplicationData({ withLogin: true });
+            await refreshApplicationData();
         }
     }
 

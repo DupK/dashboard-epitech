@@ -179,7 +179,11 @@ class Main extends Component {
                             title="Ranking"
                             hideNavBar={false}
                             component={Ranking}
-                            onRight={() => store.ranking.computePromotion({ refreshCache: true })}
+                            onRight={() => {
+                                if (store.ui.isConnected) {
+                                    return store.ranking.computePromotion({ refreshCache: true })
+                                }
+                            }}
                             rightButtonImage={require('../assets/reload.png')}
                             rightButtonIconStyle={getImageStyle()}
                         />

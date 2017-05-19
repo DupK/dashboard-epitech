@@ -23,7 +23,7 @@ async function _handleConnectionChange(isConnected) {
 
         //Refresh application data if user enables his internet connection after being offline
         if (ui.currentState === ui.state.noInternet && session.loggedIn) {
-            await refreshApplicationData({ withLogin: true });
+            await refreshApplicationData();
             return;
         }
 

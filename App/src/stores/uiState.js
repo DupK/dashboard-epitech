@@ -11,14 +11,14 @@ class UiState {
         fetching: 1,
         refreshingData: 2,
         noInternet: 3,
-        error: 4
+        error: 4,
     };
 
     @observable currentState = this.state.default;
 
     @action
     defaultState() {
-        if (this.isConnected) {
+        if (this.isConnected && this.currentState !== this.state.error) {
             this.currentState = this.state.default;
         }
     }
@@ -47,7 +47,8 @@ class UiState {
 
     @computed get shouldShowStatusBar() {
         return this.currentState === this.state.refreshingData
-            || this.currentState === this.state.noInternet;
+            || this.currentState === this.state.noInternet
+            || this.currentState === this.state.error;
     }
 
     @computed get isConnected() {

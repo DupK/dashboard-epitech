@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import {
-    Text,
-    View,
-    Image,
-    ListView,
-    Platform,
-    TextInput,
-} from 'react-native';
-import LoadingIndicator from 'react-native-spinkit';
+import { Image, ListView, Platform, Text, TextInput, View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import Layout from '../../shared/components/Layout';
 import IconIO from 'react-native-vector-icons/Ionicons';
 import styles from './styles.js';
+import LoadingIndicator from '../../shared/components/LoadingIndicator';
 
 @observer
 export default class Ranking extends Component {
@@ -72,14 +65,10 @@ export default class Ranking extends Component {
 
         if (!ranking.promotion.length) {
             return (
-                <View style={styles.loadingContainer}>
-                    <LoadingIndicator
-                        isVisible={!ranking.promotion.length}
-                        color="#FFFFFF"
-                        type="Bounce"
-                        size={100}
-                    />
-                </View>
+                <LoadingIndicator
+                    isVisible={!ranking.promotion.length}
+                    message={`Loading ranking... This may take a while.`}
+                />
             );
         }
 

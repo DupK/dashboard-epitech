@@ -2,23 +2,46 @@
  * Created by desver_f on 23/01/17.
  */
 
+import axios from 'axios';
 import uiState from '../stores/uiState';
 import moment from 'moment';
 
-const BASE_URL = 'https://intra.epitech.eu';
+const client = axios.create({
+    baseURL: 'https://intra.epitech.eu',
+    timeout: 20000,
+    validateStatus: (status) => status < 500,
+});
 
-function request(url, data) {
+function request(config) {
     if (uiState.isConnected) {
-        return fetch(url, data)
-            .then((response) => response.json())
-            .catch((e) => console.error('intra.js', url, e));
+        return client.request(config)
+            .then(({ data }) => data)
+            .catch((error) => {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+                uiState.errorState();
+            });
     } else {
         return Promise.resolve(false);
     }
 }
 
 export function loginFromRedirectUri(redirectUri) {
-    return request(redirectUri, {
+    return request({
+        url: redirectUri,
+        baseURL: '',
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -28,17 +51,20 @@ export function loginFromRedirectUri(redirectUri) {
 }
 
 export function fetchAutoLogin() {
-    return request(`${BASE_URL}/admin/autolog?format=json`, {
+    return request({
+        url: `/admin/autolog?format=json`,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-        }
+        },
     });
 }
 
 export function autoLog(autoLoginLink) {
-    return request(autoLoginLink, {
+    return request({
+        url: autoLoginLink,
+        baseURL: '',
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -48,7 +74,8 @@ export function autoLog(autoLoginLink) {
 }
 
 export function fetchStudent(student) {
-    return request(`${BASE_URL}/user/` + student + '/?format=json', {
+    return request({
+        url: `/user/` + student + '/?format=json',
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -58,7 +85,8 @@ export function fetchStudent(student) {
 }
 
 export function fetchLoggedInStudent() {
-    return request(`${BASE_URL}/user?format=json`, {
+    return request({
+        url: `/user?format=json`,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -68,7 +96,8 @@ export function fetchLoggedInStudent() {
 }
 
 export function fetchNetsoul(student) {
-    return request(`${BASE_URL}/user/` + student + '/netsoul?format=json', {
+    return request({
+        url: `/user/` + student + '/netsoul?format=json',
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -79,10 +108,11 @@ export function fetchNetsoul(student) {
 
 export function fetchCalendar(start, end) {
     const calendarUrl = start && end
-        ? `${BASE_URL}/planning/load?format=json&start=${start}&end=${end}`
-        : `${BASE_URL}/planning/load?format=json`;
+        ? `/planning/load?format=json&start=${start}&end=${end}`
+        : `/planning/load?format=json`;
 
-    return request(calendarUrl, {
+    return request({
+        url: calendarUrl,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -92,7 +122,8 @@ export function fetchCalendar(start, end) {
 }
 
 export function fetchActivity({ year, module, instance, activity }) {
-    return request(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/rdv/?format=json`, {
+    return request({
+        url: `/module/${year}/${module}/${instance}/${activity}/rdv/?format=json`,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -102,7 +133,8 @@ export function fetchActivity({ year, module, instance, activity }) {
 }
 
 export function registerActivity({ year, module, instance, activity, event }) {
-    return request(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/${event}/register?format=json`, {
+    return request({
+        url: `/module/${year}/${module}/${instance}/${activity}/${event}/register?format=json`,
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -112,7 +144,8 @@ export function registerActivity({ year, module, instance, activity, event }) {
 }
 
 export function unregisterActivity({ year, module, instance, activity, event }) {
-    return request(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/${event}/unregister?format=json`, {
+    return request({
+        url: `/module/${year}/${module}/${instance}/${activity}/${event}/unregister?format=json`,
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -126,13 +159,14 @@ export function registerActivitySlot(slotId, teamId, { year, module, instance, a
     formData.append('id_creneau', slotId);
     teamId && formData.append('id_team', teamId);
 
-    return request(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/rdv/register?format=json`, {
+    return request({
+        url: `/module/${year}/${module}/${instance}/${activity}/rdv/register?format=json`,
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'multipart/form-data',
         },
-        body: formData
+        data: formData
     });
 }
 
@@ -141,18 +175,20 @@ export function unregisterActivitySlot(slotId, idTeam, { year, module, instance,
     formData.append('id_creneau', slotId);
     idTeam && formData.append('id_team', idTeam);
 
-    return request(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/rdv/unregister?format=json`, {
+    return request({
+        url: `/module/${year}/${module}/${instance}/${activity}/rdv/unregister?format=json`,
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'multipart/form-data',
         },
-        body: formData
+        data: formData
     });
 }
 
 export function logout() {
-    return request(`${BASE_URL}/logout?format=json`, {
+    return request({
+        url: `/logout?format=json`,
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -162,7 +198,8 @@ export function logout() {
 }
 
 function fetchPromotionPage(page) {
-    return request(`${BASE_URL}${page}`, {
+    return request({
+        url: `${page}`,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -193,7 +230,8 @@ export function fetchProjects() {
     const start = moment().startOf('year').format('YYYY-MM-DD');
     const end = moment().add(1, 'year').format('YYYY-MM-DD');
 
-    return request(`${BASE_URL}/module/board?format=json&start=${start}&end=${end}`, {
+    return request({
+        url: `/module/board?format=json&start=${start}&end=${end}`,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -203,7 +241,8 @@ export function fetchProjects() {
 }
 
 export function fetchProjectDetails({ year, module, instance, activity }) {
-    return request(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/project/?format=json`, {
+    return request({
+        url: `/module/${year}/${module}/${instance}/${activity}/project/?format=json`,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -213,17 +252,19 @@ export function fetchProjectDetails({ year, module, instance, activity }) {
 }
 
 export function fetchProjectFiles({ year, module, instance, activity }) {
-    return request(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/project/file/?format=json`, {
+    return request({
+        url: `/module/${year}/${module}/${instance}/${activity}/project/file/?format=json`,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-        }
+        },
     });
 }
 
 export function fetchMarks(user) {
-    return request(`${BASE_URL}/user/${user}/notes?format=json`, {
+    return request({
+        url: `/user/${user}/notes?format=json`,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -233,7 +274,8 @@ export function fetchMarks(user) {
 }
 
 export function fetchProjectMarks(year, module, instance, activity) {
-    return request(`${BASE_URL}/module/${year}/${module}/${instance}/${activity}/note?format=json`, {
+    return request({
+        url: `/module/${year}/${module}/${instance}/${activity}/note?format=json`,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -243,7 +285,8 @@ export function fetchProjectMarks(year, module, instance, activity) {
 }
 
 export function fetchDocuments(user) {
-    return request(`${BASE_URL}/user/${user}/document/?format=json`, {
+    return request({
+        url: `/user/${user}/document/?format=json`,
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -258,12 +301,20 @@ export function validateToken(tokenLink, tokenValue) {
     formData.append('rate', '0');
     formData.append('comment', '');
 
-    return request(`${BASE_URL}${tokenLink}?format=json`, {
+    return request({
+        url: `${tokenLink}?format=json`,
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'multipart/form-data',
         },
-        body: formData,
+        data: formData,
+    });
+}
+
+export function fetchOffice365Link() {
+    return request({
+        url: '/',
+        method: 'GET',
     });
 }

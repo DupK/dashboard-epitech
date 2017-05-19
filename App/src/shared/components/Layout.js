@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
+import { Dimensions, StatusBar, StyleSheet, Text, View } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
 import { observer } from 'mobx-react/native';
 
@@ -53,6 +53,8 @@ class Layout extends React.Component {
                 return '#56ab56';
             case ui.state.noInternet:
                 return '#F44336';
+            case ui.state.error:
+                return '#F44336';
             default:
                 return '#FAFAFA';
         }
@@ -66,6 +68,8 @@ class Layout extends React.Component {
                 return 'Your profile is being refreshed...';
             case ui.state.noInternet:
                 return 'You\'re offline. Please enable your internet connection.';
+            case ui.state.error:
+                return 'An error occured. The intranet may be currently down.';
             default:
                 return '';
         }

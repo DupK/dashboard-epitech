@@ -31,7 +31,6 @@ class Session {
         this.userData = userData;
         this.userProfile = userProfile;
         this.loggedFromCache = true;
-        this.loggedIn = true;
     }
 
     @action
@@ -40,6 +39,7 @@ class Session {
         const userData = this.remapUserData((await Intra.autoLog(autologin)));
 
         this.userData = userData;
+        this.loggedIn = true;
         await storage.save('userData', userData);
     }
 

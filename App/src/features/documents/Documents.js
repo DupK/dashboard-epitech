@@ -5,13 +5,14 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react/native';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import LoadingIndicator from 'react-native-spinkit';
 import _ from 'lodash';
 import moment from 'moment';
 import Layout from '../../shared/components/Layout';
 import IconIO from 'react-native-vector-icons/Ionicons';
 import * as Intra from '../../api/intra';
 import { Actions } from 'react-native-router-flux';
+import LoadingIndicator from '../../shared/components/LoadingIndicator';
+import ConnectionError from '../../shared/components/ConnectionError';
 
 const styles = StyleSheet.create({
 
@@ -87,12 +88,7 @@ const styles = StyleSheet.create({
         color:'#203040',
         fontSize: 15
     },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#233445',
-    },
+
 });
 
 @observer
@@ -106,15 +102,25 @@ export default class Documents extends Component {
         };
 
         this._renderIcon = this._renderIcon.bind(this);
+        this.fetchDocuments = this.fetchDocuments.bind(this);
     }
 
     async componentWillMount() {
+        await this.fetchDocuments();
+    }
+
+    async fetchDocuments() {
         const { store: { session, ui } } = this.props;
 
         if (ui.isConnected) {
-            const documents = await Intra.fetchDocuments(session.userProfile.login);
 
-            this.setState({ documents: documents.error ? [] : documents });
+            ui.fetchingState();
+            const documents = await Intra.fetchDocuments(session.userProfile.login);
+            ui.defaultState();
+
+            if (ui.currentState !== ui.state.error) {
+                this.setState({ documents: documents.error ? [] : documents });
+            }
         } else {
             this.setState({ documents: [] });
         }
@@ -175,21 +181,23 @@ export default class Documents extends Component {
 
     renderLoadingIndicator() {
         return (
-            <View style={styles.loadingContainer}>
-                <LoadingIndicator
-                    isVisible={!this.state.documents}
-                    color="#FFFFFF"
-                    type="Bounce"
-                    size={70}
-                />
-                <Text style={{ color: 'white', fontSize: 15, marginTop: 10 }}>Loading documents...</Text>
-            </View>
+            <LoadingIndicator
+                isVisible={!this.state.documents}
+                message="Loading documents..."
+            />
         );
     }
 
     render() {
+        const { store: { ui } } = this.props;
 
-        if (!this.state.documents) {
+        if (ui.currentState === ui.state.error) {
+            return (
+                <ConnectionError onPress={this.fetchDocuments}/>
+            );
+        }
+
+        if (!this.state.documents || ui.currentState === ui.state.fetchingState) {
             return this.renderLoadingIndicator();
         }
 

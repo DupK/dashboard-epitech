@@ -3,10 +3,11 @@ import { StyleSheet, Text, TouchableOpacity, View, WebView } from 'react-native'
 import { observable } from 'react-native-mobx';
 import { observer } from 'mobx-react/native';
 import { Actions } from 'react-native-router-flux';
-import backgroundSource from '../../assets/fond.jpg';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LoadingIndicator from 'react-native-spinkit';
 
+import { fetchOffice365Link } from '../../api/intra';
+import backgroundSource from '../../assets/fond.jpg';
 import Layout from '../../shared/components/Layout';
 import BackgroundImageWithOverlay from './BackgroundImage';
 import LoginMessage from './LoginMessage';
@@ -118,25 +119,36 @@ export default class Login extends Component {
     }
 
     async loginWithOffice365() {
+        const { store: { session } } = this.props;
+
         try {
 
             this.setState({
                 loggingIn: true,
                 loginMessage: 'Redirecting towards Office 365...',
             }, async () => {
-                const response = await fetch('https://intra.epitech.eu?format=json', {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    }
-                })
-                    .then((response) => response.json());
+                try {
+                    let response = await fetchOffice365Link();
 
-                this.setState({
-                    loginState: LOGIN_STATE.Webview,
-                    redirect: response.office_auth_uri,
-                });
+                    // Prevent cases when storage is corrupted and user is still logged in
+                    if (response && response.ip && response.board) {
+                        await session.logout();
+                        response = await fetchOffice365Link();
+                    }
+
+                    this.setState({
+                        loginState: LOGIN_STATE.Webview,
+                        redirect: response.office_auth_uri,
+                    });
+                } catch (e) {
+                    console.log('Login.js', e);
+                    this.setState({
+                        loginState: LOGIN_STATE.Login,
+                        redirect: '',
+                        loggingIn: false,
+                        loginMessage: '',
+                    });
+                }
             });
         } catch (e) {
             console.error('loginWithOffice365', e);

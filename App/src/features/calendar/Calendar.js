@@ -8,7 +8,6 @@ import moment from 'moment';
 import { Dimensions, Platform, ScrollView, Text, View } from 'react-native';
 import LoadingIndicator from 'react-native-spinkit';
 import { observable } from 'react-native-mobx';
-
 import Layout from '../../shared/components/Layout';
 import { HOUR_SIZE, WORKING_HOURS } from './constants';
 import DaySelector from './DaySelector';
