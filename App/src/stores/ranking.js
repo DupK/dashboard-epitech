@@ -21,6 +21,12 @@ class Ranking {
     @observable promotion = [];
     @observable rankPosition = '0th';
     @observable searchField = "";
+    @observable studentModal = "";
+
+    @action
+    setStudentModal(login) {
+        this.studentModal = login;
+    }
 
     @action
     async computePromotion({ refreshCache }) {
@@ -87,6 +93,10 @@ class Ranking {
         return this.searchField === ""
             ? this.promotion.slice()
             : _.filter(this.promotion, (student) => new RegExp(this.searchField, 'i').test(student.login));
+    }
+
+    @computed get getResume() {
+        return _.find(this.promotion, (student) => student.login === this.studentModal);
     }
 
     selfRank() {

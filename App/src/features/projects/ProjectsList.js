@@ -24,7 +24,6 @@ export default class ProjectsList extends Component {
 
         this.renderProject = this.renderProject.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
-        this.renderAerProjects = this.renderAerProjects.bind(this);
 
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     }
@@ -85,6 +84,28 @@ export default class ProjectsList extends Component {
         ];
     }
 
+    renderCurrentProjects(projects) {
+        return [
+            this.renderHeader('Currents projects', 'hourglass-half'),
+            <ListView
+                key="current"
+                dataSource={this.ds.cloneWithRows(projects)}
+                renderRow={this.renderProject}>
+            </ListView>
+        ];
+    }
+
+    renderCommingProjects(projects) {
+        return [
+            this.renderHeader('Incoming projects', 'hourglass-start'),
+            <ListView
+                key="comming"
+                dataSource={this.ds.cloneWithRows(projects)}
+                renderRow={this.renderProject}>
+            </ListView>
+        ];
+    }
+
     render() {
         const { projectsStore } = this.props;
         const projects = projectsStore.projects.slice();
@@ -103,16 +124,8 @@ export default class ProjectsList extends Component {
 
         return (
             <ScrollView style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
-                    {this.renderHeader('Currents projects', 'hourglass-half')}
-                    <ListView
-                        dataSource={this.ds.cloneWithRows(currentProjects)}
-                        renderRow={this.renderProject}>
-                    </ListView>
-                    {this.renderHeader('Incoming projects', 'hourglass-start')}
-                    <ListView
-                        dataSource={this.ds.cloneWithRows(comingsProjects)}
-                        renderRow={this.renderProject}>
-                    </ListView>
+                    { currentProjects.length !== 0 && this.renderCurrentProjects(currentProjects)}
+                    { comingsProjects.length !== 0 && this.renderCommingProjects(comingsProjects)}
                     { aerProjects.length !== 0 && this.renderAerProjects(aerProjects) }
             </ScrollView>
         );
