@@ -16,7 +16,6 @@ import ProjectDetails from './projects/Details/ProjectDetails';
 import PDFViewer from './projects/Details/PDFViewer';
 import Marks from './marks/Marks';
 import MarkDetails from './marks/MarkDetails';
-import Stats from './stats/Stats';
 import Token from './token/Token';
 import Ranking from './ranking/Ranking';
 import Links from './links/Links';
@@ -193,13 +192,6 @@ class Main extends Component {
                             title="Tokens"
                             hideNavBar={false}
                             component={Token}
-                        />
-
-                        <Scene
-                            key="stats"
-                            title="Statistics"
-                            hideNavBar={false}
-                            component={Stats}
                         />
 
                         <Scene

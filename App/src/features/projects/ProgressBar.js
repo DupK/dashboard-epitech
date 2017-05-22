@@ -23,8 +23,9 @@ const ProgressBar = ({
     borderColor,
     backgroundColor,
     completePercentage,
+    maxPercentage,
 }) => {
-    const incompletePercentage = Math.abs(100 - completePercentage);
+    const incompletePercentage = Math.abs(maxPercentage - completePercentage);
 
     return (
         <View style={[styles.container, { backgroundColor: progressColor, borderColor }]}>
@@ -51,6 +52,7 @@ ProgressBar.defaultProps = {
     backgroundColor: "rgba(35, 52, 69, 1)",
     borderColor: "#ffffff",
     completePercentage: 50,
+    maxPercentage: 100,
 };
 
 export default ProgressBar;

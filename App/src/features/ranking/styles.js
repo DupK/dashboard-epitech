@@ -1,5 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions} from 'react-native';
 
+const modalHeight = Dimensions.get('window').height / 4;
 const styles = StyleSheet.create({
 
     container: {
@@ -107,6 +108,53 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginRight: 10,
         color: "#FFFFFF",
+    },
+
+    input : {
+        flex: 0.8,
+        color: '#FAFAFA',
+        height: 50,
+        fontSize: 13,
+        paddingLeft: 5,
+    },
+
+    inputContainer: {
+        height: 50,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+        margin: 5,
+    },
+
+    inputIcon: {
+        flex: 0.05,
+        paddingRight: 10,
+        color: 'rgba(255, 255, 255, 0.5)',
+        alignSelf: 'center',
+    },
+
+    modal: {
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        marginTop: modalHeight,
+    },
+
+    modalSubContainer: {
+        flex: 1,
+        backgroundColor: '#203040',
+        margin: 5,
+    },
+
+    swiper: {
+        justifyContent: 'center',
+    },
+
+    spiderContainer: {
+        alignItems: 'center',
+    },
+
+    linesContainer: {
+        justifyContent: 'center',
     }
 
 });
