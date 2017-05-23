@@ -1,4 +1,4 @@
-package com.dashboard;
+package com.dashboard.epitech;
 
 import com.facebook.react.ReactActivity;
 

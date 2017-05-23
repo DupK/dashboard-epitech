@@ -153,7 +153,7 @@ export default class Ranking extends Component {
                                     <Resume student={studentModal}>
                                         <LogTime student={studentModal}/>
                                     </Resume>
-                                    <IntranetButton login={studentModal.title} autologin={this.state.autologin}/>
+                                    <IntranetButton login={studentModal.login} autologin={this.state.autologin}/>
                                     <View style={styles.spiderContainer}>
                                         <Spider student={studentModal}/>
                                     </View>

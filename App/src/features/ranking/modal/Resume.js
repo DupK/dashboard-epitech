@@ -72,7 +72,7 @@ export class Resume extends Component {
                         </Text>
                         <Text style={styles.login}>
                             {this.props.student.login}
-                            </Text>
+                        </Text>
                     </View>
                     <Text style={styles.gpa}>
                         {this.props.student.gpa[0].gpa}
