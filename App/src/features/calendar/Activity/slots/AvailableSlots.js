@@ -37,6 +37,7 @@ export default class AvailableSlots extends Component {
                         memberPicture={selfSlot.slot.master.picture}
                         slotObject={selfSlot.slot}
                         activityStore={activity.activity}
+                        selfSlot
                     />
                 </View>
             )

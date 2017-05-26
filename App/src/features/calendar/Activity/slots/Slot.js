@@ -45,7 +45,7 @@ const textColor = {
     yours: '#FFD783',
 };
 
-const Slot = observer(({ oneshot, state, date, memberPicture, slotObject, activityStore }) => {
+const Slot = observer(({ oneshot, state, date, memberPicture, slotObject, activityStore, selfSlot }) => {
 
     const registerCallbacks = {
         yours: async () => await activityStore.unregisterActivitySlot(slotObject),
@@ -60,7 +60,7 @@ const Slot = observer(({ oneshot, state, date, memberPicture, slotObject, activi
         ? memberPicture
         : `https://cdn.local.epitech.eu/userprofil/${memberPicture}`;
 
-    const registerButton = state === 'available'
+    const registerButton = state === 'available' || (state === 'yours' && !oneshot && !selfSlot)
         ? (
             <RegisterButton
                 onPress={() => {
@@ -113,6 +113,11 @@ Slot.propTypes = {
     oneshot: React.PropTypes.bool.isRequired,
     slotObject: React.PropTypes.object.isRequired,
     activityStore: React.PropTypes.object.isRequired,
+    selfSlot: React.PropTypes.bool,
+};
+
+Slot.defaultProps = {
+    selfSlot: false,
 };
 
 const styles = StyleSheet.create({

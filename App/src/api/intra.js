@@ -170,10 +170,11 @@ export function registerActivitySlot(slotId, teamId, { year, module, instance, a
     });
 }
 
-export function unregisterActivitySlot(slotId, idTeam, { year, module, instance, activity }) {
+export function unregisterActivitySlot(slotId, idTeam, masterLogin, { year, module, instance, activity }) {
     const formData = new FormData();
-    formData.append('id_creneau', slotId);
-    idTeam && formData.append('id_team', idTeam);
+    formData.append('value[0][id_creneau]', slotId);
+    idTeam && formData.append('value[0][id_team]', idTeam);
+    masterLogin && formData.append('value[0][login]', masterLogin);
 
     return request({
         url: `/module/${year}/${module}/${instance}/${activity}/rdv/unregister?format=json`,

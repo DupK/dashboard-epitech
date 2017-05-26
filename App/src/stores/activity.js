@@ -109,11 +109,13 @@ class activity {
                         if (slot.id === slotToMark.id) {
                             return {
                                 ...slot,
-                                master: {
-                                    title: session.userProfile.name,
-                                    login: session.userProfile.login,
-                                    picture: session.userProfile.thumbnail
-                                }
+                                master: registered ?
+                                    {
+                                        title: session.userProfile.name,
+                                        login: session.userProfile.login,
+                                        picture: session.userProfile.thumbnail
+                                    }
+                                    : null
                             };
                         }
 
@@ -159,7 +161,6 @@ class activity {
         return isValidated;
     }
 
-    //TODO: Find out if teamId is needed to unregister slots
     async unregisterActivitySlot(slot) {
         const {
             scolaryear: year,
@@ -167,11 +168,15 @@ class activity {
             codeinstance: instance,
             codeacti: codeActivity,
         } = this.activity;
+
+        //teamId is used when then activity is part of a team project
         const teamId = this.activity.group ? this.activity.group.id : null;
-        const response = await Intra.unregisterActivitySlot(slot.id, teamId,
+        //masterLogin is user when the activity is part of a solo project
+        const masterLogin = !this.activity.group ? slot.master.login : null;
+
+        const response = await Intra.unregisterActivitySlot(slot.id, teamId, masterLogin,
             { year, module: codeModule, instance, activity: codeActivity }
         );
-
         const isValidated = Object.keys(response).length === 0;
 
         if (isValidated) {
