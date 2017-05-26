@@ -13,6 +13,7 @@ import {
     UIManager,
     Dimensions,
     TextInput,
+    Platform
 } from 'react-native';
 import _ from 'lodash';
 import LoadingIndicator from 'react-native-spinkit';
@@ -181,8 +182,9 @@ class Token extends Component {
                             textAlign: 'center',
                             backgroundColor: 'rgba(255, 255, 255, 0.03)'
                         }}
+                        keyboardType={Platform.OS === 'ios' ? 'default' : 'number-pad'}
                         maxLength={8}
-                        keyboardType="numeric"
+                        returnKeyType="send"
                         spellCheck={false}
                         autoCorrect={false}
                         multiline={false}
