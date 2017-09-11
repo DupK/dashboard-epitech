@@ -11,6 +11,7 @@ import {
     View,
     ListView,
 } from 'react-native';
+import IconIO from 'react-native-vector-icons/Ionicons';
 import Layout from '../../shared/components/Layout';
 import styles from './styles.js';
 
@@ -29,26 +30,40 @@ export default class News extends Component {
 
         return (
               <Layout store={this.props.store}>
-                <View style={{ backgroundColor: '#FAFAFA' }}>
-                    <ListView
-                        dataSource={this.ds.cloneWithRows(session.userData.news.slice())}
-                        enableEmptySections={true}
-                        renderRow={(news) => {
-                            return (
-                                <View style={{ flex: 1, flexDirection: 'row', padding: 15, borderBottomWidth: 1, borderBottomColor: 'rgba(0, 0, 0, 0.1)' }}>
-                                    <Image
-                                        source={{ uri: news.user.picture === null ? noPicture : news.user.picture}}
-                                        style={Platform.OS === 'ios' ? styles.pictureIOS : styles.pictureAndroid}
-                                    />
-                                    <Text style={styles.title}>{news.title}{'\n'}
-                                        <Text style={styles.detail}>
-                                        { news.details }
-                                        </Text>
-                                    </Text>
-                                </View>
-                            );
-                        }}
-                    />
+                <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
+                    {
+                        session.userData.news.slice().length > 0 ?
+                            <ListView
+                                dataSource={this.ds.cloneWithRows(session.userData.news.slice())}
+                                enableEmptySections={true}
+                                renderRow={(news) => {
+                                    return (
+                                        <View style={{ flex: 1, flexDirection: 'row', padding: 15, borderBottomWidth: 1, borderBottomColor: 'rgba(0, 0, 0, 0.1)' }}>
+                                            <Image
+                                                source={{ uri: news.user.picture === null ? noPicture : news.user.picture}}
+                                                style={Platform.OS === 'ios' ? styles.pictureIOS : styles.pictureAndroid}
+                                            />
+                                            <Text style={styles.title}>{news.title}{'\n'}
+                                                <Text style={styles.detail}>
+                                                { news.details }
+                                                </Text>
+                                            </Text>
+                                        </View>
+                                    );
+                                }}
+                            />
+                        :
+                            <View style={{ flex: 1, backgroundColor: '#2c3e50', flexDirection: 'column', justifyContent: 'center' }}>
+                                <IconIO
+                                    name="ios-pulse-outline"
+                                    size={100}
+                                    style={{ color: '#203040',   alignSelf: 'center' }}
+                                />
+                                <Text style={{ marginTop: 10, color:'#203040', alignSelf: 'center', fontSize: 15 }}>
+                                    No new notifications
+                                </Text>
+                             </View>
+                    }
                 </View>
             </Layout>
         );
