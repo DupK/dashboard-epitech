@@ -54,7 +54,7 @@ export default class Login extends Component {
 
     async retrieveDataFromCache() {
         const {
-            store: { session, calendar, ranking, marks, projects }
+            store: { session, calendar, marks, projects }
         } = this.props;
 
         try {
@@ -71,7 +71,7 @@ export default class Login extends Component {
                 calendar.retrieveCalendarFromCache(),
                 projects.retrieveProjectsFromCache(),
                 marks.retrieveMarksFromCache(),
-                ranking.selfRankPosition({ fromCache: true }),
+                //ranking.selfRankPosition({ fromCache: true }),
             ]);
 
             Actions.home();

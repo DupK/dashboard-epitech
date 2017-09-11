@@ -116,17 +116,7 @@ export default class Home extends Component {
                     onPress={this.menu.marks}
                     color="#233445"
                 />
-                <Cell
-                    title="Ranking"
-                    description={
-                        ranking.rankPosition !== '0th'
-                            ? `You\'re currently ${ranking.rankPosition} in your promotion.`
-                            : 'Click here to get your rank'
-                    }
-                    icon="ios-trophy-outline"
-                    onPress={this.menu.ranking}
-                    color="#233445"
-                />
+
                 <Cell
                     title="Documents"
                     description="Your private documents"
