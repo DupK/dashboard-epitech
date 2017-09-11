@@ -7,7 +7,6 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
 
     headerContainerAndroid: {
-        flex: 1,
         flexDirection: 'row',
         height: 40,
         backgroundColor: '#233445',
@@ -16,7 +15,6 @@ const styles = StyleSheet.create({
     },
 
     headerContainerIOS: {
-        flex: 1,
         flexDirection: 'row',
         height: 40,
         backgroundColor: '#233445',

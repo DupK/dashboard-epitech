@@ -83,7 +83,7 @@ export default class Home extends Component {
             <View style={scrollStyle.scrollViewContent}>
                 <Cell
                     title="Notifications"
-                    description={lastNews.title}
+                    description={lastNews ? lastNews.title : 'You have no new notifications'}
                     icon="ios-pulse-outline"
                     onPress={this.menu.news}
                     color="#233445"

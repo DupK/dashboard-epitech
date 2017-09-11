@@ -68,20 +68,21 @@ class Session {
         this.userProfile = remappedUserProfile;
     }
 
+    // Fix: Proposer des valeurs par défault dans le cas ou les données ne sont pas disponible sur l'intranet
     remapUserProfile(userProfile, netsoul) {
         return {
             login: userProfile.login,
             name: userProfile.title,
-            credits: userProfile.credits,
+            credits: userProfile.credits || 0,
             spices: userProfile.spice || '0',
-            gpa: userProfile.gpa[0].gpa,
-            logtime: userProfile.nsstat.active,
-            expectedLogtime: userProfile.nsstat.nslog_norm,
+            gpa: userProfile.gpa[0].gpa || 0,
+            logtime: userProfile.nsstat ? userProfile.nsstat.active : 0,
+            expectedLogtime: userProfile.nsstat ? userProfile.nsstat.nslog_norm : 35,
             promo: `tek${userProfile.studentyear}`,
             studentyear: userProfile.studentyear,
             year: userProfile.scolaryear,
             location: userProfile.location,
-            thumbnail: userProfile.picture,
+            thumbnail: userProfile.picture || 'https://intra.epitech.eu/static4a9afe84f5d8f5cb0cbe0e5baa1fb8c42d909902/img/nopicture-profilview.png',
             semester: userProfile.semester,
             uid: userProfile.uid,
             logData: netsoul,

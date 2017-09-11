@@ -109,6 +109,7 @@ export default class ProjectsList extends Component {
     render() {
         const { projectsStore } = this.props;
         const projects = projectsStore.projects.slice();
+        
 
         const currentProjects = _.filter(projects, (project) => (
             moment(project.begin_acti, 'YYYY-MM-DD, HH:mm:ss').isBefore(moment()) && project.rights.includes('student')
@@ -123,11 +124,26 @@ export default class ProjectsList extends Component {
         ));
 
         return (
-            <ScrollView style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
-                    { currentProjects.length !== 0 && this.renderCurrentProjects(currentProjects)}
-                    { comingsProjects.length !== 0 && this.renderCommingProjects(comingsProjects)}
-                    { aerProjects.length !== 0 && this.renderAerProjects(aerProjects) }
-            </ScrollView>
+            <View style={{ flex: 1 }}>
+                {projects.length > 0 ?
+                    <ScrollView style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
+                            { currentProjects.length !== 0 && this.renderCurrentProjects(currentProjects)}
+                            { comingsProjects.length !== 0 && this.renderCommingProjects(comingsProjects)}
+                            { aerProjects.length !== 0 && this.renderAerProjects(aerProjects) }
+                    </ScrollView>
+                :
+                    <View style={{ flex: 1, backgroundColor: '#2c3e50', flexDirection: 'column', justifyContent: 'center' }}>
+                        <IconIO
+                            name="ios-cafe-outline"
+                            size={100}
+                            style={{ color: '#203040',   alignSelf: 'center' }}
+                        />
+                        <Text style={{ marginTop: 10, color:'#203040', alignSelf: 'center', fontSize: 15 }}>
+                            You're not registered to any future project
+                        </Text>
+                    </View>
+                }
+            </View>
         );
     }
 }
