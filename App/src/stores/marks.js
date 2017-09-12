@@ -6,7 +6,6 @@ import _ from 'lodash';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
 import storage from 'react-native-simple-store';
-import { Alert } from 'react-native';
 import { action, computed, observable } from 'mobx';
 import ui from './uiState';
 import session from './session';
@@ -136,6 +135,10 @@ class Marks {
     @action
     setCurrentSemester(semester) {
         this.currentSemester = semester;
+    }
+
+    getSelectedMark() {
+        return this.selectedMark;
     }
 
     @action
