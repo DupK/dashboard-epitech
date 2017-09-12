@@ -12,13 +12,14 @@ import {
 } from 'react-native';
 import _ from "lodash";
 import Accordion from 'react-native-collapsible/Accordion';
-import { Actions } from 'react-native-router-flux';
 import styles from './styles.js';
 import { observer } from 'mobx-react/native';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconIO from 'react-native-vector-icons/Ionicons';
 
 import Layout from '../../shared/components/Layout';
+import ModalBox from "react-native-modalbox";
+import {BackDrop} from "../ranking/modal/BackDrop";
 
 const gradeColors = {
     A: '#62c462',
@@ -56,8 +57,7 @@ export default class Marks extends Component {
     }
 
     _renderContent(module) {
-        const { store: { ui } } = this.props;
-
+        const { store: { ui, marks } } = this.props;
         return (
             <View>
                 {
@@ -66,7 +66,7 @@ export default class Marks extends Component {
                             _.map(module.marks, (mark, i) => (
                                 <TouchableOpacity
                                     key={`${mark.date}-${i}`}
-                                    onPress={() => ui.isConnected && Actions.markDetails({ mark, title: mark.title })}
+                                    onPress={() => marks.selectMark(mark) || this._modal.open()}
                                 >
                                     <View style={Platform.OS === 'ios' ? styles.contentIOS : styles.contentAndroid}>
                                         <Text style={styles.textContent}> {mark.title}</Text>
@@ -111,6 +111,9 @@ export default class Marks extends Component {
     render() {
         const { store: { marks } } = this.props;
         const { marksBySemesters, currentSemester, nbSemester } = marks;
+        const selectedMark = marks.getSelectedMark();
+
+        console.log(selectedMark);
 
         const semesterId = (currentSemester < nbSemester)
             ? `B${currentSemester}`
@@ -131,7 +134,29 @@ export default class Marks extends Component {
                                 renderContent={this._renderContent}
                             />
                         </ScrollView>
-                    </View> 
+                        <ModalBox
+                            ref={component => this._modal = component}
+                            style={styles.modal}
+                            backdropOpacity={0.85}
+                            backdropContent={ <BackDrop message="Scroll down to quit"/> }
+                        >
+                            {
+                                selectedMark && selectedMark.comment && (
+                                    <View style={{ margin: 15 }}>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
+                                            <View>
+                                                <Text style={{ color: '#F9F9F9', fontWeight: 'bold', fontSize: 13 }}>{_.truncate(selectedMark.title, {length: 50, separator: '...'}) || "No title"}</Text>
+                                                <Text style={{ color: '#F9F9F9', fontStyle: 'italic', fontSize: 11}}>{selectedMark.reviser || "No reviser"}</Text>
+                                            </View>
+                                            <Text style={{ color: '#F9F9F9', fontWeight: 'bold', fontSize: 16}}>{selectedMark.note || "N/A"}</Text>
+                                        </View>
+                                        <View style={{ height: 1, marginTop: 10, marginBottom: 10,  borderBottomWidth: 1, borderBottomColor: 'rgba(255, 255, 255, 0.1)' }}/>
+                                        <Text style={{ color: '#F9F9F9', fontSize: 12 }}>{selectedMark.comment.replace(/(?:\r\n|\r|\n)/g, ' ') || "No comment"}</Text>
+                                    </View>
+                                )
+                            }
+                        </ModalBox>
+                    </View>
                 <View style={styles.headerContainer}>
                     <TouchableOpacity
                         hitSlop={{

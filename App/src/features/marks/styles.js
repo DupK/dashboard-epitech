@@ -2,9 +2,17 @@
  * Created by jules on 12/02/17.
  */
 
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions} from 'react-native';
+
+const modalHeight = Dimensions.get('window').height / 4;
 
 const styles = StyleSheet.create({
+
+    modal: {
+        marginTop: modalHeight,
+	    backgroundColor: '#203040',
+    },
+
     headerContainer: {
         backgroundColor: '#233445',
         flex: 0.1,
