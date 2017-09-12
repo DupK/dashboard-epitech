@@ -8,7 +8,7 @@ import moment from 'moment';
 
 const client = axios.create({
     baseURL: 'https://intra.epitech.eu',
-    timeout: 20000,
+    timeout: 50 * 1000, //50 seconds timeout limit
     validateStatus: (status) => status < 500,
 });
 
