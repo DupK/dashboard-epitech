@@ -19,6 +19,7 @@ import MarkDetails from './marks/MarkDetails';
 import Token from './token/Token';
 import Ranking from './ranking/Ranking';
 import Links from './links/Links';
+import Simulator from './simulator/Simulator';
 import Documents from './documents/Documents';
 
 import store from '../stores';
@@ -206,6 +207,12 @@ class Main extends Component {
                             title="Documents"
                             hideNavBar={false}
                             component={Documents}
+                        />
+                        <Scene
+                            key="simulator"
+                            title="Simulator"
+                            hideNavBar={false}
+                            component={Simulator}
                         />
 
                     </Scene>
