@@ -42,7 +42,6 @@ class ProgressBar extends Component {
 		return (
 			<View style={{
 				flex: 100,
-				justifyContent: 'center',
 				alignItems: 'center',
 				backgroundColor: '#233445'
 			}}>
@@ -50,7 +49,6 @@ class ProgressBar extends Component {
 					colors={this.props.colors}
 					style={{
 						flex: 100,
-						justifyContent: 'center',
 						alignItems: 'center',
 						width: widthProgressBar,
 						borderRadius: 10,
