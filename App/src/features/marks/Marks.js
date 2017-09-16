@@ -140,21 +140,55 @@ export default class Marks extends Component {
                             backdropOpacity={0.85}
                             backdropContent={ <BackDrop message="Scroll down to quit"/> }
                         >
-                            {
-                                selectedMark && selectedMark.comment && (
-                                    <View style={{ margin: 15 }}>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
+	                        {
+		                        selectedMark && selectedMark.comment ?
+                                    <View style={{margin: 15}}>
+                                        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                                             <View>
-                                                <Text style={{ color: '#F9F9F9', fontWeight: 'bold', fontSize: 13 }}>{_.truncate(selectedMark.title, {length: 50, separator: '...'}) || "No title"}</Text>
-                                                <Text style={{ color: '#F9F9F9', fontStyle: 'italic', fontSize: 11}}>{selectedMark.reviser || "No reviser"}</Text>
+                                                <Text style={{
+							                        color: '#F9F9F9',
+							                        fontWeight: 'bold',
+							                        fontSize: 13
+						                        }}>{_.truncate(selectedMark.title, {
+							                        length: 50,
+							                        separator: '...'
+						                        }) || "No title"}</Text>
+                                                <Text style={{
+							                        color: '#F9F9F9',
+							                        fontStyle: 'italic',
+							                        fontSize: 11
+						                        }}>{selectedMark.reviser || "No reviser"}</Text>
                                             </View>
-                                            <Text style={{ color: '#F9F9F9', fontWeight: 'bold', fontSize: 16}}>{selectedMark.note || "N/A"}</Text>
+                                            <Text style={{
+						                        color: '#F9F9F9',
+						                        fontWeight: 'bold',
+						                        fontSize: 16
+					                        }}>{selectedMark.note || "N/A"}</Text>
                                         </View>
-                                        <View style={{ height: 1, marginTop: 10, marginBottom: 10,  borderBottomWidth: 1, borderBottomColor: 'rgba(255, 255, 255, 0.1)' }}/>
-                                        <Text style={{ color: '#F9F9F9', fontSize: 12 }}>{selectedMark.comment.replace(/(?:\r\n|\r|\n)/g, ' ') || "No comment"}</Text>
+                                        <View style={{
+					                        height: 1,
+					                        marginTop: 10,
+					                        marginBottom: 10,
+					                        borderBottomWidth: 1,
+					                        borderBottomColor: 'rgba(255, 255, 255, 0.1)'
+				                        }}/>
+                                        <Text style={{
+					                        color: '#F9F9F9',
+					                        fontSize: 12
+				                        }}>{selectedMark.comment.replace(/(?:\r\n|\r|\n)/g, ' ') || "No comment"}</Text>
                                     </View>
-                                )
-                            }
+			                        :
+                                    <View style={{ marginTop: 60, backgroundColor: '#203040', justifyContent: 'center' }}>
+                                        <IconIO
+                                            name="ios-alert-outline"
+                                            size={100}
+                                            style={{ color: '#2c3e50',   alignSelf: 'center' }}
+                                        />
+                                        <Text style={{ marginTop: 10, color:'#2c3e50', alignSelf: 'center', fontSize: 15 }}>
+                                            No details
+                                        </Text>
+                                    </View>
+	                        }
                         </ModalBox>
                     </View>
                 <View style={styles.headerContainer}>
