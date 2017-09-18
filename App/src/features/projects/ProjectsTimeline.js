@@ -11,19 +11,15 @@ import _ from 'lodash';
 import moment from 'moment';
 import { observer } from 'mobx-react/native';
 import {
-    MONTH_BAR_WIDTH,
     DAY_IN_PIXEL,
     MONTH_BAR_HEIGHT,
     MONTH_OFFSET,
-    MONTHS,
+    MONTH_BAR_OFFSET,
     PROJECT_LINE_HEIGHT,
 } from './constants';
 import {
-    AppRegistry,
-    StyleSheet,
     Text,
     View,
-    Image,
     Dimensions,
     ScrollView,
 } from 'react-native';
@@ -49,7 +45,7 @@ Month.propTypes = {
     month: React.PropTypes.object,
 };
 
-const MonthBar = observer(() =>  {
+const MonthBar = observer(({ barWidth, months }) =>  {
     const { width } = Dimensions.get('window');
 
     return (
@@ -57,8 +53,8 @@ const MonthBar = observer(() =>  {
             position: 'absolute',
             top: 0,
             height: MONTH_BAR_HEIGHT,
-            width: MONTH_BAR_WIDTH + width,
-            backgroundColor: '#rgba(98, 196, 98, 0.9)',
+            width: barWidth + width,
+            backgroundColor: 'rgba(98, 196, 98, 0.9)',
             zIndex: 10,
             elevation: 5,
         }}>
@@ -67,20 +63,24 @@ const MonthBar = observer(() =>  {
                 flexDirection: 'row',
                 alignItems: 'center',
                 position: 'relative',
-                left: width / 2,
+                left: MONTH_BAR_OFFSET,
             }}>
-                { _.map(MONTHS, (month, i) => <Month key={i} month={month}/>) }
+                { _.map(months, (month, i) => <Month key={i} month={month}/>) }
             </View>
         </View>
     );
 });
 
-const ProjectLine = observer(({ projectName, nthProject, start, end, color }) => {
-    const { width } = Dimensions.get('window');
+MonthBar.propTypes = {
+    barWidth: React.PropTypes.number,
+    months: React.PropTypes.array,
+};
+
+const ProjectLine = observer(({ timelineMomentStart, projectName, nthProject, start, end, color }) => {
     const parsedStart = moment(start, 'YYYY-MM-DD, HH:mm:ss');
     const parsedEnd = moment(end, 'YYYY-MM-DD, HH:mm:ss');
     const nbDays = parsedEnd.diff(parsedStart, 'day');
-    const timelineStart = parsedStart.diff(moment().startOf('year'), 'day');
+    const projectStart = parsedStart.diff(timelineMomentStart, 'day');
 
     return (
         <View
@@ -90,7 +90,7 @@ const ProjectLine = observer(({ projectName, nthProject, start, end, color }) =>
                 height: PROJECT_LINE_HEIGHT,
                 width: 500,
                 top: 40 + (MONTH_BAR_HEIGHT + ((PROJECT_LINE_HEIGHT + 25) * nthProject)),
-                left: MONTH_OFFSET + (timelineStart * DAY_IN_PIXEL) + width / 2,
+                left: MONTH_OFFSET + (projectStart * DAY_IN_PIXEL) + MONTH_BAR_OFFSET,
             }}
         >
             <Text style={{ color: 'rgba(35, 52, 69, 0.9)', position: 'relative', fontSize: 10, fontWeight: 'bold' }}>
@@ -114,11 +114,11 @@ ProjectLine.propTypes = {
     end: React.PropTypes.string,
     projectName: React.PropTypes.string,
     color: React.PropTypes.string,
+    timelineMomentStart: React.PropTypes.instanceOf(moment),
 };
 
-const VerticalMonthDelimitors = observer(({ nthMonth, viewHeight }) => {
-    const { width } = Dimensions.get('window');
-    const monthsInPixelBefore = _.sumBy(_.take(MONTHS, nthMonth), (month) => (month.days * DAY_IN_PIXEL));
+const VerticalMonthDelimitors = observer(({ months, nthMonth, viewHeight }) => {
+    const monthsInPixelBefore = _.sumBy(_.take(months, nthMonth), (month) => (month.days * DAY_IN_PIXEL));
 
     return (
         <View
@@ -127,7 +127,7 @@ const VerticalMonthDelimitors = observer(({ nthMonth, viewHeight }) => {
                 position: 'absolute',
                 width: 1,
                 height: viewHeight,
-                left: MONTH_OFFSET + monthsInPixelBefore + width / 2,
+                left: MONTH_OFFSET + monthsInPixelBefore + MONTH_BAR_OFFSET,
                 backgroundColor: 'rgba(35, 52, 69, 0.1)',
                 zIndex: 1,
             }}
@@ -138,6 +138,7 @@ const VerticalMonthDelimitors = observer(({ nthMonth, viewHeight }) => {
 VerticalMonthDelimitors.propTypes = {
     nthMonth: React.PropTypes.number,
     viewHeight: React.PropTypes.number,
+    months: React.PropTypes.array,
 };
 
 const DayIndicator = observer(({ dayNumber, position, colorBar, colorBox, colorBoxText, viewHeight }) => {
@@ -208,7 +209,7 @@ export default class ProjectsTimeline extends Component {
     }
 
     componentDidMount() {
-        const daysSinceStartOfYear = moment().diff(moment().startOf('year'), 'day');
+        const daysSinceStartOfYear = moment().diff(this.props.momentStart, 'day');
         const todayPosition = (daysSinceStartOfYear * DAY_IN_PIXEL);
 
         //Horrible work-around for the scrollTo method to work properly on DidMount.
@@ -222,25 +223,21 @@ export default class ProjectsTimeline extends Component {
         this.setState({ scrollPosition: e.nativeEvent.contentOffset.x });
     }
 
-    renderMonthTimeline() {
-        return <MonthBar/>;
-    }
-
-    renderMonthVerticalBars(viewHeight) {
-        return _.map(MONTHS, (month, i) => (
+    renderMonthVerticalBars(months, viewHeight) {
+        return _.map(months, (month, i) => (
             <VerticalMonthDelimitors
                 key={i}
                 nthMonth={i}
                 viewHeight={viewHeight}
+                months={months}
             />
         ));
     }
 
     renderTodayIndicator(viewHeight) {
-        const { width } = Dimensions.get('window');
-        const daysSinceStartOfYear = moment().diff(moment().startOf('year'), 'day');
+        const daysSinceStartOfTimeline = moment().diff(this.props.momentStart, 'day');
         const dayNumber = moment().format('DD');
-        const position = MONTH_OFFSET + (daysSinceStartOfYear * DAY_IN_PIXEL) - 10 + width / 2;
+        const position = MONTH_OFFSET + (daysSinceStartOfTimeline * DAY_IN_PIXEL) - 10 + MONTH_BAR_OFFSET;
 
         return <DayIndicator
             dayNumber={dayNumber}
@@ -253,10 +250,9 @@ export default class ProjectsTimeline extends Component {
     }
 
     renderSelectedDayIndicator() {
-        const { width } = Dimensions.get('window');
         const todayPosition = this.state.scrollPosition / DAY_IN_PIXEL;
-        const dayNumber = moment().startOf('year').add(todayPosition, 'd').format('DD');
-        const position = (width / 2) - 10 + MONTH_OFFSET;
+        const dayNumber = moment(this.props.momentStart).add(todayPosition, 'd').format('DD');
+        const position = (MONTH_BAR_OFFSET) - 10 + MONTH_OFFSET;
 
         return <DayIndicator
             dayNumber={dayNumber}
@@ -267,7 +263,7 @@ export default class ProjectsTimeline extends Component {
     }
 
     renderProjectsLines() {
-        const { projectsStore } = this.props;
+        const { projectsStore, momentStart } = this.props;
 
         return  _.map(projectsStore.projects.slice(), (project, i) => (
             <ProjectLine
@@ -277,15 +273,39 @@ export default class ProjectsTimeline extends Component {
                 nthProject={i}
                 projectName={project.acti_title}
                 color={project.rights.includes('assistant') ? "rgba(98, 196, 98, 0.9)" : "rgba(35, 52, 69, 0.9)"}
+                timelineMomentStart={momentStart}
             />
         ));
     }
 
+    computeAvailableMonths() {
+        const startTime = moment(this.props.momentStart);
+        const endTime = moment(this.props.momentEnd);
+        const monthsBasedOnTimeRange = [];
+
+        while (startTime.isBefore(endTime)) {
+            monthsBasedOnTimeRange.push({
+                name: startTime.format('MMM'),
+                days: startTime.daysInMonth()
+            });
+            startTime.add(1, 'month');
+        }
+
+        return monthsBasedOnTimeRange;
+    }
+
+    computeMonthBarWidth() {
+        const availableMonths = this.computeAvailableMonths();
+
+        return _.sumBy(availableMonths, (month) => month.days * DAY_IN_PIXEL);
+    }
 
     render() {
         const { width } = Dimensions.get('window');
         const { projectsStore } = this.props;
-        const viewWidth = MONTH_BAR_WIDTH - (moment().startOf('year').daysInMonth() * DAY_IN_PIXEL) + width;
+        const monthBarWidth = this.computeMonthBarWidth();
+        const availableMonths = this.computeAvailableMonths();
+        const viewWidth = monthBarWidth - (this.props.momentStart.daysInMonth() * DAY_IN_PIXEL) + width;
         const viewHeight = computeViewHeight(projectsStore.projects.length);
 
         return (
@@ -302,14 +322,17 @@ export default class ProjectsTimeline extends Component {
                     onScroll={this.handleScroll}
                     scrollEventThrottle={30}
                 >
-                    { this.renderMonthTimeline() }
+                    <MonthBar
+                        barWidth={monthBarWidth}
+                        months={availableMonths}
+                    />
                     <ScrollView>
                         <View style={{
                             width: viewWidth,
                             height: viewHeight,
                         }}/>
                         { this.renderTodayIndicator(viewHeight) }
-                        { this.renderMonthVerticalBars(viewHeight) }
+                        { this.renderMonthVerticalBars(availableMonths, viewHeight) }
                         { this.renderProjectsLines() }
                     </ScrollView>
                 </ScrollView>
@@ -321,4 +344,6 @@ export default class ProjectsTimeline extends Component {
 
 ProjectsTimeline.propTypes = {
     projectsStore: React.PropTypes.object,
+    momentStart: React.PropTypes.instanceOf(moment),
+    momentEnd: React.PropTypes.instanceOf(moment),
 };

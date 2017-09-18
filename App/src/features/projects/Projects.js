@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import { observer } from 'mobx-react/native';
 import { TabBar, TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 import { StyleSheet } from 'react-native';
@@ -56,13 +57,18 @@ export default class Projects extends Component {
     };
 
     _renderScene = ({ route }) => {
-        const { store: { ui, projects: projectsStore } } = this.props;
+        const { store: { ui, session, projects: projectsStore } } = this.props;
+        const { year: scolarYear } = session.userProfile;
 
         switch (route.key) {
             case '1':
                 return <ProjectsList uiStore={ui} projectsStore={projectsStore} />;
             case '2':
-                return <ProjectsTimeline projectsStore={projectsStore} />;
+                return <ProjectsTimeline
+                    projectsStore={projectsStore}
+                    momentStart={moment().year(scolarYear).month('Sep').startOf('month')}
+                    momentEnd={moment().year(scolarYear).month('Sep').add(1, 'year').add(1, 'month').startOf('month')}
+                />;
             default:
                 return null;
         }
