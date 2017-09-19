@@ -13,29 +13,25 @@ import { observer } from 'mobx-react/native';
 import {
     DAY_IN_PIXEL,
     MONTH_BAR_HEIGHT,
-    MONTH_OFFSET,
     MONTH_BAR_OFFSET,
+    MONTH_OFFSET,
     PROJECT_LINE_HEIGHT,
 } from './constants';
-import {
-    Text,
-    View,
-    Dimensions,
-    ScrollView,
-} from 'react-native';
+import { Dimensions, ScrollView, Text, View, Platform } from 'react-native';
 
-const computeViewHeight = (nbProjects) => {
+const computeTimelineHeight = (nbProjects) => {
     const { height } = Dimensions.get('window');
     const projectLinesHeight = 40 + (MONTH_BAR_HEIGHT + ((PROJECT_LINE_HEIGHT + 25) * nbProjects)) + 10;
+    const headerHeight = Platform.OS === 'android' ? 54 : 64;
+    const bottomBarHeight = 50;
+    const timeLineHeight = height - headerHeight - MONTH_BAR_HEIGHT - bottomBarHeight - 5;
 
-    return (projectLinesHeight > height) ? projectLinesHeight : height;
+    return (projectLinesHeight > timeLineHeight) ? projectLinesHeight : timeLineHeight;
 };
 
 const Month = observer(({ month }) => {
     return (
-        <View style={{
-            width: DAY_IN_PIXEL * month.days,
-        }}>
+        <View style={{ width: DAY_IN_PIXEL * month.days }}>
             <Text style={{ color: 'white' }}>{ month.name }</Text>
         </View>
     );
@@ -76,9 +72,9 @@ MonthBar.propTypes = {
     months: React.PropTypes.array,
 };
 
-const ProjectLine = observer(({ timelineMomentStart, projectName, nthProject, start, end, color }) => {
-    const parsedStart = moment(start, 'YYYY-MM-DD, HH:mm:ss');
-    const parsedEnd = moment(end, 'YYYY-MM-DD, HH:mm:ss');
+export const ProjectLine = observer(({ dateTimeFormat, timelineMomentStart, projectName, nthProject, start, end, color }) => {
+    const parsedStart = moment(start, dateTimeFormat);
+    const parsedEnd = moment(end, dateTimeFormat);
     const nbDays = parsedEnd.diff(parsedStart, 'day');
     const projectStart = parsedStart.diff(timelineMomentStart, 'day');
 
@@ -115,6 +111,7 @@ ProjectLine.propTypes = {
     projectName: React.PropTypes.string,
     color: React.PropTypes.string,
     timelineMomentStart: React.PropTypes.instanceOf(moment),
+    dateTimeFormat: React.PropTypes.string,
 };
 
 const VerticalMonthDelimitors = observer(({ months, nthMonth, viewHeight }) => {
@@ -263,19 +260,9 @@ export default class ProjectsTimeline extends Component {
     }
 
     renderProjectsLines() {
-        const { projectsStore, momentStart } = this.props;
+        const { items, renderItemsLines } = this.props;
 
-        return  _.map(projectsStore.projects.slice(), (project, i) => (
-            <ProjectLine
-                key={i}
-                start={project.begin_acti}
-                end={project.end_acti}
-                nthProject={i}
-                projectName={project.acti_title}
-                color={project.rights.includes('assistant') ? "rgba(98, 196, 98, 0.9)" : "rgba(35, 52, 69, 0.9)"}
-                timelineMomentStart={momentStart}
-            />
-        ));
+        return _.map(items, renderItemsLines);
     }
 
     computeAvailableMonths() {
@@ -302,11 +289,10 @@ export default class ProjectsTimeline extends Component {
 
     render() {
         const { width } = Dimensions.get('window');
-        const { projectsStore } = this.props;
         const monthBarWidth = this.computeMonthBarWidth();
         const availableMonths = this.computeAvailableMonths();
         const viewWidth = monthBarWidth - (this.props.momentStart.daysInMonth() * DAY_IN_PIXEL) + width;
-        const viewHeight = computeViewHeight(projectsStore.projects.length);
+        const viewHeight = computeTimelineHeight(this.props.items.length);
 
         return (
             <View style={{
@@ -343,7 +329,11 @@ export default class ProjectsTimeline extends Component {
 };
 
 ProjectsTimeline.propTypes = {
-    projectsStore: React.PropTypes.object,
+    items: React.PropTypes.arrayOf(React.PropTypes.shape({
+        start: React.PropTypes.string,
+        end: React.PropTypes.end,
+    })),
+    renderItemsLines: React.PropTypes.func,
     momentStart: React.PropTypes.instanceOf(moment),
     momentEnd: React.PropTypes.instanceOf(moment),
 };

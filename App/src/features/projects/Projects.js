@@ -5,7 +5,7 @@ import { TabBar, TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view'
 import { StyleSheet } from 'react-native';
 
 import Layout from '../../shared/components/Layout';
-import ProjectsTimeline from './ProjectsTimeline';
+import ProjectsTimeline, { ProjectLine } from './ProjectsTimeline';
 import ProjectsList from './ProjectsList';
 
 const styles = StyleSheet.create({
@@ -59,6 +59,13 @@ export default class Projects extends Component {
     _renderScene = ({ route }) => {
         const { store: { ui, session, projects: projectsStore } } = this.props;
         const { year: scolarYear } = session.userProfile;
+        const momentStart = moment().year(scolarYear).month('Sep').startOf('month');
+        const momentEnd = moment()
+            .year(scolarYear)
+            .month('Sep')
+            .add(1, 'year')
+            .add(1, 'month')
+            .startOf('month');
 
         switch (route.key) {
             case '1':
@@ -66,8 +73,25 @@ export default class Projects extends Component {
             case '2':
                 return <ProjectsTimeline
                     projectsStore={projectsStore}
-                    momentStart={moment().year(scolarYear).month('Sep').startOf('month')}
-                    momentEnd={moment().year(scolarYear).month('Sep').add(1, 'year').add(1, 'month').startOf('month')}
+                    momentStart={momentStart}
+                    momentEnd={momentEnd}
+                    items={projectsStore.projects.slice()}
+                    renderItemsLines={(item, i) => (
+                        <ProjectLine
+                            key={i}
+                            start={item.begin_acti}
+                            end={item.end_acti}
+                            dateTimeFormat="YYYY-MM-DD, HH:mm:ss"
+                            nthProject={i}
+                            projectName={item.acti_title}
+                            color={
+                                item.rights.includes('assistant')
+                                    ? 'rgba(98, 196, 98, 0.9)'
+                                    : 'rgba(35, 52, 69, 0.9)'
+                            }
+                            timelineMomentStart={momentStart}
+                        />
+                    )}
                 />;
             default:
                 return null;
