@@ -71,7 +71,6 @@ export default class Projects extends Component {
                 return <ProjectsList uiStore={ui} projectsStore={projectsStore} />;
             case '2':
                 return <ProjectsTimeline
-                    projectsStore={projectsStore}
                     momentStart={momentStart}
                     momentEnd={momentEnd}
                     items={projectsStore.projects.slice()}

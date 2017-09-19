@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import moment from 'moment';
 import { TabBar, TabViewAnimated, TabViewPagerPan } from 'react-native-tab-view';
 
-import Subscription from './subscription/Subscription';
+import Subscription, { modules } from './subscription/Subscription';
+import ProjectsTimeline, { ProjectLine } from '../projects/ProjectsTimeline';
 
 import styles from './styles';
 
@@ -33,11 +34,36 @@ class Modules extends Component {
     };
 
 	_renderScene = ({ route }) => {
+		//TODO: plug store and replace 2017 by scolaryear
+        const momentStart = moment().year(2017).month('Sep').startOf('month');
+        const momentEnd = moment()
+            .year(2017)
+            .month('Sep')
+            .add(1, 'year')
+            .add(1, 'month')
+            .startOf('month');
+
 		switch (route.key) {
 			case '1':
 				return <Subscription/>;
 			case '2':
-				return <View/>;
+				return <ProjectsTimeline
+					momentStart={momentStart}
+					momentEnd={momentEnd}
+					items={modules}
+					renderItemsLines={(item, i) => (
+						<ProjectLine
+							key={i}
+							start={item.start}
+							end={item.end}
+							dateTimeFormat="DD-MM-YYYY"
+							nthProject={i}
+							projectName={item.title}
+							color="rgba(35, 52, 69, 0.9)"
+							timelineMomentStart={momentStart}
+						/>
+                    )}
+				/>;
 			default:
 				return null;
 		}
