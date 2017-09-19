@@ -19,8 +19,9 @@ import MarkDetails from './marks/MarkDetails';
 import Token from './token/Token';
 import Ranking from './ranking/Ranking';
 import Links from './links/Links';
-import Simulator from './simulator/Simulator';
+import Modules from './modules/Modules';
 import Documents from './documents/Documents';
+import ModuleDetails from './modules/details/ModuleDetails';
 
 import store from '../stores';
 import _ from 'lodash';
@@ -208,11 +209,19 @@ class Main extends Component {
                             hideNavBar={false}
                             component={Documents}
                         />
+
                         <Scene
-                            key="simulator"
-                            title="Simulator"
+                            key="modules"
+                            title="Modules"
                             hideNavBar={false}
-                            component={Simulator}
+                            component={Modules}
+                        />
+
+                        <Scene
+                            key="moduleDetails"
+                            title="module-details"
+                            hideNavBar={false}
+                            component={ModuleDetails}
                         />
 
                     </Scene>

@@ -31,7 +31,6 @@ export default class Projects extends Component {
                 { key: '2', title: 'Overview' },
             ],
         };
-
     }
 
     _handleChangeTab = (index) => {

@@ -4314,6 +4314,14 @@
       "resolved": "https://registry.npmjs.org/react-native-animatable/-/react-native-animatable-0.6.1.tgz",
       "integrity": "sha1-vYUCPUKtDOs8yY17SQ99bda6EbA="
     },
+    "react-native-animate-number": {
+      "version": "0.1.2",
+      "resolved": "https://registry.npmjs.org/react-native-animate-number/-/react-native-animate-number-0.1.2.tgz",
+      "integrity": "sha1-1BxaeE4F+deI2vv3sVhYTGXoz0c=",
+      "requires": {
+        "react-timer-mixin": "0.13.3"
+      }
+    },
     "react-native-animated-modal": {
       "version": "1.0.2",
       "resolved": "https://registry.npmjs.org/react-native-animated-modal/-/react-native-animated-modal-1.0.2.tgz",
