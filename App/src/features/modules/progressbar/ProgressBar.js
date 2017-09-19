@@ -2,6 +2,8 @@ import React, {Component, PropTypes} from 'react';
 import {View, Animated} from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
 
+import styles from './styles';
+
 const Fillbar = Animated.createAnimatedComponent(View);
 
 class ProgressBar extends Component {
@@ -31,45 +33,20 @@ class ProgressBar extends Component {
 
 	render() {
 
-		// ProgressBar
-		const widthProgressBar = 6;
-
-		// Indicator
-		const widthIndicator = 20;
-		const heightIndicator = 5;
-		const colorIndicator = '#F9F9F9';
-
 		return (
-			<View style={{
-				flex: 100,
-				alignItems: 'center',
-				backgroundColor: '#233445'
-			}}>
+			<View style={styles.container}>
 				<LinearGradient
 					colors={this.props.colors}
-					style={{
-						flex: 100,
-						alignItems: 'center',
-						width: widthProgressBar,
-						borderRadius: 10,
-					}}>
-					<View style={{
-						flex: this.props.incompletePercentage,
-						width: widthProgressBar,
-						backgroundColor: '#F9F9F9',
-						borderTopRightRadius: 5,
-						borderTopLeftRadius: 5
-					}}/>
-					<View style={{
-						width: widthIndicator,
-						height: heightIndicator,
-						backgroundColor: colorIndicator,
-					}}/>
-					<Fillbar style={{
-						flex: this.state.animatedFilling,
-						width: widthProgressBar,
-						backgroundColor: 'transparent'
-					}}/>
+					style={styles.gradient}>
+					<View style={[
+						styles.incompletPercentage,
+						{flex: this.props.incompletePercentage}
+					]}/>
+					<View style={styles.indicator}/>
+					<Fillbar style={[
+						styles.fillBar,
+						{flex: this.state.animatedFilling}
+					]}/>
 				</LinearGradient>
 			</View>
 		)

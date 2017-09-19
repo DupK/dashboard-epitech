@@ -42,7 +42,7 @@ export default class Home extends Component {
         stats: () => Actions.stats(),
         links: () => Actions.links(),
         documents: () => Actions.documents(),
-        simulator: () => Actions.simulator(),
+        modules: () => Actions.modules(),
         logout: async () => {
             await this.props.store.session.logout();
             this.props.store.ui.defaultState();
@@ -69,6 +69,8 @@ export default class Home extends Component {
                 tokens,
             }
         } = this.props;
+
+        console.log(this.props);
 
         const nextEvent = calendar.nextEvent;
         const lastNews = _(session.userData.news.slice())
@@ -104,10 +106,10 @@ export default class Home extends Component {
                     color="#233445"
                 />
                 <Cell
-                    title="Tokens"
-                    description={tokenDescription}
-                    icon="ios-pricetags-outline"
-                    onPress={this.menu.tokens}
+                    title="Modules"
+                    description="You can obtain 23 credits for this semester"
+                    icon="ios-flask-outline"
+                    onPress={this.menu.modules}
                     color="#233445"
                 />
                 <Cell
@@ -118,10 +120,10 @@ export default class Home extends Component {
                     color="#233445"
                 />
                 <Cell
-                    title="Simulator"
-                    description="Simulate your subscription to modules"
-                    icon="ios-flask-outline"
-                    onPress={this.menu.simulator}
+                    title="Tokens"
+                    description={tokenDescription}
+                    icon="ios-pricetags-outline"
+                    onPress={this.menu.tokens}
                     color="#233445"
                 />
                 <Cell
