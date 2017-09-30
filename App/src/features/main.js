@@ -210,20 +210,6 @@ class Main extends Component {
                             component={Documents}
                         />
 
-                        <Scene
-                            key="modules"
-                            title="Modules"
-                            hideNavBar={false}
-                            component={Modules}
-                        />
-
-                        <Scene
-                            key="moduleDetails"
-                            title="module-details"
-                            hideNavBar={false}
-                            component={ModuleDetails}
-                        />
-
                     </Scene>
                 </Router>
             </View>

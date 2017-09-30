@@ -42,7 +42,6 @@ export default class Home extends Component {
         stats: () => Actions.stats(),
         links: () => Actions.links(),
         documents: () => Actions.documents(),
-        modules: () => Actions.modules(),
         logout: async () => {
             await this.props.store.session.logout();
             this.props.store.ui.defaultState();
@@ -103,13 +102,6 @@ export default class Home extends Component {
                     description={nextProject}
                     icon="ios-cafe-outline"
                     onPress={this.menu.projects}
-                    color="#233445"
-                />
-                <Cell
-                    title="Modules"
-                    description="You can obtain 23 credits for this semester"
-                    icon="ios-flask-outline"
-                    onPress={this.menu.modules}
                     color="#233445"
                 />
                 <Cell
