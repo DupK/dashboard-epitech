@@ -3,12 +3,6 @@
 Dashboard EPITECH (*Android/iOS*)
 =================
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/12463f4e99504b1794db7d50151d2924)](https://www.codacy.com/app/DupK/dashboard-epitech?utm_source=github.com&utm_medium=referral&utm_content=DupK/dashboard-epitech&utm_campaign=badger) [![GitHub issues](https://img.shields.io/github/issues/DupK/dashboard-epitech.svg)](https://github.com/DupK/dashboard-epitech/issues)
-
-
-**What is it ?**
--
-
 A cross-platform **Epitech** intranet application with awesome features 🔥 
 
 * Authentification with **Office 365**
@@ -18,8 +12,6 @@ A cross-platform **Epitech** intranet application with awesome features 🔥
 * **PDF** file viewer
 * Management of **tokens**
 * **Projects** and **modules** results
-* Promotion **ranking**
-* **Statistics**
 * Private **documents**
 * Helpful **links**
 * **Cache** system
@@ -47,23 +39,6 @@ Contributions are always welcome! 🤘
 -
 
 * [intra.epitech.eu](https://gist.github.com/DupK)
-
-
-
-**Todo**
--
-
-* Trombinoscope
-* BDE Events
-* Implementing redirection of news
-* Restrict projects displayed for AER Students
-
-
-
-**Demo**
--
-![enter image description here](https://github.com/DupK/demo_storage/blob/master/demo.gif)
-
 
 **Authors**
 -------
